@@ -441,9 +441,14 @@ footer a:hover { color: var(--text); }
   width: 34px;
   height: 34px;
   border: none;
-  background: transparent;
+  background: #ebebea;
+  border-radius: 8px;
   cursor: pointer;
   padding: 4px;
+}
+
+[data-theme="dark"] .hamburger {
+  background: #222220;
 }
 
 .hamburger span {
