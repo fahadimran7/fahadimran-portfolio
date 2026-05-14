@@ -48,7 +48,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 64px;
+  margin-bottom: 44px;
 }
 
 nav .logo {
@@ -233,6 +233,10 @@ footer a:hover { color: var(--text); }
 .project-item:last-child { border-bottom: 1px solid var(--border); }
 
 .project-info h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+
+.project-title-link { color: var(--text); text-decoration: none; }
+.project-title-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.project-arrow { font-size: 13px; vertical-align: 2px; }
 
 .project-info p { font-size: 17px; color: var(--muted); max-width: 380px; }
 
@@ -431,6 +435,7 @@ footer a:hover { color: var(--text); }
 .hamburger {
   display: none;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 5px;
   width: 34px;
@@ -497,11 +502,7 @@ footer a:hover { color: var(--text); }
   nav ul { display: none; }
   .hamburger { display: flex; }
 
-  .hero {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+  .hero { flex-direction: column; align-items: flex-start; }
 
   .project-link-desktop { display: none; }
   .project-link-mobile { display: inline; }
@@ -511,16 +512,8 @@ footer a:hover { color: var(--text); }
     grid-template-columns: 1fr 1fr;
   }
 
-  .social-link {
-    justify-content: center;
-  }
-
   footer {
     flex-direction: column;
-    align-items: center;
     gap: 12px;
-    text-align: center;
   }
-
-  .bio { text-align: center; }
 }
