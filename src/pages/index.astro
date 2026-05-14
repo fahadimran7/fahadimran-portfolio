@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import { Twitter, Github, Linkedin, Mail, Wrench } from 'lucide-astro';
+---
+<Base title="Home" description="Product and engineering. Mostly at startups, mostly moving fast. Nights go to building things I kept wishing someone else would make.">
+
+  <div class="hero">
+    <img class="avatar" src="/logos/profile-photo.jpeg" alt="Fahad Imran" />
+    <div class="hero-text">
+      <h1>Fahad Imran</h1>
+      <p>product and code, mostly in that order</p>
+    </div>
+  </div>
+
+  <p class="bio">
+    I do product and engineering. Mostly at startups, mostly moving fast. Nights go to building things I kept wishing someone else would make.
+  </p>
+
+  <div class="section-row">
+    <p class="section-label">Places I've worked at</p>
+    <div class="chip-list">
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">where i started, part-time</span>
+        <a class="chip" href="https://www.linkedin.com/company/tuamify" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/tuamify-logo-3.png" alt="Tuamify" /></span>
+          Tuamify
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">where I used to work</span>
+        <a class="chip" href="https://devsinc.com" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/devsinc-logo.svg" alt="Devsinc" style="width:20px;height:20px;" /></span>
+          Devsinc
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">where I work now :)</span>
+        <a class="chip" href="https://alfabolt.com" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/alfabolt-logo.png" alt="Alfabolt" style="width:46px;height:46px;" /></span>
+          Alfabolt
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-row" style="margin-bottom:56px;">
+    <p class="section-label">Products I've shipped for</p>
+    <div class="chip-list">
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">Accept payments over WhatsApp</span>
+        <a class="chip" href="https://nomod.com" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/nomod-logo.png" alt="Nomod" /></span>
+          Nomod
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">Group buying for restaurants and cafes</span>
+        <a class="chip" href="https://apps.apple.com/no/app/pine-the-app/id6467567252" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/pine-logo.png" alt="Pine" /></span>
+          Pine
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">Audio stories, saved for family</span>
+        <a class="chip" href="https://sharewithleaf.com" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/leaf-logo.webp" alt="Leaf" /></span>
+          Leaf
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">On-demand lawyers for businesses</span>
+        <a class="chip" href="https://wearerayne.com" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/rayne-logo.png" alt="Rayne" /></span>
+          Rayne
+        </a>
+      </div>
+
+      <div class="chip-wrap">
+        <span class="chip-tooltip">HR management for teams</span>
+        <a class="chip" href="https://www.linkedin.com/company/maplehr" target="_blank" rel="noopener">
+          <span class="chip-icon"><img src="/logos/maple-logo.png" alt="Maple" /></span>
+          Maple
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="projects">
+    <p class="section-label">Things I'm building</p>
+
+    <div class="project-item">
+      <div class="project-info">
+        <h3>Subtab</h3>
+        <p>Know exactly what you're paying for. Offline-first subscription tracker, no account needed.</p>
+        <div class="project-bottom">
+          <span class="project-tag live"><span class="tag-dot"></span>live</span>
+          <a href="https://subtab.app" target="_blank" class="project-link project-link-mobile">↗ visit</a>
+        </div>
+      </div>
+      <a href="https://subtab.app" target="_blank" class="project-link project-link-desktop">↗ visit</a>
+    </div>
+
+    <div class="project-item">
+      <div class="project-info">
+        <h3>The unnamed one</h3>
+        <p>Pakistani clothing brands run a lot of sales. Someone should track them. Working on it.</p>
+        <span class="project-tag wip"><Wrench size={12} />wip</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connect">
+    <p class="section-label">Find me online</p>
+    <div class="social-links">
+      <a href="https://twitter.com/fahadimran7" target="_blank" rel="noopener" class="social-link"><Twitter size={17} />Twitter</a>
+      <a href="https://github.com/fahadimran7" target="_blank" rel="noopener" class="social-link"><Github size={17} />GitHub</a>
+      <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener" class="social-link"><Linkedin size={17} />LinkedIn</a>
+      <a href="mailto:fahadimran6544@gmail.com" class="social-link"><Mail size={17} />Email</a>
+    </div>
+  </div>
+
+</Base>

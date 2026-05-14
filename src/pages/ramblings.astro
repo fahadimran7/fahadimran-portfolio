@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('ramblings')).sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
+
+function formatDate(str: string) {
+  return new Date(str).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+---
+<Base title="Ramblings" description="Raw thoughts, bad takes, and ideas I haven't finished having yet. Proceed with low expectations.">
+
+  <div class="page-heading">
+    <h1>Ramblings</h1>
+    <p>Raw thoughts, bad takes, and ideas I haven't finished having yet. Proceed with low expectations and you'll be fine.</p>
+  </div>
+
+  <div class="writing-list">
+    {posts.map(post => (
+      <div class="writing-item">
+        <a href={`/ramblings/${post.id}`}>{post.data.title}</a>
+        <span class="writing-date">{formatDate(post.data.publishedAt)}</span>
+      </div>
+    ))}
+  </div>
+
+  <p style="margin-top:32px;font-size:14px;color:var(--muted);">
+    Not all worth reading is mine. See what I've <a href="/reads" style="color:var(--muted);text-decoration:underline;text-underline-offset:3px;">saved from others</a>.
+  </p>
+
+</Base>

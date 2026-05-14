@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Product and engineering. Mostly at startups, mostly moving fast.',
+} = Astro.props;
+
+const pageTitle = title === 'Home' ? 'Fahad Imran' : `${title} — Fahad Imran`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/logos/profile-photo.jpeg', Astro.site).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="/logos/profile-photo.jpeg" />
+
+  <!-- Primary -->
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- OG -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@fahadimran7" />
+  <meta name="twitter:creator" content="@fahadimran7" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- Preload above-the-fold avatar -->
+  <link rel="preload" as="image" href="/logos/profile-photo.jpeg" />
+
+  <!-- prevent flash of wrong theme -->
+  <script is:inline>
+    (function() {
+      var stored = localStorage.getItem('theme');
+      var prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', stored || prefer);
+    })();
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <a href="/" class="logo">fahad</a>
+      <ul id="nav-links">
+        <li><a href="/uses" aria-current={Astro.url.pathname === '/uses' ? 'page' : undefined}>uses</a></li>
+        <li><a href="/ramblings" aria-current={Astro.url.pathname === '/ramblings' ? 'page' : undefined}>ramblings</a></li>
+        <li><a href="mailto:fahadimran6544@gmail.com">say hi</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon" id="theme-icon"></span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <div id="mobile-menu" aria-hidden="true">
+      <a href="/uses">uses</a>
+      <a href="/ramblings">ramblings</a>
+      <a href="mailto:fahadimran6544@gmail.com">say hi</a>
+    </div>
+
+    <slot />
+
+    <footer>
+      <span>© {new Date().getFullYear()} Fahad Imran</span>
+      <div style="display:flex;gap:16px;">
+        <a href="/uses">uses</a>
+        <a href="/ramblings">ramblings</a>
+        <a href="/reads">reads</a>
+      </div>
+    </footer>
+  </div>
+
+  <script is:inline>
+    var MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    var SUN  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+
+    function getTheme() {
+      return document.documentElement.getAttribute('data-theme') || 'light';
+    }
+
+    function setIcon(theme, animate) {
+      var el = document.getElementById('theme-icon');
+      if (!el) return;
+      var next = theme === 'dark' ? SUN : MOON;
+
+      if (!animate) {
+        el.innerHTML = next;
+        return;
+      }
+
+      // slide out
+      el.style.transition = 'opacity 140ms ease, transform 140ms ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+
+      setTimeout(function() {
+        el.innerHTML = next;
+        el.style.transition = 'none';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-8px)';
+
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            el.style.transition = 'opacity 280ms cubic-bezier(0.22,1,0.36,1), transform 280ms cubic-bezier(0.22,1,0.36,1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          });
+        });
+      }, 150);
+    }
+
+    // init icon without animation
+    setIcon(getTheme(), false);
+
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      var next = getTheme() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      setIcon(next, true);
+    });
+
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', function() {
+      var open = mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  </script>
+</body>
+</html>

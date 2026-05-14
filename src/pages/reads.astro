@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+
+const bookmarks = [
+  {
+    type: "tweet",
+    title: "It's 2018 and your coworker just sent you a 400 line pull request",
+    url: "https://x.com/i/status/2054152429277421773",
+    note: "wrote a whole rambling about this one",
+  },
+  {
+    type: "tweet",
+    title: "Why 90% of Vibe Coded Apps Look Cheap (And Exactly How to Fix It)",
+    url: "https://x.com/i/status/2034890067236594136",
+    note: "you can tell in 3 seconds. correct.",
+  },
+  {
+    type: "tweet",
+    title: "At WorkOS, Everyone Codes",
+    url: "https://x.com/i/status/2047394537203736825",
+    note: "coding as basic executive function. i think they're right.",
+  },
+  {
+    type: "video",
+    title: "Why Vibe Coders Can't Build Useful Apps",
+    url: "https://www.youtube.com/watch?v=2IQYbwQpFdM",
+    note: "honest title. watched it twice.",
+  },
+  {
+    type: "tweet",
+    title: "Day shift plans. Night shift ships. A real playbook for AFK agents.",
+    url: "https://x.com/mattpocockuk/status/2048159313357598989",
+    note: "closest thing to an actual workflow for AFK coding i've seen.",
+  },
+];
+---
+<Base title="Reads" description="Things I bookmarked and actually want to come back to. Not mine, just good.">
+
+  <style is:global>
+    .reads-item {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      gap: 4px;
+    }
+
+    .reads-item:last-child { border-bottom: 1px solid var(--border); }
+
+    .reads-top {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .reads-type {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .reads-item a {
+      font-size: 17px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .reads-item a:hover { text-decoration: underline; }
+
+    .reads-note {
+      font-size: 14px;
+      color: var(--muted);
+      padding-left: 52px;
+    }
+  </style>
+
+  <div class="page-heading">
+    <h1>Reads</h1>
+    <p>Things I bookmarked and actually want to come back to. Not mine, just good. Won't be updated — I'll probably forget this page exists.</p>
+  </div>
+
+  <div class="reads-list">
+    {bookmarks.map(b => (
+      <div class="reads-item">
+        <div class="reads-top">
+          <span class="reads-type">{b.type}</span>
+          <a href={b.url} target="_blank" rel="noopener">{b.title}</a>
+        </div>
+        {b.note && <p class="reads-note">{b.note}</p>}
+      </div>
+    ))}
+  </div>
+
+</Base>
