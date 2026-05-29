@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Twitter, Youtube, BookOpen, Link2 } from 'lucide-astro';
 
 const bookmarks = [
   {
@@ -33,47 +34,105 @@ const bookmarks = [
     note: "closest thing to an actual workflow for AFK coding i've seen.",
   },
 ];
+
+const iconMap: Record<string, any> = {
+  tweet: Twitter,
+  video: Youtube,
+  article: BookOpen,
+};
 ---
 <Base title="Reads" description="Things I bookmarked and actually want to come back to. Not mine, just good.">
 
   <style is:global>
+    .reads-list { margin-bottom: 56px; }
+
     .reads-item {
       display: flex;
-      flex-direction: column;
-      padding: 14px 0;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 16px 0;
       border-top: 1px solid var(--border);
-      gap: 4px;
     }
 
     .reads-item:last-child { border-bottom: 1px solid var(--border); }
 
-    .reads-top {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-
     .reads-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: var(--muted);
       flex-shrink: 0;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-top: 2px;
     }
 
-    .reads-item a {
+    .reads-type[data-type="tweet"] {
+      color: #1d9bf0;
+      background: rgba(29, 155, 240, 0.07);
+      border-color: rgba(29, 155, 240, 0.14);
+    }
+
+    .reads-type[data-type="video"] {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.07);
+      border-color: rgba(239, 68, 68, 0.14);
+    }
+
+    [data-theme="dark"] .reads-type[data-type="tweet"] {
+      background: rgba(29, 155, 240, 0.10);
+      border-color: rgba(29, 155, 240, 0.18);
+    }
+
+    [data-theme="dark"] .reads-type[data-type="video"] {
+      background: rgba(239, 68, 68, 0.10);
+      border-color: rgba(239, 68, 68, 0.18);
+    }
+
+    .reads-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .reads-body a {
       font-size: 17px;
       color: var(--text);
       text-decoration: none;
+      line-height: 1.4;
     }
 
-    .reads-item a:hover { text-decoration: underline; }
+    .reads-body a:hover { text-decoration: underline; }
 
     .reads-note {
       font-size: 14px;
       color: var(--muted);
-      padding-left: 52px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    @media (max-width: 415px) {
+      .reads-item {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .reads-body {
+        width: 100%;
+        order: 1;
+      }
+
+      .reads-type {
+        order: 2;
+        margin-top: 0;
+        align-self: flex-start;
+      }
     }
   </style>
 
@@ -83,15 +142,21 @@ const bookmarks = [
   </div>
 
   <div class="reads-list">
-    {bookmarks.map(b => (
-      <div class="reads-item">
-        <div class="reads-top">
-          <span class="reads-type">{b.type}</span>
-          <a href={b.url} target="_blank" rel="noopener">{b.title}</a>
+    {bookmarks.map(b => {
+      const Icon = iconMap[b.type] || Link2;
+      return (
+        <div class="reads-item">
+          <span class="reads-type" data-type={b.type}>
+            <Icon size={12} />
+            {b.type}
+          </span>
+          <div class="reads-body">
+            <a href={b.url} target="_blank" rel="noopener">{b.title}</a>
+            {b.note && <p class="reads-note">{b.note}</p>}
+          </div>
         </div>
-        {b.note && <p class="reads-note">{b.note}</p>}
-      </div>
-    ))}
+      );
+    })}
   </div>
 
 </Base>
