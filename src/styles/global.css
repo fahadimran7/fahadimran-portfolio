@@ -710,7 +710,7 @@ footer a:hover {
 }
 
 [data-theme="dark"] .contribution-cell[data-level="0"] {
-  background: #161b22;
+  background: #1c1c1a;
 }
 [data-theme="dark"] .contribution-cell[data-level="1"] {
   background: #0e4429;
