@@ -372,10 +372,6 @@ footer a:hover {
   border-top: 1px solid var(--border);
 }
 
-.tool-item:last-child {
-  border-bottom: 1px solid var(--border);
-}
-
 .tool-icon {
   width: 36px;
   height: 36px;
@@ -562,20 +558,9 @@ footer a:hover {
     align-items: flex-start;
   }
 
-  .project-link-desktop {
-    display: none;
-  }
-  .project-link-mobile {
-    display: inline;
-  }
-
   .social-links {
     display: grid;
     grid-template-columns: 1fr 1fr;
-  }
-
-  .nav-divider {
-    margin-bottom: 16px;
   }
 
   #mobile-menu {
