@@ -71,13 +71,13 @@ const ogImage = new URL('/logos/profile-photo.jpeg', Astro.site).href;
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
           <span class="theme-icon" id="theme-icon"></span>
         </button>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </nav>
 
-    <div id="mobile-menu" aria-hidden="true">
+    <div id="mobile-menu" inert>
       <a href="/uses">uses</a>
       <a href="/ramblings">ramblings</a>
       <a href="mailto:fahadimran6544@gmail.com">say hi</a>
@@ -149,6 +149,7 @@ const ogImage = new URL('/logos/profile-photo.jpeg', Astro.site).href;
     hamburger.addEventListener('click', function() {
       var open = mobileMenu.classList.toggle('open');
       hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      mobileMenu.inert = !open;
     });
   </script>
 </body>

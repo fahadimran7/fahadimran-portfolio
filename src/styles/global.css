@@ -232,7 +232,7 @@ footer a:hover { color: var(--text); }
 
 .project-item:last-child { border-bottom: 1px solid var(--border); }
 
-.project-info h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.project-info h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
 
 .project-title-link { color: var(--text); text-decoration: none; }
 .project-title-link:hover { text-decoration: underline; text-underline-offset: 3px; }
