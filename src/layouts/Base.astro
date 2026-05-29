@@ -13,7 +13,7 @@ const {
 
 const pageTitle = title === 'Home' ? 'Fahad Imran' : `${title} — Fahad Imran`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/logos/profile-photo.jpeg', Astro.site).href;
+const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +47,7 @@ const ogImage = new URL('/logos/profile-photo.jpeg', Astro.site).href;
   <meta name="twitter:image" content={ogImage} />
 
   <!-- Preload above-the-fold avatar -->
-  <link rel="preload" as="image" href="/logos/profile-photo.jpeg" />
+  <link rel="preload" as="image" href="/images/profile-photo.webp" />
 
   <!-- prevent flash of wrong theme -->
   <script is:inline>
