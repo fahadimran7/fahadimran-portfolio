@@ -60,7 +60,7 @@ nav {
 .nav-divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 0 0 44px 0;
+  margin: 0 0 64px 0;
 }
 
 nav .logo {
@@ -214,14 +214,17 @@ footer a:hover {
   border-radius: 999px;
   pointer-events: none;
   opacity: 0;
+  visibility: hidden;
   transition:
     opacity 0.15s ease,
+    visibility 0.15s ease,
     transform 0.15s ease;
   z-index: 10;
 }
 
 .chip-wrap:hover .chip-tooltip {
   opacity: 1;
+  visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
@@ -507,23 +510,64 @@ footer a:hover {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Mobile menu ── */
+/* ── Mobile sidebar ── */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 120;
+}
+
+#sidebar-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 #mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100dvh;
+  background: var(--bg);
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin-bottom: 32px;
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition:
-    max-height 0.25s ease,
-    opacity 0.2s ease;
+  padding: 64px 24px 24px;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 130;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
   pointer-events: none;
 }
 
+.sidebar-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: none;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar-close:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
 #mobile-menu a {
-  font-size: 17px;
+  font-size: 18px;
   color: var(--muted);
   text-decoration: none;
   padding: 14px 0;
@@ -540,12 +584,11 @@ footer a:hover {
 }
 
 #mobile-menu.open {
-  max-height: 200px;
-  opacity: 1;
+  transform: translateX(0);
   pointer-events: auto;
 }
 
-@media (max-width: 415px) {
+@media (max-width: 570px) {
   nav ul {
     display: none;
   }
@@ -563,8 +606,8 @@ footer a:hover {
     grid-template-columns: 1fr 1fr;
   }
 
-  #mobile-menu {
-    margin-bottom: 16px;
+  .nav-divider {
+    margin-bottom: 36px;
   }
 
   .writing-item {
@@ -582,6 +625,17 @@ footer a:hover {
   }
 }
 
+@media (max-width: 360px) {
+  .social-links {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
 /* ── GitHub Contributions ── */
 .github-section {
   margin-bottom: 56px;
@@ -590,10 +644,12 @@ footer a:hover {
 .contribution-calendar {
   margin-bottom: 12px;
   position: relative;
+  overflow: hidden;
 }
 
 .contribution-scroll {
   overflow-x: auto;
+  width: 100%;
   padding-bottom: 8px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
