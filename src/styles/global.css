@@ -636,6 +636,12 @@ footer a:hover {
   }
 }
 
+@media (max-width: 320px) {
+  .chip-tooltip {
+    display: none !important;
+  }
+}
+
 /* ── GitHub Contributions ── */
 .github-section {
   margin-bottom: 56px;
