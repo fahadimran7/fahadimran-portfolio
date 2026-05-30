@@ -626,10 +626,6 @@ footer a:hover {
 }
 
 @media (max-width: 360px) {
-  .social-links {
-    grid-template-columns: 1fr;
-  }
-
   .contribution-footer {
     flex-wrap: wrap;
     gap: 12px;
