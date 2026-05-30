@@ -601,11 +601,6 @@ footer a:hover {
     align-items: flex-start;
   }
 
-  .social-links {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
   .nav-divider {
     margin-bottom: 36px;
   }
