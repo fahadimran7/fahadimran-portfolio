@@ -663,32 +663,6 @@ footer a:hover {
   margin-top: 12px;
 }
 
-.contribution-arrows {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.contribution-arrow {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--chip-bg);
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  padding: 0;
-}
-
-.contribution-arrow:hover {
-  background: var(--bg);
-  color: var(--text);
-}
-
 .contribution-header {
   display: flex;
   gap: 6px;

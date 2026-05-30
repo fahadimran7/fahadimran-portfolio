@@ -211,34 +211,7 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 
       <div class="contribution-footer">
         <p class="contribution-total">{totalContributions.toLocaleString()} contributions in the last year — <a href="https://github.com/fahadimran7" target="_blank" rel="noopener">@fahadimran7</a></p>
-        <div class="contribution-arrows">
-          <button class="contribution-arrow left" aria-label="Scroll left" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button class="contribution-arrow right" aria-label="Scroll right" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-        </div>
       </div>
-
-      <script is:inline>
-        (function() {
-          var section = document.currentScript?.parentElement;
-          if (!section) return;
-          var scroll = section.querySelector('.contribution-scroll');
-          var leftBtn = section.querySelector('.contribution-arrow.left');
-          var rightBtn = section.querySelector('.contribution-arrow.right');
-          if (!scroll || !leftBtn || !rightBtn) return;
-
-          leftBtn.addEventListener('click', function() {
-            scroll.scrollBy({ left: -150, behavior: 'smooth' });
-          });
-
-          rightBtn.addEventListener('click', function() {
-            scroll.scrollBy({ left: 150, behavior: 'smooth' });
-          });
-        })();
-      </script>
     </div>
   )}
 
