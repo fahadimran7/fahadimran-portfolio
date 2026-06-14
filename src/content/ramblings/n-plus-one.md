@@ -2,6 +2,7 @@
 title: N+1 (and we'll never get it back)
 publishedAt: "2026-05-14"
 summary: A tweet about a 2018 code review hit different. Turns out I'm grieving an era I didn't notice leaving.
+tags: ["AI", "Craft", "Reflection"]
 ---
 
 ![Tweet by @staysaasy about a 2018 code review](/images/tweet-staysaasy.png)
