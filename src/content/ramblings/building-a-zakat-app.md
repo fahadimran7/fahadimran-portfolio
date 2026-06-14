@@ -152,6 +152,11 @@ I also made sadaqah something you can give any time, even while you still owe za
 
 All those gold and silver sums need a price, and prices move. I can't ask the user to type in today's gold rate every time. So I built a small service that pulls live gold and silver rates from free APIs and shows them in the app, with caching and retries and enough checking that a failed refresh never wipes out a good number.
 
+<figure class="phone">
+  <video src="/images/blogs/building-a-zakat-app/zakat-nisab-calculations.mp4" poster="/images/blogs/building-a-zakat-app/zakat-nisab-calculations.webp" autoplay loop muted playsinline></video>
+  <figcaption>Live gold and silver rates feeding the nisab calculation, so the threshold is always worked out against today's prices, not a number you had to look up.</figcaption>
+</figure>
+
 One local quirk. In Pakistan we weigh gold in tola, while a lot of the world uses grams. So the app supports both and converts between them.
 
 And currencies, well, I took the dumbest possible route on purpose. I don't convert amounts, I just swap the currency symbol. For a private, single-user zakat keeper, real currency conversion is complexity nobody asked for. Simplest thing that's still correct wins.
