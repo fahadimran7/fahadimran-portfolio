@@ -98,6 +98,11 @@ The first version worked. The flows were correct. I handed it to my brother, my 
 
 The feedback was pretty consistent, and a little deflating. The app worked great if you already understood zakat. But if you didn't already know the terms, you were a bit lost. It didn't explain enough, it didn't hold your hand. It assumed you walked in already knowing all the words, and most people don't.
 
+<figure>
+  <img src="/images/blogs/building-a-zakat-app/notes-after-feedback.webp" alt="My notes from the first round of user testing with family" />
+  <figcaption>My actual notes from round one of testing on the family. Bugs and confusions at the top, bigger product gaps in the middle, nice-to-haves at the bottom. Most of it boiled down to the same thing: explain more.</figcaption>
+</figure>
+
 So, back to the drawing board. I redid a bunch of screens and added the stuff a first-timer needs. An onboarding flow that walks you through what a zakat year even is, how to pick your date, what to do if you don't have one. Nisab explained right there, gold versus silver, and plainly what each one means for you. Empty states that actually teach, because people were landing on the home screen with no idea what to do, so now it just tells them: add your assets and we'll handle the maths. And a worked example of a zakat calculation, showing you take your wealth, compare it to nisab, and if you're above it, apply the rate. Show the arithmetic instead of hiding it.
 
 <figure class="phone">
@@ -163,7 +168,9 @@ And currencies, well, I took the dumbest possible route on purpose. I don't conv
 
 ## The stuff I obsessed over for no good reason
 
-Page swipe animations. The animated digits on the keypad. The little celebrations. Theming, icons, the asset-adding flow, the donation flow. I even built a calendar view that lays your past payments out across the year, for no reason other than I thought it looked cool. I had ChatGPT design the app icon too, and wired it in. Still not happy with it although my wife really likes it for some reason.
+Page swipe animations. The animated digits on the keypad. The little celebrations. Theming, icons, the asset-adding flow, the donation flow. I even built a calendar view that lays your past payments out across the year, for no reason other than I thought it looked cool.
+
+The app icon got the same treatment. My approach was to lean on references. I really like the [Forest app's artwork](https://forestapp.cc/), that little leaf sprouting from the ground, and I wanted something in that spirit, because zakat has the same feeling to it. You plant a seed, you watch it grow. So I gave ChatGPT that reference, wrote a prompt, and it came back with a bunch of designs. A lot of them were honestly atrocious. But one was clearly better than the rest, so I went with that one, and wired it in. I'm still not happy with it, though my wife really likes it, so maybe it's just me.
 
 ## What's still missing
 
@@ -171,7 +178,7 @@ Plenty, and I'm saying it plainly because "finished" was never the claim.
 
 There's no Hijri calendar option yet. The app runs on the Gregorian calendar, which is how I personally track mine, but some people work off the Islamic calendar and the app doesn't let you switch. That should be in there.
 
-There's no Usher, the zakat on crops and livestock, which is calculated at different rates. I don't have that need myself, so I haven't built it.
+There's no Ushr, the zakat on crops and livestock, which is calculated at different rates. I don't have that need myself, so I haven't built it.
 
 There's no proper liabilities concept. Right now the app assumes you've already subtracted your debts when you enter your assets. A real version, where you list what you owe and the app does the subtraction for you, is something I've seen done well elsewhere and should add. It matters. It's just not there yet.
 
