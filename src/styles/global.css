@@ -442,14 +442,11 @@ footer a:hover {
   filter: invert(1);
 }
 
-.tool-info a {
+.tool-info .tool-name {
+  display: block;
   font-size: 18px;
   font-weight: 500;
   color: var(--text);
-  text-decoration: none;
-}
-.tool-info a:hover {
-  text-decoration: underline;
 }
 .tool-info p {
   font-size: 16px;

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Laptop, Monitor, Keyboard, Mouse, Headphones } from 'lucide-astro';
 ---
 <Base title="Uses" description="Tools I use for building products and writing code. The logos were 40% of the decision.">
 
@@ -16,7 +17,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/claude-color.svg" alt="Claude" />
       </div>
       <div class="tool-info">
-        <a href="#">Claude</a>
+        <span class="tool-name">Claude</span>
         <p>GPT ruins my frontend. Claude doesn't. My hair is still on my head.</p>
       </div>
     </div>
@@ -26,7 +27,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/codex-color.svg" alt="Codex" />
       </div>
       <div class="tool-info">
-        <a href="#">Codex</a>
+        <span class="tool-name">Codex</span>
         <p>My main models. Good for most tasks, and the limits don't feel like a punishment — unlike some other labs. Just not frontend.</p>
       </div>
     </div>
@@ -36,7 +37,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/cursor.svg" alt="Cursor" class="invert-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">Cursor</a>
+        <span class="tool-name">Cursor</span>
         <p>Moved from VS Code. Now I constantly switch between the two because Cursor has bugs, but VS Code is just meh. So here we are.</p>
       </div>
     </div>
@@ -47,7 +48,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/opencode-dark.svg" alt="OpenCode" class="opencode-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">OpenCode</a>
+        <span class="tool-name">OpenCode</span>
         <p>Best interface of any AI coding tool I've tried. No bugs, no weird jank. The OpenCode Go sub unlocking Chinese models is a nice bonus on top.</p>
       </div>
     </div>
@@ -57,7 +58,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/ghostty.svg" alt="Ghostty" />
       </div>
       <div class="tool-info">
-        <a href="#">Ghostty</a>
+        <span class="tool-name">Ghostty</span>
         <p>Terminal that's fast, native, and actually pleasant to look at.</p>
       </div>
     </div>
@@ -67,7 +68,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/notion.svg" alt="Notion" class="invert-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">Notion</a>
+        <span class="tool-name">Notion</span>
         <p>I genuinely hate Notion. I've been trying to leave for two years. It just keeps working and I keep staying.</p>
       </div>
     </div>
@@ -83,7 +84,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/nextjs-light.svg" alt="Next.js" class="nextjs-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">Next.js</a>
+        <span class="tool-name">Next.js</span>
         <p>Too lazy to switch. Moving on.</p>
       </div>
     </div>
@@ -93,7 +94,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/astro.svg" alt="Astro" />
       </div>
       <div class="tool-info">
-        <a href="#">Astro</a>
+        <span class="tool-name">Astro</span>
         <p>Used it for this very site. Ships zero JS by default, which is the only correct default.</p>
       </div>
     </div>
@@ -103,7 +104,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/expo-icon-2.svg" alt="Expo" class="invert-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">Expo</a>
+        <span class="tool-name">Expo</span>
         <p>How I build mobile apps. I haven't touched a native Android or iOS bundle in years and I'd like to keep it that way.</p>
       </div>
     </div>
@@ -113,7 +114,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/convex.svg" alt="Convex" />
       </div>
       <div class="tool-info">
-        <a href="#">Convex</a>
+        <span class="tool-name">Convex</span>
         <p>Less boilerplate. Real-time built in. Still not sure how it works under the hood and I've made peace with that.</p>
       </div>
     </div>
@@ -123,7 +124,7 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/stripe (1).svg" alt="Stripe" />
       </div>
       <div class="tool-info">
-        <a href="#">Stripe</a>
+        <span class="tool-name">Stripe</span>
         <p>The docs are good. That's it.</p>
       </div>
     </div>
@@ -134,11 +135,62 @@ import Base from '../layouts/Base.astro';
         <img src="/logos/posthog-light.svg" alt="PostHog" class="posthog-dark" />
       </div>
       <div class="tool-info">
-        <a href="#">PostHog</a>
+        <span class="tool-name">PostHog</span>
         <p>Tells you what your users are actually doing, not what you think they're doing. Humbling.</p>
       </div>
     </div>
 
   </div>
 
+  <div class="tools-section">
+    <p class="section-label">Things on my desk</p>
+
+    <div class="tool-item">
+      <div class="tool-icon"><Laptop size={22} /></div>
+      <div class="tool-info">
+        <span class="tool-name">MacBook Pro 14″ (M1 Pro)</span>
+        <p>The 2021 model — M1 Pro, 16GB, 512GB. Reliable workhorse that's never once complained. Only thing I miss is more RAM. Always more RAM.</p>
+      </div>
+    </div>
+
+    <div class="tool-item">
+      <div class="tool-icon"><Monitor size={22} /></div>
+      <div class="tool-info">
+        <span class="tool-name">Apple Thunderbolt Display</span>
+        <p>27-inch 1440p. The only reason it's on my desk is that my office gave it to me for free. Sold.</p>
+      </div>
+    </div>
+
+    <div class="tool-item">
+      <div class="tool-icon"><Keyboard size={22} /></div>
+      <div class="tool-info">
+        <span class="tool-name">Rapture Mechanical Keyboard</span>
+        <p>Mechanical and easy on the wallet. I'm honestly just here for the vibes and the clack.</p>
+      </div>
+    </div>
+
+    <div class="tool-item">
+      <div class="tool-icon"><Mouse size={22} /></div>
+      <div class="tool-info">
+        <span class="tool-name">A4tech Fstyler Mouse</span>
+        <p>Bluetooth, silent clicks, works a charm. Nobody hears me rage-click. Nobody needs to.</p>
+      </div>
+    </div>
+
+    <div class="tool-item">
+      <div class="tool-icon"><Headphones size={22} /></div>
+      <div class="tool-info">
+        <span class="tool-name">Bloody MH390 Headset</span>
+        <p>A headset literally named "Bloody." Metal as hell on the box, perfectly normal in my ears.</p>
+      </div>
+    </div>
+
+  </div>
+
 </Base>
+
+<style>
+  .tool-icon :global(svg) {
+    color: var(--muted);
+  }
+</style>
