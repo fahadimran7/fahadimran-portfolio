@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { ArrowRight } from 'lucide-astro';
+import { ArrowRight, Download } from 'lucide-astro';
 
 interface Project {
   name: string;
@@ -8,6 +8,8 @@ interface Project {
   url: string;
   urlLabel: string;
   image: string;
+  downloadUrl?: string;
+  downloadLabel?: string;
 }
 
 // First project renders as the featured block; the rest fall into the grid.
@@ -19,6 +21,8 @@ const projects: Project[] = [
     url: 'https://github.com/fahadimran7/mizan',
     urlLabel: 'github.com/fahadimran7/mizan',
     image: '/images/projects/mizan.png',
+    downloadUrl: 'https://github.com/fahadimran7/mizan/releases/latest',
+    downloadLabel: 'Download APK',
   },
 ];
 
@@ -42,9 +46,16 @@ const [featured, ...rest] = projects;
         <div class="proj-text">
           <h2><a href={featured.url} target="_blank" rel="noopener">{featured.name}</a></h2>
           <p class="proj-desc">{featured.description}</p>
-          <a class="proj-link" href={featured.url} target="_blank" rel="noopener">
-            {featured.urlLabel} <ArrowRight size={15} />
-          </a>
+          <div class="proj-links">
+            <a class="proj-link" href={featured.url} target="_blank" rel="noopener">
+              {featured.urlLabel} <ArrowRight size={15} />
+            </a>
+            {featured.downloadUrl && (
+              <a class="proj-link proj-download" href={featured.downloadUrl} target="_blank" rel="noopener">
+                <Download size={15} /> {featured.downloadLabel}
+              </a>
+            )}
+          </div>
         </div>
         <a class="proj-media" href={featured.url} target="_blank" rel="noopener">
           <img src={featured.image} alt={`${featured.name} app icon`} loading="lazy" />
@@ -183,6 +194,13 @@ const [featured, ...rest] = projects;
     margin-bottom: 18px;
   }
 
+  .proj-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 24px;
+  }
+
   .proj-link {
     display: inline-flex;
     align-items: center;
@@ -198,6 +216,10 @@ const [featured, ...rest] = projects;
   }
   .proj-link:hover :global(svg) {
     transform: translateX(3px);
+  }
+  /* Download link leads with its icon — nudge it down, not sideways. */
+  .proj-download:hover :global(svg) {
+    transform: translateY(2px);
   }
 
   @media (max-width: 570px) {
