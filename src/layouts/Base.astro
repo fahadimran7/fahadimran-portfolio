@@ -59,7 +59,7 @@ const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
   </script>
 </head>
 <body>
-  <div class="wrap">
+  <header class="site-header" id="site-header">
     <nav>
       <a href="/" class="logo">Fahad Imran</a>
       <ul id="nav-links">
@@ -76,7 +76,8 @@ const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
         </button>
       </div>
     </nav>
-    <hr class="nav-divider" aria-hidden="true" />
+  </header>
+  <div class="wrap">
 
     <slot />
 
@@ -162,6 +163,13 @@ const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
   </div>
 
   <script>
+    var headerEl = document.getElementById('site-header');
+    function updateNavGlass() {
+      if (headerEl) headerEl.classList.toggle('scrolled', window.scrollY > 4);
+    }
+    window.addEventListener('scroll', updateNavGlass, { passive: true });
+    updateNavGlass();
+
     var hamburger = document.getElementById('hamburger');
     var mobileMenu = document.getElementById('mobile-menu');
     var sidebarOverlay = document.getElementById('sidebar-overlay');

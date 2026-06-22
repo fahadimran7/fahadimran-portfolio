@@ -20,6 +20,7 @@
   --social-bg: white;
   --toggle-bg: #1a1a1a;
   --toggle-color: #f9f9f7;
+  --nav-glass: rgba(249, 249, 247, 0.55);
 }
 
 [data-theme="dark"] {
@@ -33,6 +34,7 @@
   --social-bg: #1c1c1a;
   --toggle-bg: #f5f0e8;
   --toggle-color: #1a1a1a;
+  --nav-glass: rgba(17, 17, 16, 0.55);
 }
 
 html {
@@ -46,26 +48,37 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 19px;
   line-height: 1.7;
-  padding: 60px 24px 120px;
+  padding: 48px 0 120px;
 }
 
 .wrap {
-  max-width: var(--max-w);
+  max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 /* ── Nav ── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin-bottom: 40px;
+  transition: background 0.25s ease;
+}
+
+.site-header.scrolled {
+  background: var(--nav-glass);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+}
+
 nav {
+  max-width: calc(var(--max-w) + 48px);
+  margin: 0 auto;
+  padding: 12px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-}
-
-.nav-divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 0 0 64px 0;
 }
 
 nav .logo {
@@ -607,8 +620,8 @@ footer a:hover {
     align-items: flex-start;
   }
 
-  .nav-divider {
-    margin-bottom: 36px;
+  .site-header {
+    margin-bottom: 28px;
   }
 
   .writing-item {
