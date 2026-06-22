@@ -13,7 +13,7 @@
   --text: #1a1a1a;
   --muted: #707070;
   --border: #e5e5e3;
-  --max-w: 580px;
+  --max-w: 680px;
   --chip-bg: white;
   --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   --chip-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.09);
@@ -33,6 +33,11 @@
   --social-bg: #1c1c1a;
   --toggle-bg: #f5f0e8;
   --toggle-color: #1a1a1a;
+}
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -74,6 +79,8 @@ nav ul {
   list-style: none;
   display: flex;
   gap: 24px;
+  margin-left: auto;
+  margin-right: 24px;
 }
 
 nav ul a {
@@ -181,7 +188,6 @@ footer a:hover {
 
 .bio {
   margin-bottom: 56px;
-  max-width: 480px;
 }
 
 /* ── Chips ── */

@@ -225,4 +225,46 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     </div>
   </div>
 
+  <div class="say-hi">
+    <p class="section-label">Say hi</p>
+    <p class="say-hi-text">Got a project in mind, or just want to say hi?</p>
+    <a class="say-hi-link" href="mailto:fahadimran6544@gmail.com">
+      <Mail size={17} />
+      fahadimran6544@gmail.com
+    </a>
+  </div>
+
 </Base>
+
+<style>
+  .say-hi {
+    margin-top: 8px;
+  }
+
+  .say-hi-text {
+    color: var(--muted);
+    font-size: 17px;
+    margin-bottom: 16px;
+    max-width: 440px;
+  }
+
+  .say-hi-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    color: var(--text);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .say-hi-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .say-hi-link :global(svg) {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+</style>
