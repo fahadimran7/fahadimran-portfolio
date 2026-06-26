@@ -27,6 +27,20 @@ const projects: Project[] = [
 ];
 
 const [featured, ...rest] = projects;
+
+// Things I want to exist but haven't built yet. They keep the page honest —
+// a portfolio is also a list of itches you haven't scratched.
+interface Idea {
+  name: string;
+  description: string;
+}
+const ideas: Idea[] = [
+  {
+    name: 'Sale tracker',
+    description:
+      'Pakistani clothing brands run a lot of sales. Someone should track them in one place — which brands, when they drop, and how big the discount. On it.',
+  },
+];
 ---
 <Base
   title="Projects"
@@ -85,6 +99,26 @@ const [featured, ...rest] = projects;
         </article>
       ))}
     </div>
+  )}
+
+  {ideas.length > 0 && (
+    <section class="proj-ideas">
+      <div class="proj-ideas-head">
+        <h2>On the workbench</h2>
+        <p>Itches I haven't scratched yet. Half-promises to myself.</p>
+      </div>
+      <div class="proj-grid">
+        {ideas.map(idea => (
+          <article class="proj-card proj-card--idea">
+            <div class="proj-card-head">
+              <h3>{idea.name}</h3>
+              <span class="proj-tag">Cooking</span>
+            </div>
+            <p class="proj-desc">{idea.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   )}
 
 </Base>
@@ -247,6 +281,55 @@ const [featured, ...rest] = projects;
   }
   .proj-link:hover :global(svg) {
     transform: translateX(3px);
+  }
+
+  /* ── On the workbench ── */
+  .proj-ideas {
+    margin-top: 64px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  .proj-ideas-head {
+    margin-bottom: 32px;
+  }
+  .proj-ideas-head h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .proj-ideas-head p {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  /* Idea cards read as quieter, unfinished siblings of the shipped ones:
+     dashed edge, no link, a soft status tag instead of a CTA. */
+  .proj-card--idea {
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    background: var(--chip-bg);
+  }
+
+  .proj-card--idea .proj-card-head {
+    justify-content: space-between;
+  }
+
+  .proj-card--idea .proj-desc {
+    margin-bottom: 0;
+  }
+
+  .proj-tag {
+    font-size: 12px;
+    font-weight: 550;
+    line-height: 1;
+    padding: 5px 10px;
+    border-radius: 999px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
   }
 
   @media (max-width: 570px) {

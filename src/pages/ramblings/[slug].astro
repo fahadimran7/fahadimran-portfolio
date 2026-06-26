@@ -4,7 +4,7 @@ import { getCollection, render } from 'astro:content';
 import { CalendarDays, Clock3, ArrowLeft } from 'lucide-astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('ramblings');
+  const posts = await getCollection('ramblings', ({ data }) => data.published);
   return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
 }
 

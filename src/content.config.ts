@@ -8,6 +8,7 @@ const ramblings = defineCollection({
     publishedAt: z.string(),
     summary: z.string(),
     tags: z.array(z.string()).default([]),
+    published: z.boolean().default(true),
   }),
 });
 
