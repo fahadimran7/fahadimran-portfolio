@@ -1,7 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { CalendarDays, Clock3, ArrowLeft } from 'lucide-astro';
+import { CalendarDays, Clock3, ArrowLeft, ArrowRight } from 'lucide-astro';
+import { series as allSeries } from '../../data/series';
 
 export async function getStaticPaths() {
   const posts = await getCollection('ramblings', ({ data }) => data.published);
@@ -40,6 +41,13 @@ function tagHue(tag: string) {
 }
 
 const tags = post.data.tags ?? [];
+
+// Series context, if this post belongs to one.
+const currentSeries = post.data.series ? allSeries[post.data.series] : undefined;
+const currentPart = post.data.seriesPart;
+const nextPart = currentSeries?.parts.find(
+  (p) => currentPart !== undefined && p.part === currentPart + 1
+);
 ---
 <Base title={post.data.title} description={post.data.summary}>
 
@@ -93,6 +101,14 @@ const tags = post.data.tags ?? [];
       background: hsl(var(--h) 28% 17%);
       color: hsl(var(--h) 62% 76%);
       border-color: hsl(var(--h) 25% 28%);
+    }
+
+    .post-series-eyebrow {
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+      margin-bottom: 10px;
     }
 
     .post-title {
@@ -175,6 +191,108 @@ const tags = post.data.tags ?? [];
       text-align: center;
       margin-top: 12px;
     }
+
+    /* ── Coloured chips inside inline SVG diagrams (matches .post-tag) ── */
+    .post-body svg .dchip rect {
+      fill: hsl(var(--h) 65% 94%);
+      stroke: hsl(var(--h) 55% 87%);
+    }
+    .post-body svg .dchip text {
+      fill: hsl(var(--h) 48% 32%);
+    }
+    [data-theme="dark"] .post-body svg .dchip rect {
+      fill: hsl(var(--h) 28% 17%);
+      stroke: hsl(var(--h) 25% 28%);
+    }
+    [data-theme="dark"] .post-body svg .dchip text {
+      fill: hsl(var(--h) 62% 76%);
+    }
+
+    /* ── Series box ── */
+    .series-box {
+      margin-top: 56px;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--chip-bg);
+      box-shadow: var(--chip-shadow);
+    }
+
+    .series-box-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .series-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .series-item {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 7px 0;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .series-item + .series-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .series-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .series-item a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .series-item a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .series-item.is-current .series-title {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .series-item:not(.is-current) .series-title {
+      color: var(--muted);
+    }
+
+    .series-here {
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .series-soon {
+      color: var(--muted);
+      opacity: 0.75;
+    }
+
+    .series-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .series-next:hover {
+      gap: 9px;
+    }
   </style>
 
   <div id="progress-bar"></div>
@@ -183,6 +301,10 @@ const tags = post.data.tags ?? [];
     <ArrowLeft size={14} strokeWidth={2} />
     All ramblings
   </a>
+
+  {currentSeries && currentPart !== undefined && (
+    <p class="post-series-eyebrow">{currentSeries.name} · Part {currentPart}</p>
+  )}
 
   <h1 class="post-title">{post.data.title}</h1>
 
@@ -209,6 +331,34 @@ const tags = post.data.tags ?? [];
   <div class="post-body">
     <Content />
   </div>
+
+  {currentSeries && (
+    <aside class="series-box">
+      <p class="series-box-label">Part of a series · {currentSeries.name}</p>
+      <ol class="series-list">
+        {currentSeries.parts.map((p) => (
+          <li class={`series-item${p.part === currentPart ? ' is-current' : ''}`}>
+            <span class="series-num">{String(p.part).padStart(2, '0')}</span>
+            {p.slug && p.part !== currentPart ? (
+              <a href={`/ramblings/${p.slug}`}>{p.title}</a>
+            ) : (
+              <span class="series-title">
+                {p.title}
+                {p.part === currentPart && <span class="series-here"> · you're here</span>}
+                {!p.slug && <span class="series-soon"> · coming soon</span>}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+      {nextPart?.slug && (
+        <a class="series-next" href={`/ramblings/${nextPart.slug}`}>
+          Next: {nextPart.title}
+          <ArrowRight size={14} strokeWidth={2} />
+        </a>
+      )}
+    </aside>
+  )}
 
   <script is:inline>
     const bar = document.getElementById('progress-bar');
