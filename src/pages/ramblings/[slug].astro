@@ -192,6 +192,55 @@ const nextPart = currentSeries?.parts.find(
       margin-top: 12px;
     }
 
+    /* ── Standing AI-transparency note (rendered on every post) ── */
+    .post-ai-note {
+      margin: 0 0 44px;
+      padding: 13px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--chip-bg);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Blockquote / callout ── */
+    .post-body blockquote {
+      margin: 0 0 28px;
+      padding: 14px 20px;
+      border-left: 3px solid var(--border);
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.65;
+    }
+    .post-body blockquote p { margin-bottom: 12px; }
+    .post-body blockquote p:last-child { margin-bottom: 0; }
+
+    /* ── Tables ── */
+    .post-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .post-body th,
+    .post-body td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .post-body th {
+      font-weight: 600;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+    }
+    .post-body tbody tr:last-child td { border-bottom: none; }
+    .post-body table strong { font-weight: 650; }
+
     /* ── Coloured chips inside inline SVG diagrams (matches .post-tag) ── */
     .post-body svg .dchip rect {
       fill: hsl(var(--h) 65% 94%);
@@ -327,6 +376,12 @@ const nextPart = currentSeries?.parts.find(
       ))}
     </div>
   )}
+
+  <p class="post-ai-note">
+    A note on how this was made: I use Claude to help me structure and edit these
+    posts. The research, the analysis, and the opinions are mine, and I check what
+    goes in before it ships. I figure you'd want to know.
+  </p>
 
   <div class="post-body">
     <Content />

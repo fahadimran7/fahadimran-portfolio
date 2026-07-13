@@ -15,7 +15,7 @@ export const series: Record<string, Series> = {
   'nomod-payments': {
     name: 'Nomod payments',
     parts: [
-      { part: 1, title: 'One card form for every payment provider', slug: 'one-card-form-every-provider' },
+      { part: 1, title: "How we charge cards we're not allowed to keep", slug: 'one-card-form-every-provider' },
       { part: 2, title: 'The architecture refactor' },
       { part: 3, title: 'Dynamic currency conversion' },
     ],
