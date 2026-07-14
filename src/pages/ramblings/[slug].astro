@@ -204,6 +204,78 @@ const nextPart = currentSeries?.parts.find(
       line-height: 1.6;
     }
 
+    /* ── Code ── */
+    .post-body :not(pre) > code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+    }
+    .post-body pre {
+      margin: 28px 0;
+      padding: 16px 18px;
+      border-radius: 10px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .post-body pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    /* Shiki dual-theme token colours, switched by the site's [data-theme] toggle.
+       We keep our own block background above and only take Shiki's token colours. */
+    .post-body .astro-code,
+    .post-body .astro-code span {
+      color: var(--shiki-light);
+    }
+    [data-theme="dark"] .post-body .astro-code,
+    [data-theme="dark"] .post-body .astro-code span {
+      color: var(--shiki-dark);
+    }
+
+    /* Copy button (injected around each code block by the script below) */
+    .post-body .code-block {
+      position: relative;
+      margin: 28px 0;
+    }
+    .post-body .code-block pre {
+      margin: 0;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      display: inline-flex;
+      align-items: center;
+      font-family: inherit;
+      font-size: 12px;
+      line-height: 1;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 9px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease, color 0.15s ease;
+    }
+    .post-body .code-block:hover .code-copy-btn,
+    .code-copy-btn:focus-visible {
+      opacity: 1;
+    }
+    .code-copy-btn:hover { color: var(--text); }
+    .code-copy-btn svg { margin-right: 5px; }
+    .code-copy-btn.is-copied { opacity: 1; }
+    .code-copy-btn.is-copied svg { color: hsl(145 55% 38%); }
+    [data-theme="dark"] .code-copy-btn.is-copied svg { color: hsl(145 58% 62%); }
+
     /* ── Blockquote / callout ── */
     .post-body blockquote {
       margin: 0 0 28px;
@@ -416,6 +488,52 @@ const nextPart = currentSeries?.parts.find(
   )}
 
   <script is:inline>
+    // Wrap each code block and add a copy button that flips to "Copied" briefly.
+    (function () {
+      const copyIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      const checkIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      document.querySelectorAll('.post-body pre').forEach((pre) => {
+        if (pre.parentElement && pre.parentElement.classList.contains('code-block')) return;
+        const wrap = document.createElement('div');
+        wrap.className = 'code-block';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.setAttribute('aria-label', 'Copy code');
+        btn.innerHTML = copyIcon + 'Copy';
+
+        let timer;
+        btn.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          const text = code ? code.innerText : pre.innerText;
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch (e) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            document.body.removeChild(ta);
+          }
+          btn.innerHTML = checkIcon + 'Copied';
+          btn.classList.add('is-copied');
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            btn.innerHTML = copyIcon + 'Copy';
+            btn.classList.remove('is-copied');
+          }, 1800);
+        });
+
+        wrap.appendChild(btn);
+      });
+    })();
+
     const bar = document.getElementById('progress-bar');
     function updateProgress() {
       const scrollTop = window.scrollY;
