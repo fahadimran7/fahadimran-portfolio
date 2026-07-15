@@ -114,6 +114,34 @@ The first is the Basis Theory migration from the last post. It went smoothly bec
 
 The second is dynamic routing, and it's my favourite side effect. Because the frontend no longer assumed any relationship between a currency and a provider, the backend was free to change its mind. If a charge failed with one provider, the backend could hand back a different service, and we'd simply retry with it, passing that new service straight back as the payload. The frontend didn't need to understand why. To make that work across an intentionally auth-less links platform, where a payment link is just a URL you open and pay, no login, because logging in would wreck the UX, we leaned on cookies so the backend could tell that the same link had already failed on another provider. That routing became the backbone of our resilience: retries when a charge failed, somewhere to fall back to when a provider went down. With the old architecture, I don't think it would have been possible.
 
+<figure>
+  <svg viewBox="0 0 680 240" role="img" aria-label="Dynamic routing on a failed charge: an attempt on provider A fails, the backend reroutes to provider B, and the retry succeeds. A cookie remembers the failure across the auth-less payment link." xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:inherit">
+    <defs>
+      <marker id="route-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" /></marker>
+    </defs>
+    <rect x="40" y="50" width="170" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="125" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text)">provider A</text>
+    <text x="125" y="97" text-anchor="middle" font-size="12" fill="var(--muted)">first attempt</text>
+    <rect x="255" y="50" width="170" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--text)" stroke-width="1.4" />
+    <text x="340" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text)">backend reroutes</text>
+    <text x="340" y="97" text-anchor="middle" font-size="12" fill="var(--muted)">picks another provider</text>
+    <rect x="470" y="50" width="170" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="555" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text)">provider B</text>
+    <text x="555" y="97" text-anchor="middle" font-size="12" fill="var(--muted)">the retry</text>
+    <line x1="210" y1="80" x2="252" y2="80" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#route-ar)" />
+    <line x1="425" y1="80" x2="467" y2="80" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#route-ar)" />
+    <line x1="125" y1="110" x2="125" y2="128" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#route-ar)" />
+    <g class="dchip" style="--h:5"><rect x="70" y="131" width="110" height="30" rx="8" /><text x="125" y="150" text-anchor="middle" font-size="12" font-weight="600">fails</text></g>
+    <line x1="555" y1="110" x2="555" y2="128" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#route-ar)" />
+    <g class="dchip" style="--h:145"><rect x="500" y="131" width="110" height="30" rx="8" /><text x="555" y="150" text-anchor="middle" font-size="12" font-weight="600">succeeds</text></g>
+    <line x1="340" y1="110" x2="340" y2="166" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="5 4" />
+    <rect x="255" y="168" width="170" height="50" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="340" y="190" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text)">cookie</text>
+    <text x="340" y="208" text-anchor="middle" font-size="12" fill="var(--muted)">remembers the failure</text>
+  </svg>
+  <figcaption>Because the frontend assumed no fixed provider, a failed charge didn't dead-end. The backend rerouted to another provider, the retry went through, and a cookie remembered the failure across the auth-less link.</figcaption>
+</figure>
+
 ## The edges that stayed provider-specific
 
 Not everything could be made generic, and I won't pretend it could. A couple of things stayed provider-specific by nature, and we pushed them out to the edges so the core stayed clean.

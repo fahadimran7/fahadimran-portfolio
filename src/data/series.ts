@@ -15,9 +15,9 @@ export const series: Record<string, Series> = {
   'nomod-payments': {
     name: 'Nomod payments',
     parts: [
-      { part: 1, title: "How we charge cards we're not allowed to keep", slug: 'one-card-form-every-provider' },
+      { part: 1, title: 'Taking card payments without ever storing the card', slug: 'one-card-form-every-provider' },
       { part: 2, title: 'Making the frontend dumb on purpose', slug: 'config-driven-checkout' },
-      { part: 3, title: 'Knowing a payment finished when nothing would tell us', slug: 'charge-polling' },
+      { part: 3, title: 'Knowing when a 3DS payment finished, by polling', slug: 'charge-polling' },
       { part: 4, title: 'Dynamic currency conversion' },
     ],
   },

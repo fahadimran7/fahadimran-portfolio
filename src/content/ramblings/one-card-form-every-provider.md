@@ -1,5 +1,5 @@
 ---
-title: How we charge cards we're not allowed to keep
+title: Taking card payments without ever storing the card
 publishedAt: "2026-07-13"
 summary: At Nomod we kept adding card providers to cut fees and stay resilient. Each one came with its own card fields, and that quietly put us out of PCI compliance. Here's how we ended up charging cards we never hold, by tokenizing every provider through Basis Theory.
 tags: ["Nomod", "Payments", "PCI", "Frontend", "Architecture"]

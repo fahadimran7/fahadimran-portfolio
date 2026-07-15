@@ -1,5 +1,5 @@
 ---
-title: Knowing a payment finished when nothing would tell us
+title: Knowing when a 3DS payment finished, by polling
 publishedAt: "2026-07-14"
 summary: 3D Secure runs inside an iframe that won't call you back, so we couldn't actually know when a payment had finished. This is the polling hook we built to find out, which started as one small function and turned into the most deceptively hard thing I shipped at Nomod.
 tags: ["Nomod", "Payments", "Frontend", "React", "3DS"]
@@ -20,7 +20,62 @@ The obvious way is to redirect the whole page to it. That works, but it's a roug
 
 That's where the problem starts. A 3DS iframe is on the bank's domain, not ours, so it's cross-origin, and a cross-origin iframe will not talk to you. It can't tell you the user passed, or failed, or just closed the tab in frustration. From the parent page you are completely blind to what's happening inside it.
 
+<figure>
+  <svg viewBox="0 0 680 250" role="img" aria-label="Why we poll: the 3DS iframe is cross-origin and opaque, so it gives our checkout page no callback. The provider reports the outcome to our backend instead, so the checkout polls the backend for the charge status." xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:inherit">
+    <defs>
+      <marker id="why-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" /></marker>
+    </defs>
+    <rect x="60" y="40" width="210" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="165" y="68" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">3DS iframe</text>
+    <text x="165" y="87" text-anchor="middle" font-size="11.5" fill="var(--muted)">cross-origin, opaque</text>
+    <rect x="60" y="170" width="210" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--text)" stroke-width="1.4" />
+    <text x="165" y="198" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">our checkout page</text>
+    <text x="165" y="217" text-anchor="middle" font-size="11.5" fill="var(--muted)">can't see inside</text>
+    <rect x="410" y="40" width="210" height="52" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="515" y="64" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">the provider</text>
+    <text x="515" y="82" text-anchor="middle" font-size="11.5" fill="var(--muted)">reports the outcome</text>
+    <rect x="410" y="150" width="210" height="60" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="515" y="178" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">our backend</text>
+    <text x="515" y="197" text-anchor="middle" font-size="11.5" fill="var(--muted)">knows the real status</text>
+    <line x1="165" y1="100" x2="165" y2="170" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="5 4" />
+    <g class="dchip" style="--h:5"><rect x="182" y="121" width="120" height="28" rx="8" /><text x="242" y="140" text-anchor="middle" font-size="11.5">no callback</text></g>
+    <line x1="515" y1="92" x2="515" y2="150" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#why-ar)" />
+    <line x1="272" y1="192" x2="408" y2="172" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#why-ar)" />
+    <text x="340" y="166" text-anchor="middle" font-size="11" fill="var(--muted)">poll for status</text>
+  </svg>
+  <figcaption>The 3DS challenge runs in a cross-origin iframe that can't call back into our page, so we can't tell when the user finishes. The provider reports the outcome to our backend, so we poll the backend for the charge status instead.</figcaption>
+</figure>
+
 So we ask the only thing that does know: our own backend. Once the charge exists, its status is the source of truth, and it moves from pending to `paid` or `authorised` or `failed` as the 3DS challenge resolves. We just have to keep asking for it until it settles. That's the whole idea. The nice part is that it's completely provider-agnostic, because the backend normalises every provider's outcome into the same handful of statuses. The polling doesn't know or care who processed the charge.
+
+<figure>
+  <svg viewBox="0 0 680 320" role="img" aria-label="Polling lifecycle: start polling, or the user closing the 3DS iframe, both feed the poll-charge-status loop, which runs every second then every three seconds. A paid or authorised status ends in success, a failed status ends in error, and a pending status keeps looping." xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:inherit">
+    <defs>
+      <marker id="poll-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" /></marker>
+    </defs>
+    <rect x="40" y="44" width="172" height="50" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="126" y="68" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">closes 3DS iframe</text>
+    <text x="126" y="86" text-anchor="middle" font-size="11.5" fill="var(--muted)">user cancels</text>
+    <rect x="280" y="44" width="160" height="50" rx="10" fill="var(--chip-bg)" stroke="var(--text)" stroke-width="1.4" />
+    <text x="360" y="68" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">start polling</text>
+    <text x="360" y="86" text-anchor="middle" font-size="11.5" fill="var(--muted)">id + callbacks</text>
+    <rect x="266" y="136" width="188" height="54" rx="10" fill="var(--chip-bg)" stroke="var(--border)" />
+    <text x="360" y="160" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">poll charge status</text>
+    <text x="360" y="178" text-anchor="middle" font-size="11.5" fill="var(--muted)">every 1s, then 3s</text>
+    <g class="dchip" style="--h:145"><rect x="70" y="250" width="172" height="52" rx="10" /><text x="156" y="274" text-anchor="middle" font-size="13.5" font-weight="600">success</text><text x="156" y="291" text-anchor="middle" font-size="11.5">paid or authorised</text></g>
+    <g class="dchip" style="--h:5"><rect x="458" y="250" width="172" height="52" rx="10" /><text x="544" y="274" text-anchor="middle" font-size="13.5" font-weight="600">on error</text><text x="544" y="291" text-anchor="middle" font-size="11.5">charge failed</text></g>
+    <line x1="360" y1="94" x2="360" y2="134" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#poll-ar)" />
+    <path d="M126 94 L126 164 L263 164" fill="none" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#poll-ar)" />
+    <text x="150" y="157" text-anchor="start" font-size="11" fill="var(--muted)">stops the loop</text>
+    <path d="M454 152 L500 152 L500 120 L457 134" fill="none" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#poll-ar)" />
+    <text x="506" y="140" text-anchor="start" font-size="11" fill="var(--muted)">pending</text>
+    <line x1="322" y1="190" x2="177" y2="248" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#poll-ar)" />
+    <text x="226" y="214" text-anchor="middle" font-size="11" fill="var(--muted)">paid</text>
+    <line x1="398" y1="190" x2="541" y2="248" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#poll-ar)" />
+    <text x="486" y="214" text-anchor="middle" font-size="11" fill="var(--muted)">failed</text>
+  </svg>
+  <figcaption>The polling lifecycle. Start it with a charge id and two callbacks, poll the charge status on an interval that eases off from one second to three, and finish on success or failure. A pending status just loops; closing the 3DS iframe stops it.</figcaption>
+</figure>
 
 ## It started as one function
 
