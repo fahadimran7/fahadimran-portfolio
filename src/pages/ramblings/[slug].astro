@@ -49,7 +49,7 @@ const nextPart = currentSeries?.parts.find(
   (p) => currentPart !== undefined && p.part === currentPart + 1
 );
 ---
-<Base title={post.data.title} description={post.data.summary}>
+<Base title={post.data.title} description={post.data.summary} ogImage={`/og/${post.id}.png`}>
 
   <style is:global>
     /* ── Progress bar ── */

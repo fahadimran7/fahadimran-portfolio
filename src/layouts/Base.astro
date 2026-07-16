@@ -4,16 +4,19 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
 const {
   title,
   description = 'Product and engineering. Mostly at startups, mostly moving fast.',
+  ogImage,
 } = Astro.props;
 
 const pageTitle = title === 'Home' ? 'Fahad Imran' : `${title} — Fahad Imran`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
+const ogImageUrl = new URL(ogImage ?? '/images/profile-photo.webp', Astro.site).href;
+const twitterCard = ogImage ? 'summary_large_image' : 'summary';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -36,15 +39,19 @@ const ogImage = new URL('/images/profile-photo.webp', Astro.site).href;
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:alt" content={pageTitle} />
+  {ogImage && <meta property="og:image:width" content="1200" />}
+  {ogImage && <meta property="og:image:height" content="630" />}
 
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content={twitterCard} />
   <meta name="twitter:site" content="@fahadimran_7" />
   <meta name="twitter:creator" content="@fahadimran_7" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image" content={ogImageUrl} />
+  <meta name="twitter:image:alt" content={pageTitle} />
 
   <!-- Preload above-the-fold avatar -->
   <link rel="preload" as="image" href="/images/profile-photo.webp" />
