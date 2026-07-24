@@ -1,0 +1,302 @@
+---
+import Base from '../layouts/Base.astro';
+import { ArrowUpRight, Mail } from 'lucide-astro';
+---
+<Base
+  title="About"
+  description="The slightly-too-honest version. Five years, four countries, mostly shipping from a bedroom in Pakistan — and where you won't find me online."
+>
+
+  <div class="page-heading">
+    <h1>About</h1>
+    <p>The slightly-too-honest version.</p>
+  </div>
+
+  <p class="intro">
+    I care less about the job title — engineer, designer, whatever's on the offer letter —
+    and more about whether the thing actually works when a real person finally opens it.
+    Most of what I know came from shipping, breaking, and quietly fixing things before
+    anyone noticed.
+  </p>
+
+  <div class="me">
+    <figure class="polaroid">
+      <img src="/images/profile-photo.webp" alt="Fahad Imran" width="240" height="288" />
+    </figure>
+
+    <div class="me-body">
+      <dl class="facts">
+        <div class="fact">
+          <dt>Now</dt>
+          <dd>
+            Software Engineer, building
+            <a href="https://nomod.com" target="_blank" rel="noopener">Nomod</a>
+            @ <a href="https://alfabolt.com" target="_blank" rel="noopener">Alfabolt</a>
+          </dd>
+        </div>
+        <div class="fact">
+          <dt>Before</dt>
+          <dd>Six products, four countries — <a href="/work">the whole run</a></dd>
+        </div>
+        <div class="fact">
+          <dt>Based</dt>
+          <dd>Pakistan, remote-first since 2021</dd>
+        </div>
+        <div class="fact">
+          <dt>Does</dt>
+          <dd>Ships the whole feature — design, edge cases, the boring 20%</dd>
+        </div>
+      </dl>
+      <div class="me-actions">
+        <a class="btn-ghost" href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener">
+          résumé <ArrowUpRight size={15} />
+        </a>
+        <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
+          <Mail size={15} /> connect
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="not-online">
+    <p class="section-label">Where you won't find me</p>
+    <div class="not-here" role="list" aria-label="Platforms I've quit">
+      <span class="not-here-item" role="listitem" title="Not on X">
+        <img src="/logos/x.svg" alt="X" class="brand-x" width="26" height="26" />
+      </span>
+      <span class="not-here-item" role="listitem" title="Not on Instagram">
+        <img src="/logos/instagram.svg" alt="Instagram" width="26" height="26" />
+      </span>
+      <span class="not-here-item" role="listitem" title="Not on Facebook">
+        <img src="/logos/facebook.svg" alt="Facebook" width="26" height="26" />
+      </span>
+    </div>
+    <p class="not-online-text">
+      No X, no Instagram, no Facebook. I traded the infinite scroll for my sanity —
+      turns out doomscrolling three feeds at once is a great way to feel busy, anxious,
+      and behind all at the same time. Deleting them was the closest thing to a software
+      update my brain has ever had.
+    </p>
+    <p class="not-online-text not-online-confession">
+      Full disclosure though: I didn't <em>defeat</em> the algorithm so much as pick a
+      favourite. I'm hopelessly addicted to
+      <a href="https://www.youtube.com/" target="_blank" rel="noopener" class="yt-inline"><img src="/logos/youtube.svg" alt="" width="20" height="20" />YouTube</a>.
+      Recovery is a journey. This is not it.
+    </p>
+  </div>
+
+</Base>
+
+<style>
+  .intro {
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 680px;
+    margin-bottom: 44px;
+  }
+
+  /* ── Photo + current role ── */
+  .me {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 64px;
+    align-items: start;
+    margin-bottom: 64px;
+  }
+
+  .polaroid {
+    background: #fff;
+    padding: 7px;
+    border-radius: 3px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.08),
+      0 10px 26px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s ease;
+  }
+  .polaroid:hover {
+    transform: rotate(-2deg);
+  }
+  .polaroid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+    border-radius: 1px;
+  }
+
+  .me-body {
+    min-width: 0;
+    padding-top: 4px;
+  }
+
+  .facts {
+    margin: 0;
+  }
+  .fact {
+    display: grid;
+    grid-template-columns: 66px 1fr;
+    gap: 16px;
+    padding: 11px 0;
+    border-top: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .fact:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+  .fact dt {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .fact dd {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .fact dd a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 3px;
+  }
+  .fact dd a:hover {
+    text-decoration-color: var(--text);
+  }
+
+  .me-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .btn-ghost,
+  .btn-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 999px;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      color 0.15s ease,
+      opacity 0.15s ease;
+  }
+  .btn-ghost {
+    color: var(--muted);
+    padding: 9px 8px;
+  }
+  .btn-ghost:hover {
+    color: var(--text);
+  }
+  .btn-solid {
+    color: var(--bg);
+    background: var(--text);
+    padding: 10px 20px;
+    font-weight: 500;
+    box-shadow: var(--chip-shadow);
+  }
+  .btn-solid:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--chip-shadow-hover);
+  }
+
+  /* ── Where you won't find me ── */
+  .not-online {
+    margin-bottom: 8px;
+  }
+
+  .not-here {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .not-here-item {
+    position: relative;
+    display: inline-flex;
+    line-height: 0;
+  }
+  .not-here-item img {
+    width: 26px;
+    height: 26px;
+    filter: grayscale(1);
+    opacity: 0.4;
+  }
+  :global([data-theme="dark"]) .not-here-item img {
+    opacity: 0.5;
+  }
+  /* diagonal "nope" strike across each quit platform */
+  .not-here-item::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 34px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    opacity: 0.7;
+  }
+  .brand-x {
+    filter: grayscale(1);
+  }
+  :global([data-theme="dark"]) .not-here-item img.brand-x {
+    filter: grayscale(1) invert(1);
+  }
+
+  .not-online-text {
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+  .not-online-confession {
+    margin-top: 14px;
+  }
+
+  .yt-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    text-underline-offset: 3px;
+  }
+  .yt-inline img {
+    vertical-align: text-bottom;
+  }
+  .yt-inline:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 570px) {
+    .intro {
+      font-size: 20px;
+    }
+    .me {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      justify-items: center;
+    }
+    .polaroid {
+      max-width: 240px;
+    }
+    .me-body {
+      padding-top: 0;
+    }
+    .me-role {
+      font-size: 21px;
+    }
+  }
+</style>

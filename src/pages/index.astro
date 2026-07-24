@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Twitter, Github, Linkedin, Mail } from 'lucide-astro';
+import { Github, Linkedin, Mail } from 'lucide-astro';
 
 interface ContributionDay {
   date: string;
@@ -218,7 +218,6 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
   <div class="connect">
     <p class="section-label">Find me online</p>
     <div class="social-links">
-      <a href="https://twitter.com/fahadimran_7" target="_blank" rel="noopener" class="social-link"><Twitter size={17} />Twitter</a>
       <a href="https://github.com/fahadimran7" target="_blank" rel="noopener" class="social-link"><Github size={17} />GitHub</a>
       <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener" class="social-link"><Linkedin size={17} />LinkedIn</a>
       <a href="mailto:fahadimran6544@gmail.com" class="social-link"><Mail size={17} />Email</a>

@@ -97,13 +97,11 @@ const span = (positions: Position[]) =>
 >
 
   <div class="page-heading exp-heading">
-    <div>
-      <h1>Work</h1>
-      <p>Five years, four countries, mostly remote from a bedroom in Pakistan. Here's roughly where the time went.</p>
-    </div>
+    <h1>Work</h1>
     <a class="exp-resume" href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener">
       Résumé <ArrowUpRight size={15} />
     </a>
+    <p>Five years, four countries, mostly remote from a bedroom in Pakistan. Here's roughly<br class="hb" />where the time went.</p>
   </div>
 
   <ol class="timeline">
@@ -158,13 +156,22 @@ const span = (positions: Position[]) =>
 
 <style>
   .exp-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 16px;
+    align-items: baseline;
+  }
+  .exp-heading h1 {
+    grid-column: 1;
+  }
+  .exp-heading p {
+    grid-column: 1 / -1;
+    max-width: none;
   }
 
   .exp-resume {
+    grid-column: 2;
+    justify-self: end;
     display: inline-flex;
     align-items: center;
     gap: 3px;
@@ -172,8 +179,6 @@ const span = (positions: Position[]) =>
     color: var(--muted);
     text-decoration: none;
     white-space: nowrap;
-    flex-shrink: 0;
-    margin-top: 4px;
     transition: color 0.15s ease;
   }
   .exp-resume:hover {
@@ -313,6 +318,9 @@ const span = (positions: Position[]) =>
   }
 
   @media (max-width: 570px) {
+    .hb {
+      display: none;
+    }
     .tl-item {
       grid-template-columns: 38px 1fr;
       gap: 14px;
