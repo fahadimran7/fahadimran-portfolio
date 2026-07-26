@@ -179,7 +179,9 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       mobileMenu.classList.toggle('open', open);
       mobileMenu.inert = !open;
       hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      document.body.style.overflow = open ? 'hidden' : '';
+      // Lock the real scroll container (html), not body — locking body detaches
+      // the sticky header and doesn't actually stop the page from scrolling.
+      document.documentElement.style.overflow = open ? 'hidden' : '';
     }
 
     hamburger.addEventListener('click', function() {

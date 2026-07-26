@@ -686,12 +686,9 @@ footer a:hover {
 }
 
 @media (max-width: 570px) {
+  /* hover tooltips make no sense on touch — hide them (also avoids any overflow) */
   .chip-tooltip {
-    white-space: normal;
-    max-width: min(240px, calc(100vw - 20px));
-    width: max-content;
-    text-align: center;
-    line-height: 1.35;
+    display: none;
   }
 }
 
