@@ -153,17 +153,15 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     });
   </script>
 
-  <!-- Mobile sidebar -->
-  <div id="sidebar-overlay"></div>
+  <!-- Mobile menu -->
   <div id="mobile-menu" inert>
-    <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <a href="/about">about</a>
-    <a href="/work">work</a>
-    <a href="/uses">uses</a>
-    <a href="/ramblings">ramblings</a>
-    <a href="mailto:fahadimran6544@gmail.com">say hi</a>
+    <nav class="mobile-nav">
+      <a href="/about" aria-current={Astro.url.pathname === '/about' ? 'page' : undefined}>about</a>
+      <a href="/work" aria-current={Astro.url.pathname === '/work' ? 'page' : undefined}>work</a>
+      <a href="/uses" aria-current={Astro.url.pathname === '/uses' ? 'page' : undefined}>uses</a>
+      <a href="/ramblings" aria-current={Astro.url.pathname.startsWith('/ramblings') ? 'page' : undefined}>ramblings</a>
+      <a href="mailto:fahadimran6544@gmail.com">say hi</a>
+    </nav>
   </div>
 
   <script>
@@ -176,32 +174,21 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
 
     var hamburger = document.getElementById('hamburger');
     var mobileMenu = document.getElementById('mobile-menu');
-    var sidebarOverlay = document.getElementById('sidebar-overlay');
 
-    function toggleSidebar(open) {
+    function toggleMenu(open) {
       mobileMenu.classList.toggle('open', open);
-      sidebarOverlay.classList.toggle('open', open);
       mobileMenu.inert = !open;
       hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
       document.body.style.overflow = open ? 'hidden' : '';
     }
 
     hamburger.addEventListener('click', function() {
-      var isOpen = mobileMenu.classList.contains('open');
-      toggleSidebar(!isOpen);
-    });
-
-    sidebarOverlay.addEventListener('click', function() {
-      toggleSidebar(false);
-    });
-
-    document.getElementById('sidebar-close').addEventListener('click', function() {
-      toggleSidebar(false);
+      toggleMenu(!mobileMenu.classList.contains('open'));
     });
 
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
-        toggleSidebar(false);
+        toggleMenu(false);
       }
     });
   </script>
