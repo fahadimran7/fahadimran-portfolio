@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { CalendarDays, Clock3, ArrowLeft, ArrowRight } from 'lucide-astro';
+import { CalendarDays, Clock3, ArrowRight } from 'lucide-astro';
 import { series as allSeries } from '../../data/series';
 
 export async function getStaticPaths() {
@@ -19,25 +19,6 @@ function formatDate(str: string) {
 function readingTime(body: string) {
   const words = body.trim().split(/\s+/).length;
   return `${Math.ceil(words / 200)} min read`;
-}
-
-// Deterministic colour per tag: known tags get hand-picked distinct hues,
-// anything else falls back to a hash so the same label is always the same colour.
-const TAG_HUES = [145, 210, 265, 35, 330, 175, 5, 240];
-const TAG_HUE_MAP: Record<string, number> = {
-  'ai': 210,            // blue
-  'ux': 265,            // purple
-  'side project': 145,  // green
-  'mobile': 35,         // amber
-  'craft': 330,         // pink
-  'reflection': 175,    // teal
-};
-function tagHue(tag: string) {
-  const known = TAG_HUE_MAP[tag.toLowerCase()];
-  if (known !== undefined) return known;
-  let h = 0;
-  for (let i = 0; i < tag.length; i++) h = (h * 31 + tag.charCodeAt(i)) >>> 0;
-  return TAG_HUES[h % TAG_HUES.length];
 }
 
 const tags = post.data.tags ?? [];
@@ -64,20 +45,6 @@ const nextPart = currentSeries?.parts.find(
       transition: width 0.1s linear;
     }
 
-    /* ── Post content ── */
-    .post-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      color: var(--muted);
-      text-decoration: none;
-      margin-bottom: 48px;
-      transition: color 0.15s;
-    }
-
-    .post-back:hover { color: var(--text); }
-
     /* ── Tags ── */
     .post-tags {
       display: flex;
@@ -92,15 +59,9 @@ const nextPart = currentSeries?.parts.find(
       line-height: 1;
       padding: 6px 11px;
       border-radius: 999px;
-      background: hsl(var(--h) 65% 94%);
-      color: hsl(var(--h) 48% 32%);
-      border: 1px solid hsl(var(--h) 55% 87%);
-    }
-
-    [data-theme="dark"] .post-tag {
-      background: hsl(var(--h) 28% 17%);
-      color: hsl(var(--h) 62% 76%);
-      border-color: hsl(var(--h) 25% 28%);
+      background: var(--chip-bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
     }
 
     .post-series-eyebrow {
@@ -265,12 +226,7 @@ const nextPart = currentSeries?.parts.find(
       border-radius: 6px;
       padding: 5px 9px;
       cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.15s ease, color 0.15s ease;
-    }
-    .post-body .code-block:hover .code-copy-btn,
-    .code-copy-btn:focus-visible {
-      opacity: 1;
+      transition: color 0.15s ease;
     }
     .code-copy-btn:hover { color: var(--text); }
     .code-copy-btn svg { margin-right: 5px; }
@@ -420,11 +376,6 @@ const nextPart = currentSeries?.parts.find(
 
   <div id="progress-bar"></div>
 
-  <a href="/ramblings" class="post-back">
-    <ArrowLeft size={14} strokeWidth={2} />
-    All ramblings
-  </a>
-
   {currentSeries && currentPart !== undefined && (
     <p class="post-series-eyebrow">{currentSeries.name} · Part {currentPart}</p>
   )}
@@ -446,7 +397,7 @@ const nextPart = currentSeries?.parts.find(
   {tags.length > 0 && (
     <div class="post-tags">
       {tags.map(tag => (
-        <span class="post-tag" style={`--h:${tagHue(tag)}`}>#{tag}</span>
+        <span class="post-tag">#{tag}</span>
       ))}
     </div>
   )}

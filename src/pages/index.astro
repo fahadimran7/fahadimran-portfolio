@@ -87,6 +87,12 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     Product and engineering at startups by day. Building things on the side at night. Some of them stuck.
   </p>
 
+  <div class="hero-cta">
+    <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
+      <Mail size={15} /> Get in touch
+    </a>
+  </div>
+
   <div class="section-row">
     <p class="section-label">Places I've worked at</p>
     <div class="chip-list">
@@ -263,6 +269,19 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 </script>
 
 <style>
+  /* pull the CTA up under the bio, then keep the usual gap before the sections */
+  .bio {
+    margin-bottom: 24px;
+  }
+
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+
   .say-hi {
     margin-top: 8px;
   }
@@ -275,13 +294,13 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
   }
 
   .say-hi-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
     font-size: 17px;
     color: var(--text);
     text-decoration: none;
     transition: opacity 0.15s ease;
+    /* inline flow so the icon aligns to the text and the long email can
+       wrap instead of overflowing on tiny screens */
+    overflow-wrap: anywhere;
   }
 
   .say-hi-link:hover {
@@ -291,6 +310,7 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 
   .say-hi-link :global(svg) {
     color: var(--muted);
-    flex-shrink: 0;
+    margin-right: 10px;
+    vertical-align: -0.2em;
   }
 </style>
