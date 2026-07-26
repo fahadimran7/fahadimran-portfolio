@@ -235,6 +235,33 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 
 </Base>
 
+<script>
+  // Keep chip tooltips inside the viewport so they never clip at the edges.
+  function clampChipTooltips() {
+    var margin = 10;
+    var tips = document.querySelectorAll('.chip-tooltip');
+    for (var i = 0; i < tips.length; i++) {
+      var tip = tips[i];
+      tip.style.setProperty('--tip-shift', '0px');
+      var rect = tip.getBoundingClientRect();
+      var shift = 0;
+      if (rect.left < margin) {
+        shift = margin - rect.left;
+      } else if (rect.right > window.innerWidth - margin) {
+        shift = window.innerWidth - margin - rect.right;
+      }
+      if (shift) tip.style.setProperty('--tip-shift', Math.round(shift) + 'px');
+    }
+  }
+
+  clampChipTooltips();
+  window.addEventListener('resize', clampChipTooltips);
+  window.addEventListener('load', clampChipTooltips);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(clampChipTooltips);
+  }
+</script>
+
 <style>
   .say-hi {
     margin-top: 8px;

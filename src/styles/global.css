@@ -229,7 +229,8 @@ footer a:hover {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  /* --tip-shift is set by JS to keep the tooltip inside the viewport */
+  transform: translateX(calc(-50% + var(--tip-shift, 0px))) translateY(4px);
   background: #1a1a1a;
   color: #fff;
   font-size: 12px;
@@ -249,7 +250,7 @@ footer a:hover {
 .chip-wrap:hover .chip-tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(calc(-50% + var(--tip-shift, 0px))) translateY(0);
 }
 
 .chip {
@@ -643,9 +644,13 @@ footer a:hover {
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 570px) {
   .chip-tooltip {
-    display: none !important;
+    white-space: normal;
+    max-width: min(240px, calc(100vw - 20px));
+    width: max-content;
+    text-align: center;
+    line-height: 1.35;
   }
 }
 
