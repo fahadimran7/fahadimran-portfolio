@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -62,11 +63,13 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       document.documentElement.setAttribute('data-theme', stored || prefer);
     })();
   </script>
+
+  <ClientRouter />
 </head>
 <body>
   <header class="site-header" id="site-header">
     <nav>
-      <a href="/" class="logo">Fahad Imran</a>
+      <a href="/" class="logo" aria-label="Fahad Imran — home">FI<span class="logo-dot" aria-hidden="true">.</span></a>
       <ul id="nav-links">
         <li><a href="/about" aria-current={Astro.url.pathname === '/about' ? 'page' : undefined}>about</a></li>
         <li><a href="/work" aria-current={Astro.url.pathname === '/work' ? 'page' : undefined}>work</a></li>
@@ -103,56 +106,6 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     </footer>
   </div>
 
-  <script is:inline>
-    var MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-    var SUN  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
-
-    function getTheme() {
-      return document.documentElement.getAttribute('data-theme') || 'light';
-    }
-
-    function setIcon(theme, animate) {
-      var el = document.getElementById('theme-icon');
-      if (!el) return;
-      var next = theme === 'dark' ? SUN : MOON;
-
-      if (!animate) {
-        el.innerHTML = next;
-        return;
-      }
-
-      // slide out
-      el.style.transition = 'opacity 140ms ease, transform 140ms ease';
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(8px)';
-
-      setTimeout(function() {
-        el.innerHTML = next;
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(-8px)';
-
-        requestAnimationFrame(function() {
-          requestAnimationFrame(function() {
-            el.style.transition = 'opacity 280ms cubic-bezier(0.22,1,0.36,1), transform 280ms cubic-bezier(0.22,1,0.36,1)';
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-          });
-        });
-      }, 150);
-    }
-
-    // init icon without animation
-    setIcon(getTheme(), false);
-
-    document.getElementById('theme-toggle').addEventListener('click', function() {
-      var next = getTheme() === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      setIcon(next, true);
-    });
-  </script>
-
   <!-- Mobile menu -->
   <div id="mobile-menu" inert>
     <nav class="mobile-nav">
@@ -165,34 +118,102 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
   </div>
 
   <script>
-    var headerEl = document.getElementById('site-header');
-    function updateNavGlass() {
-      if (headerEl) headerEl.classList.toggle('scrolled', window.scrollY > 4);
-    }
-    window.addEventListener('scroll', updateNavGlass, { passive: true });
-    updateNavGlass();
+    // With the ClientRouter, pages swap in place and per-page <script> tags run
+    // only once. So: bind window/document listeners a single time here, and
+    // (re)bind the swapped-in header/toggle/menu on every astro:page-load.
+    const MOON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    const SUN  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
 
-    var hamburger = document.getElementById('hamburger');
-    var mobileMenu = document.getElementById('mobile-menu');
+    function getTheme() {
+      return document.documentElement.getAttribute('data-theme') || 'light';
+    }
+
+    function setIcon(theme, animate) {
+      const el = document.getElementById('theme-icon');
+      if (!el) return;
+      const next = theme === 'dark' ? SUN : MOON;
+
+      if (!animate) {
+        el.innerHTML = next;
+        return;
+      }
+
+      el.style.transition = 'opacity 140ms ease, transform 140ms ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+
+      setTimeout(function() {
+        el.innerHTML = next;
+        el.style.transition = 'none';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-8px)';
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            el.style.transition = 'opacity 280ms cubic-bezier(0.22,1,0.36,1), transform 280ms cubic-bezier(0.22,1,0.36,1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          });
+        });
+      }, 150);
+    }
+
+    function updateNavGlass() {
+      const header = document.getElementById('site-header');
+      if (header) header.classList.toggle('scrolled', window.scrollY > 4);
+    }
 
     function toggleMenu(open) {
-      mobileMenu.classList.toggle('open', open);
-      mobileMenu.inert = !open;
+      const menu = document.getElementById('mobile-menu');
+      const hamburger = document.getElementById('hamburger');
+      if (!menu || !hamburger) return;
+      menu.classList.toggle('open', open);
+      menu.inert = !open;
       hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
       // Lock the real scroll container (html), not body — locking body detaches
       // the sticky header and doesn't actually stop the page from scrolling.
       document.documentElement.style.overflow = open ? 'hidden' : '';
     }
 
-    hamburger.addEventListener('click', function() {
-      toggleMenu(!mobileMenu.classList.contains('open'));
+    // (Re)bind elements that get replaced on each client-side navigation.
+    function initChrome() {
+      updateNavGlass();
+      setIcon(getTheme(), false);
+
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function() {
+          const next = getTheme() === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+          setIcon(next, true);
+        });
+      }
+
+      const hamburger = document.getElementById('hamburger');
+      if (hamburger) {
+        hamburger.addEventListener('click', function() {
+          const menu = document.getElementById('mobile-menu');
+          toggleMenu(!(menu && menu.classList.contains('open')));
+        });
+      }
+    }
+
+    // Bound once — these survive navigations.
+    window.addEventListener('scroll', updateNavGlass, { passive: true });
+    document.addEventListener('keydown', function(e) {
+      const menu = document.getElementById('mobile-menu');
+      if (e.key === 'Escape' && menu && menu.classList.contains('open')) toggleMenu(false);
+    });
+    // Re-apply the theme before the swapped page paints, and never carry an open
+    // menu (or its scroll lock) across a navigation.
+    document.addEventListener('astro:after-swap', function() {
+      const stored = localStorage.getItem('theme');
+      const prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', stored || prefer);
+      toggleMenu(false);
     });
 
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
-        toggleMenu(false);
-      }
-    });
+    document.addEventListener('astro:page-load', initChrome);
   </script>
 </body>
 </html>

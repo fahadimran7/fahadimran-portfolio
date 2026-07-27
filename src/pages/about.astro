@@ -81,20 +81,25 @@ import { Download, Mail } from 'lucide-astro';
 
 <script>
   // Tilt the polaroid once it scrolls into view, and leave it tilted.
-  var polaroid = document.querySelector('.polaroid');
-  if (polaroid) {
-    var io = new IntersectionObserver(function (entries) {
+  // Re-run on every client-side navigation, since the element is swapped fresh.
+  let polaroidIO = null;
+  function initPolaroidTilt() {
+    const polaroid = document.querySelector('.polaroid');
+    if (!polaroid) return;
+    if (polaroidIO) polaroidIO.disconnect();
+    polaroidIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           polaroid.classList.add('is-tilted');
-          io.disconnect();
+          if (polaroidIO) polaroidIO.disconnect();
         }
       });
       // Fires only once the photo scrolls up past the middle of the viewport,
       // so the tilt animation is visible even when it's on-screen at load.
     }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
-    io.observe(polaroid);
+    polaroidIO.observe(polaroid);
   }
+  document.addEventListener('astro:page-load', initPolaroidTilt);
 </script>
 
 <style>

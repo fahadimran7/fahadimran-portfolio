@@ -434,9 +434,10 @@ const nextPart = currentSeries?.parts.find(
     </aside>
   )}
 
-  <script is:inline>
+  <script>
     // Wrap each code block and add a copy button that flips to "Copied" briefly.
-    (function () {
+    // Runs on every client-side navigation; the .code-block guard makes it idempotent.
+    function initCodeCopy() {
       const copyIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
       const checkIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
       document.querySelectorAll('.post-body pre').forEach((pre) => {
@@ -479,17 +480,23 @@ const nextPart = currentSeries?.parts.find(
 
         wrap.appendChild(btn);
       });
-    })();
+    }
 
-    const bar = document.getElementById('progress-bar');
     function updateProgress() {
+      const bar = document.getElementById('progress-bar');
+      if (!bar) return;
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
     }
+
+    // Window listeners bound once; updateProgress no-ops where there's no bar.
     window.addEventListener('scroll', updateProgress, { passive: true });
     window.addEventListener('resize', updateProgress);
-    updateProgress();
+    document.addEventListener('astro:page-load', function () {
+      initCodeCopy();
+      updateProgress();
+    });
   </script>
 
 </Base>

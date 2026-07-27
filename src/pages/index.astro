@@ -260,9 +260,10 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     }
   }
 
-  clampChipTooltips();
+  // clampChipTooltips is a no-op on pages without chips, so it's safe to leave
+  // these listeners bound across client-side navigations.
   window.addEventListener('resize', clampChipTooltips);
-  window.addEventListener('load', clampChipTooltips);
+  document.addEventListener('astro:page-load', clampChipTooltips);
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(clampChipTooltips);
   }

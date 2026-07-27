@@ -20,6 +20,7 @@
   --social-bg: white;
   --toggle-bg: #1a1a1a;
   --toggle-color: #f9f9f7;
+  --accent: #805AD5;
   --nav-glass: rgba(249, 249, 247, 0.55);
 }
 
@@ -34,6 +35,7 @@
   --social-bg: #1c1c1a;
   --toggle-bg: #f5f0e8;
   --toggle-color: #1a1a1a;
+  --accent: #FBD38D;
   --nav-glass: rgba(17, 17, 16, 0.55);
 }
 
@@ -90,10 +92,15 @@ nav {
 }
 
 nav .logo {
-  font-weight: 600;
-  font-size: 20px;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  line-height: 1;
   text-decoration: none;
   color: var(--text);
+}
+nav .logo .logo-dot {
+  color: var(--accent);
 }
 
 nav ul {
