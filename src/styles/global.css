@@ -221,7 +221,7 @@ footer a:hover {
 .bio {
   font-size: 21px;
   line-height: 1.55;
-  font-weight: 450;
+  font-weight: 400;
   letter-spacing: -0.011em;
   margin-bottom: 56px;
 }
@@ -532,7 +532,7 @@ footer a:hover {
 }
 .writing-item a {
   font-size: 19px;
-  font-weight: 650;
+  font-weight: 500;
   letter-spacing: -0.011em;
   color: var(--text);
   text-decoration: none;
