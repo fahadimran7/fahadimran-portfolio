@@ -131,9 +131,11 @@ nav ul a[aria-current="page"] {
   margin-bottom: 48px;
 }
 .page-heading h1 {
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: 10px;
 }
 .page-heading p {
   color: var(--muted);
@@ -197,17 +199,23 @@ footer a:hover {
 }
 
 .hero-text h1 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 2px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: 4px;
 }
 
 .hero-text p {
   color: var(--muted);
-  font-size: 17px;
+  font-size: 18px;
 }
 
 .bio {
+  font-size: 21px;
+  line-height: 1.55;
+  font-weight: 450;
+  letter-spacing: -0.011em;
   margin-bottom: 56px;
 }
 
@@ -492,7 +500,8 @@ footer a:hover {
 .tool-info .tool-name {
   display: block;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--text);
 }
 .tool-info p {
@@ -515,7 +524,9 @@ footer a:hover {
   border-bottom: 1px solid var(--border);
 }
 .writing-item a {
-  font-size: 18px;
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.011em;
   color: var(--text);
   text-decoration: none;
 }

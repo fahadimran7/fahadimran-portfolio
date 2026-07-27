@@ -79,14 +79,34 @@ import { Download, Mail } from 'lucide-astro';
 
 </Base>
 
+<script>
+  // Tilt the polaroid once it scrolls into view, and leave it tilted.
+  var polaroid = document.querySelector('.polaroid');
+  if (polaroid) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          polaroid.classList.add('is-tilted');
+          io.disconnect();
+        }
+      });
+      // Fires only once the photo scrolls up past the middle of the viewport,
+      // so the tilt animation is visible even when it's on-screen at load.
+    }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
+    io.observe(polaroid);
+  }
+</script>
+
 <style>
   .page-heading {
     margin-bottom: 20px;
   }
 
   .intro {
-    font-size: 19px;
-    line-height: 1.7;
+    font-size: 21px;
+    line-height: 1.55;
+    font-weight: 450;
+    letter-spacing: -0.011em;
     color: var(--muted);
     max-width: 680px;
     margin-bottom: 44px;
@@ -108,10 +128,21 @@ import { Download, Mail } from 'lucide-astro';
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.08),
       0 10px 26px rgba(0, 0, 0, 0.12);
-    transition: transform 0.25s ease;
+    transform: rotate(0deg);
+    /* eased so the tilt settles in as it scrolls into view */
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .polaroid:hover {
-    transform: rotate(-2deg);
+  /* tilts once when scrolled into view, then stays */
+  .polaroid.is-tilted {
+    transform: rotate(-3deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .polaroid {
+      transition: none;
+    }
+    .polaroid.is-tilted {
+      transform: none;
+    }
   }
   .polaroid img {
     display: block;
