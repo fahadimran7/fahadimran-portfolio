@@ -247,8 +247,11 @@ footer a:hover {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
-  /* --tip-shift is set by JS to keep the tooltip inside the viewport */
-  transform: translateX(calc(-50% + var(--tip-shift, 0px))) translateY(4px);
+  /* JS sets --tip-shift to nudge edge tooltips inside the viewport. It rides on
+     margin-left (not transform) so it applies instantly — folding it into the
+     transitioned transform makes the offset fail to resolve until a reflow. */
+  margin-left: var(--tip-shift, 0px);
+  transform: translateX(-50%) translateY(4px);
   background: #1a1a1a;
   color: #fff;
   font-size: 12px;
@@ -268,7 +271,7 @@ footer a:hover {
 .chip-wrap:hover .chip-tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translateX(calc(-50% + var(--tip-shift, 0px))) translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 .chip {

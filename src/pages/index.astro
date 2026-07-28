@@ -243,27 +243,45 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 
 <script>
   // Keep chip tooltips inside the viewport so they never clip at the edges.
+  // We compute the offset from the chip's geometry (its centre) and the
+  // tooltip's width — both unaffected by the tooltip's transform transition —
+  // rather than reading the tooltip's (mid-animation) position, which would
+  // give a wrong measurement and leave edge tooltips overflowing.
   function clampChipTooltips() {
     var margin = 10;
+    var vw = document.documentElement.clientWidth;
     var tips = document.querySelectorAll('.chip-tooltip');
     for (var i = 0; i < tips.length; i++) {
       var tip = tips[i];
-      tip.style.setProperty('--tip-shift', '0px');
-      var rect = tip.getBoundingClientRect();
+      var wrap = tip.parentElement;
+      if (!wrap) continue;
+      var wrapRect = wrap.getBoundingClientRect();
+      var tipWidth = tip.getBoundingClientRect().width; // width is transform-invariant
+      if (!tipWidth) { tip.style.setProperty('--tip-shift', '0px'); continue; }
+      // The tooltip is centred over the chip (left:50% + translateX(-50%)).
+      var center = wrapRect.left + wrapRect.width / 2;
+      var naturalLeft = center - tipWidth / 2;
+      var naturalRight = center + tipWidth / 2;
       var shift = 0;
-      if (rect.left < margin) {
-        shift = margin - rect.left;
-      } else if (rect.right > window.innerWidth - margin) {
-        shift = window.innerWidth - margin - rect.right;
+      if (naturalLeft < margin) {
+        shift = margin - naturalLeft;
+      } else if (naturalRight > vw - margin) {
+        shift = (vw - margin) - naturalRight;
       }
-      if (shift) tip.style.setProperty('--tip-shift', Math.round(shift) + 'px');
+      tip.style.setProperty('--tip-shift', Math.round(shift) + 'px');
     }
   }
 
   // clampChipTooltips is a no-op on pages without chips, so it's safe to leave
-  // these listeners bound across client-side navigations.
-  window.addEventListener('resize', clampChipTooltips);
-  document.addEventListener('astro:page-load', clampChipTooltips);
+  // these listeners bound across client-side navigations. Re-run on the next
+  // frame after load so it measures the final (wrapped) layout.
+  function clampSoon() {
+    clampChipTooltips();
+    requestAnimationFrame(clampChipTooltips);
+  }
+  window.addEventListener('resize', clampSoon);
+  window.addEventListener('load', clampSoon);
+  document.addEventListener('astro:page-load', clampSoon);
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(clampChipTooltips);
   }
