@@ -3,7 +3,7 @@ title: I built a zakat calculator in 2026. The code was the easy part.
 publishedAt: "2026-06-15"
 summary: A boring app, two prompts of working code, and six months of UX questions I couldn't hand off. Why the calculator was the easy part.
 tags: ["Side project", "UX", "AI", "Mobile"]
-published: false
+published: true
 ---
 
 Let me get the obvious thing out of the way.
@@ -196,11 +196,3 @@ But that's the thing I keep coming back to. Even a simple app, if you actually w
 Someone said it better than I can. AI can code, but it can't UX. Yet.
 
 The code was two prompts. Everything else was the work.
-
-_I'll add some screenshots, maybe a quick demo video, and the GitHub link. You can try the APK if you want, it's local-only so your data never leaves your phone. I don't know when I'll call it released. I'll probably never be fully happy with it anyway. Give me six months and I'd spend all six right here and still find something to fix._
-
-## Update — 22 June 2026
-
-Well, that was quick. It's out. I tagged v1.0.0 and pushed it up, so the GitHub link I kept promising is finally real. The code lives at [github.com/fahadimran7/mizan](https://github.com/fahadimran7/mizan), and you can grab the Android APK straight from the [latest release](https://github.com/fahadimran7/mizan/releases/latest).
-
-It's still local-only, so nothing leaves your phone. Since it's not on the Play Store, Android will warn you about installing from an "unknown source" — that's normal for a sideloaded app. You'll need Android 7.0 or newer. Nowhere near finished, obviously. But it's real now, and you can use it.
