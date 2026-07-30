@@ -33,18 +33,6 @@ const nextPart = currentSeries?.parts.find(
 <Base title={post.data.title} description={post.data.summary} ogImage={`/og/${post.id}.png`}>
 
   <style is:global>
-    /* ── Progress bar ── */
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 3px;
-      background: var(--text);
-      z-index: 100;
-      transition: width 0.1s linear;
-    }
-
     /* ── Tags ── */
     .post-tags {
       display: flex;
@@ -374,8 +362,6 @@ const nextPart = currentSeries?.parts.find(
     }
   </style>
 
-  <div id="progress-bar"></div>
-
   {currentSeries && currentPart !== undefined && (
     <p class="post-series-eyebrow">{currentSeries.name} · Part {currentPart}</p>
   )}
@@ -482,21 +468,7 @@ const nextPart = currentSeries?.parts.find(
       });
     }
 
-    function updateProgress() {
-      const bar = document.getElementById('progress-bar');
-      if (!bar) return;
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
-    }
-
-    // Window listeners bound once; updateProgress no-ops where there's no bar.
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress);
-    document.addEventListener('astro:page-load', function () {
-      initCodeCopy();
-      updateProgress();
-    });
+    document.addEventListener('astro:page-load', initCodeCopy);
   </script>
 
 </Base>
