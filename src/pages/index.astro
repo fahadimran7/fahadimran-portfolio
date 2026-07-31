@@ -76,7 +76,6 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 <Base title="Home" description="Product and engineering. Mostly at startups, mostly moving fast. Nights go to building things I kept wishing someone else would make.">
 
   <div class="hero">
-    <img class="avatar" src="/images/profile-photo.webp" alt="Fahad Imran" />
     <div class="hero-text">
       <h1>Hi, I'm Fahad</h1>
       <p>product and code, mostly in that order</p>
@@ -86,12 +85,6 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
   <p class="bio">
     Product and engineering at startups by day. Building things on the side at night. Some of them stuck.
   </p>
-
-  <div class="hero-cta">
-    <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
-      <Mail size={15} /> Get in touch
-    </a>
-  </div>
 
   <div class="section-row">
     <p class="section-label">Places I've worked at</p>
@@ -233,9 +226,8 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
   <div class="say-hi">
     <p class="section-label">Say hi</p>
     <p class="say-hi-text">Got a project in mind, or just want to say hi?</p>
-    <a class="say-hi-link" href="mailto:fahadimran6544@gmail.com">
-      <Mail size={17} />
-      fahadimran6544@gmail.com
+    <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
+      <Mail size={15} /> Get in touch
     </a>
   </div>
 
@@ -288,16 +280,9 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 </script>
 
 <style>
-  /* pull the CTA up under the bio, then keep the usual gap before the sections */
+  /* bio flows straight into the sections; the contact CTA now lives at the
+     bottom in "Say hi", where it lands after the proof */
   .bio {
-    margin-bottom: 24px;
-  }
-
-  .hero-cta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
     margin-bottom: 56px;
   }
 
@@ -310,26 +295,5 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     font-size: 17px;
     margin-bottom: 16px;
     max-width: 440px;
-  }
-
-  .say-hi-link {
-    font-size: 17px;
-    color: var(--text);
-    text-decoration: none;
-    transition: opacity 0.15s ease;
-    /* inline flow so the icon aligns to the text and the long email can
-       wrap instead of overflowing on tiny screens */
-    overflow-wrap: anywhere;
-  }
-
-  .say-hi-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .say-hi-link :global(svg) {
-    color: var(--muted);
-    margin-right: 10px;
-    vertical-align: -0.2em;
   }
 </style>

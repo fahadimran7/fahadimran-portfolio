@@ -52,9 +52,6 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
   <meta name="twitter:image" content={ogImageUrl} />
   <meta name="twitter:image:alt" content={pageTitle} />
 
-  <!-- Preload above-the-fold avatar -->
-  <link rel="preload" as="image" href="/images/profile-photo.webp" />
-
   <!-- prevent flash of wrong theme -->
   <script is:inline>
     (function() {
@@ -67,7 +64,7 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
   <ClientRouter />
 </head>
 <body>
-  <header class="site-header" id="site-header">
+  <header class="site-header" id="site-header" transition:persist>
     <nav>
       <a href="/" class="logo" aria-label="Fahad Imran — home">FI<span class="logo-dot" aria-hidden="true">.</span></a>
       <ul id="nav-links">
@@ -162,6 +159,19 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       if (header) header.classList.toggle('scrolled', window.scrollY > 4);
     }
 
+    // The header persists across client-side navigations (transition:persist),
+    // so its server-rendered aria-current would freeze on the page we came from.
+    // Recompute the active link from the new URL after every swap. Exact-match
+    // per link, mirroring the desktop nav's server logic.
+    function updateActiveNav() {
+      const path = location.pathname;
+      const links = document.querySelectorAll('#nav-links a');
+      for (const a of links) {
+        if (a.getAttribute('href') === path) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      }
+    }
+
     function toggleMenu(open) {
       const menu = document.getElementById('mobile-menu');
       const hamburger = document.getElementById('hamburger');
@@ -174,13 +184,17 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       document.documentElement.style.overflow = open ? 'hidden' : '';
     }
 
-    // (Re)bind elements that get replaced on each client-side navigation.
+    // Runs on every navigation. The header now persists across swaps, so its
+    // controls keep their listeners — guard each binding with dataset.bound so
+    // re-running this never stacks duplicate handlers on the same element.
     function initChrome() {
       updateNavGlass();
       setIcon(getTheme(), false);
+      updateActiveNav();
 
       const toggle = document.getElementById('theme-toggle');
-      if (toggle) {
+      if (toggle && !toggle.dataset.bound) {
+        toggle.dataset.bound = '1';
         toggle.addEventListener('click', function() {
           const next = getTheme() === 'dark' ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', next);
@@ -190,7 +204,8 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       }
 
       const hamburger = document.getElementById('hamburger');
-      if (hamburger) {
+      if (hamburger && !hamburger.dataset.bound) {
+        hamburger.dataset.bound = '1';
         hamburger.addEventListener('click', function() {
           const menu = document.getElementById('mobile-menu');
           toggleMenu(!(menu && menu.classList.contains('open')));

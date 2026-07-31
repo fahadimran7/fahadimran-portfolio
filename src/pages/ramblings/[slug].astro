@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { CalendarDays, Clock3, ArrowRight } from 'lucide-astro';
+import { CalendarDays, Clock3, ArrowRight, ArrowLeft } from 'lucide-astro';
 import { series as allSeries } from '../../data/series';
 
 export async function getStaticPaths() {
@@ -33,6 +33,29 @@ const nextPart = currentSeries?.parts.find(
 <Base title={post.data.title} description={post.data.summary} ogImage={`/og/${post.id}.png`}>
 
   <style is:global>
+    /* ── Back to index ── */
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .post-back:hover {
+      color: var(--text);
+    }
+    /* Nudge the arrow left on hover, mirroring .series-next's rightward nudge. */
+    .post-back svg {
+      transition: transform 0.15s ease;
+    }
+    .post-back:hover svg {
+      transform: translateX(-3px);
+    }
+
     /* ── Tags ── */
     .post-tags {
       display: flex;
@@ -361,6 +384,11 @@ const nextPart = currentSeries?.parts.find(
       gap: 9px;
     }
   </style>
+
+  <a class="post-back" href="/ramblings">
+    <ArrowLeft size={15} strokeWidth={2} />
+    Ramblings
+  </a>
 
   {currentSeries && currentPart !== undefined && (
     <p class="post-series-eyebrow">{currentSeries.name} · Part {currentPart}</p>

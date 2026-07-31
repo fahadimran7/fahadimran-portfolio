@@ -190,19 +190,7 @@ footer a:hover {
 
 /* ── Hero ── */
 .hero {
-  display: flex;
-  align-items: center;
-  gap: 20px;
   margin-bottom: 28px;
-}
-
-.avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #d4d0c8 0%, #b8b4ac 100%);
 }
 
 .hero-text h1 {
@@ -667,17 +655,20 @@ footer a:hover {
   }
 }
 
+/* Instant page swaps: keep ClientRouter's no-reload navigation but drop its
+   default cross-fade, so moving between pages feels native and immediate
+   rather than animated. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
 @media (max-width: 570px) {
   nav ul {
     display: none;
   }
   .hamburger {
     display: flex;
-  }
-
-  .hero {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .site-header {
