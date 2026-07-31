@@ -40,7 +40,7 @@ import { Download, Mail } from 'lucide-astro';
 
   <div class="me">
     <figure class="polaroid">
-      <img src="/images/profile-photo.webp" alt="Fahad Imran" width="240" height="288" />
+      <img src="/images/profile-portrait.webp" alt="Fahad Imran" width="240" height="288" />
     </figure>
 
     <div class="me-body">
@@ -151,6 +151,10 @@ import { Download, Mail } from 'lucide-astro';
   .polaroid img {
     display: block;
     width: 100%;
+    /* height:auto lets the width/aspect-ratio drive the height. Without it the
+       img's height attribute stays fixed while width scales to the column, so
+       the ratio breaks after a client-side nav (it's only correct on refresh). */
+    height: auto;
     aspect-ratio: 5 / 6;
     object-fit: cover;
     border-radius: 1px;
