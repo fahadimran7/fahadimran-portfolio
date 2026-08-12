@@ -130,6 +130,11 @@ nav .logo {
   line-height: 1;
   text-decoration: none;
   color: var(--text);
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+nav .logo:hover {
+  transform: scale(1.08);
 }
 nav .logo .logo-dot {
   color: var(--accent);
