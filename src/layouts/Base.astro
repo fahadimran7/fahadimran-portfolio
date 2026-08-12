@@ -84,8 +84,11 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     </nav>
   </header>
   <div class="wrap">
+    <main id="page-content">
 
-    <slot />
+      <slot />
+
+    </main>
 
     <footer>
       <span>&copy; {new Date().getFullYear()} Fahad Imran</span>
