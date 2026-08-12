@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Github, Linkedin, Mail } from 'lucide-astro';
+import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-astro';
 
 interface ContributionDay {
   date: string;
@@ -77,14 +77,17 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 
   <div class="hero">
     <div class="hero-text">
-      <h1>Hi, I'm Fahad</h1>
-      <p>product and code, mostly in that order</p>
+      <h1>Hi, I'm Fahad Imran</h1>
     </div>
-  </div>
 
-  <p class="bio">
-    Product and engineering at startups by day. Building things on the side at night. Some of them stuck.
-  </p>
+    <p class="bio">
+      Product and engineering at startups by day. Building things on the side at night. Some of them stuck.
+    </p>
+
+    <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
+      let's talk <ArrowUpRight size={15} />
+    </a>
+  </div>
 
   <div class="section-row">
     <p class="section-label">Places I've worked at</p>
@@ -227,7 +230,7 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     <p class="section-label">Say hi</p>
     <p class="say-hi-text">Got a project in mind, or just want to say hi?</p>
     <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
-      <Mail size={15} /> Get in touch
+      let's talk <ArrowUpRight size={15} />
     </a>
   </div>
 
@@ -280,10 +283,11 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
 </script>
 
 <style>
-  /* bio flows straight into the sections; the contact CTA now lives at the
-     bottom in "Say hi", where it lands after the proof */
-  .bio {
-    margin-bottom: 56px;
+  /* Bio sits close under the heading; the hero's own CTA follows it
+     closely too. The bottom "Say hi" CTA still gets its own space after
+     the proof sections further down the page. */
+  .hero .bio {
+    margin-bottom: 20px;
   }
 
   .say-hi {

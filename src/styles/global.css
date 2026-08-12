@@ -227,20 +227,15 @@ footer a:hover {
 
 /* ── Hero ── */
 .hero {
-  margin-bottom: 28px;
+  margin-bottom: 56px;
 }
 
 .hero-text h1 {
-  font-size: 30px;
+  font-size: 46px;
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.1;
-  margin-bottom: 4px;
-}
-
-.hero-text p {
-  color: var(--muted);
-  font-size: 18px;
+  margin-bottom: 16px;
 }
 
 .bio {
@@ -410,7 +405,9 @@ footer a:hover {
   /* inverted pill: dark in light mode, light in dark mode */
   color: var(--toggle-color);
   background: var(--toggle-bg);
-  padding: 10px 20px;
+  /* 2px less on top than bottom — the text otherwise reads as sitting
+     slightly low against the icon's optical center. */
+  padding: 8px 20px 10px;
   font-weight: 500;
   box-shadow: var(--chip-shadow);
 }
@@ -710,6 +707,10 @@ footer a:hover {
 
   .site-header {
     margin-bottom: 28px;
+  }
+
+  .hero-text h1 {
+    font-size: 34px;
   }
 
   .writing-item {

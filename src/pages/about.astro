@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Download, Mail } from 'lucide-astro';
+import { Download, ArrowUpRight } from 'lucide-astro';
 ---
 <Base
   title="About"
@@ -17,26 +17,6 @@ import { Download, Mail } from 'lucide-astro';
     really stopped. Most of what I know came from shipping, breaking, and quietly fixing
     things before anyone noticed.
   </p>
-
-  <aside class="not-online">
-    <div class="not-here" role="list" aria-label="Platforms I've quit">
-      <span class="not-here-item" role="listitem" title="Not on X">
-        <img src="/logos/x.svg" alt="X" class="brand-x" width="22" height="22" />
-      </span>
-      <span class="not-here-item" role="listitem" title="Not on Instagram">
-        <img src="/logos/instagram.svg" alt="Instagram" width="22" height="22" />
-      </span>
-      <span class="not-here-item" role="listitem" title="Not on Facebook">
-        <img src="/logos/facebook.svg" alt="Facebook" width="22" height="22" />
-      </span>
-    </div>
-    <p class="not-online-text">
-      You won't find me on X, Instagram, or Facebook — I deleted them for my sanity, and
-      losing the infinite scroll was the closest thing to a software update my brain's ever
-      had. I didn't beat the algorithm though; I just picked a favourite, and I'm hopelessly
-      addicted to <a href="https://www.youtube.com/" target="_blank" rel="noopener" class="yt-inline"><img src="/logos/youtube.svg" alt="" width="19" height="19" />YouTube</a>.
-    </p>
-  </aside>
 
   <div class="me">
     <figure class="polaroid">
@@ -71,11 +51,31 @@ import { Download, Mail } from 'lucide-astro';
           <Download size={15} /> resume
         </a>
         <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
-          <Mail size={15} /> connect
+          connect <ArrowUpRight size={15} />
         </a>
       </div>
     </div>
   </div>
+
+  <aside class="not-online">
+    <div class="not-here" role="list" aria-label="Platforms I've quit">
+      <span class="not-here-item" role="listitem" title="Not on X">
+        <img src="/logos/x.svg" alt="X" class="brand-x" width="22" height="22" />
+      </span>
+      <span class="not-here-item" role="listitem" title="Not on Instagram">
+        <img src="/logos/instagram.svg" alt="Instagram" width="22" height="22" />
+      </span>
+      <span class="not-here-item" role="listitem" title="Not on Facebook">
+        <img src="/logos/facebook.svg" alt="Facebook" width="22" height="22" />
+      </span>
+    </div>
+    <p class="not-online-text">
+      You won't find me on X, Instagram, or Facebook — I deleted them for my sanity, and
+      losing the infinite scroll was the closest thing to a software update my brain's ever
+      had. I didn't beat the algorithm though; I just picked a favourite, and I'm hopelessly
+      addicted to <a href="https://www.youtube.com/" target="_blank" rel="noopener" class="yt-inline"><img src="/logos/youtube.svg" alt="" width="19" height="19" />YouTube</a>.
+    </p>
+  </aside>
 
 </Base>
 
