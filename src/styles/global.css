@@ -767,16 +767,15 @@ footer a:hover {
 
 .contribution-months {
   display: grid;
-  grid-template-columns: repeat(var(--weeks, 53), minmax(10px, 1fr));
+  /* Fixed track size (not 1fr) so this grid's width comes purely from the
+     shared column count, not from its own sparse content — two separate
+     grids (13 label spans here vs 371 dense cells in .contribution-grid)
+     only stay column-aligned if neither one's width depends on its content. */
+  grid-template-columns: repeat(var(--weeks, 53), 12px);
   gap: 3px;
   font-size: 11px;
   color: var(--muted);
   line-height: 1;
-  /* Sized purely from available flex space (not its own sparse content) so
-     its column tracks land at the exact same width as .contribution-grid's —
-     two separate grids only stay aligned if neither sizes itself from its
-     own (very different) content. */
-  flex: 1 1 0%;
   min-width: 0;
 }
 
@@ -805,9 +804,8 @@ footer a:hover {
 
 .contribution-grid {
   display: grid;
-  grid-template-columns: repeat(var(--weeks, 53), minmax(10px, 1fr));
+  grid-template-columns: repeat(var(--weeks, 53), 12px);
   gap: 3px;
-  flex: 1 1 0%;
   min-width: 0;
 }
 
