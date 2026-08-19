@@ -772,6 +772,11 @@ footer a:hover {
   font-size: 11px;
   color: var(--muted);
   line-height: 1;
+  /* Sized purely from available flex space (not its own sparse content) so
+     its column tracks land at the exact same width as .contribution-grid's —
+     two separate grids only stay aligned if neither sizes itself from its
+     own (very different) content. */
+  flex: 1 1 0%;
   min-width: 0;
 }
 
@@ -791,6 +796,7 @@ footer a:hover {
   grid-template-rows: repeat(7, 1fr);
   gap: 3px;
   width: 36px;
+  flex-shrink: 0;
   font-size: 11px;
   color: var(--muted);
   line-height: 1;
@@ -801,6 +807,7 @@ footer a:hover {
   display: grid;
   grid-template-columns: repeat(var(--weeks, 53), minmax(10px, 1fr));
   gap: 3px;
+  flex: 1 1 0%;
   min-width: 0;
 }
 
