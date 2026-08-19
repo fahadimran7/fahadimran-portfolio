@@ -175,7 +175,7 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
         <div class="contribution-scroll">
           <div class="contribution-header">
             <div class="contribution-days" aria-hidden="true"></div>
-            <div class="contribution-months">
+            <div class="contribution-months" style={`--weeks: ${contributionGrid.length}`}>
               {filteredMonthLabels.map(m => (
                 <span style={`grid-column: ${m.col + 1}`}>{m.label}</span>
               ))}
@@ -193,7 +193,7 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
               <span></span>
             </div>
 
-            <div class="contribution-grid">
+            <div class="contribution-grid" style={`--weeks: ${contributionGrid.length}`}>
               {Array.from({ length: 7 }).map((_, dayIndex) =>
                 contributionGrid.map(week => {
                   const day = week[dayIndex];
