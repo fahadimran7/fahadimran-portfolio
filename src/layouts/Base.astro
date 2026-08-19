@@ -69,6 +69,7 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       <a href="/" class="logo" aria-label="Fahad Imran — home">FI<span class="logo-dot" aria-hidden="true">.</span></a>
       <ul id="nav-links">
         <li><a href="/about" aria-current={Astro.url.pathname === '/about' ? 'page' : undefined}>about</a></li>
+        <li><a href="/work" aria-current={Astro.url.pathname === '/work' ? 'page' : undefined}>work</a></li>
         <li><a href="/uses" aria-current={Astro.url.pathname === '/uses' ? 'page' : undefined}>uses</a></li>
         <li><a href="/ramblings" aria-current={Astro.url.pathname === '/ramblings' ? 'page' : undefined}>ramblings</a></li>
       </ul>
@@ -109,6 +110,7 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
   <div id="mobile-menu" inert>
     <nav class="mobile-nav">
       <a href="/about" aria-current={Astro.url.pathname === '/about' ? 'page' : undefined}>about</a>
+      <a href="/work" aria-current={Astro.url.pathname === '/work' ? 'page' : undefined}>work</a>
       <a href="/uses" aria-current={Astro.url.pathname === '/uses' ? 'page' : undefined}>uses</a>
       <a href="/ramblings" aria-current={Astro.url.pathname.startsWith('/ramblings') ? 'page' : undefined}>ramblings</a>
       <a href="mailto:fahadimran6544@gmail.com">say hi</a>

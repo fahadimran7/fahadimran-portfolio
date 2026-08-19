@@ -1,6 +1,77 @@
 ---
 import Base from '../layouts/Base.astro';
 
+interface ContributionDay {
+  date: string;
+  count: number;
+  level: number;
+}
+
+let contributionGrid: (ContributionDay | null)[][] = [];
+let totalContributions = 0;
+let monthLabels: { col: number; label: string }[] = [];
+
+try {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  const res = await fetch('https://github-contributions-api.jogruber.de/v4/fahadimran7?y=last', {
+    signal: controller.signal,
+  });
+  clearTimeout(timeoutId);
+
+  if (res.ok) {
+    const data = await res.json() as {
+      total: Record<string, number>;
+      contributions: ContributionDay[];
+    };
+    const contributions = data.contributions || [];
+
+    totalContributions = Object.values(data.total || {}).reduce((sum, val) => {
+      return typeof val === 'number' ? sum + val : sum;
+    }, 0);
+
+    const weeks: (ContributionDay | null)[][] = [];
+    let currentWeek: (ContributionDay | null)[] = new Array(7).fill(null);
+
+    for (const day of contributions) {
+      const date = new Date(day.date);
+      const dow = date.getDay();
+
+      if (dow === 0 && currentWeek.some(d => d !== null)) {
+        weeks.push([...currentWeek]);
+        currentWeek = new Array(7).fill(null);
+      }
+
+      currentWeek[dow] = day;
+    }
+
+    if (currentWeek.some(d => d !== null)) {
+      weeks.push([...currentWeek]);
+    }
+
+    contributionGrid = weeks;
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let lastMonth = -1;
+    for (let i = 0; i < weeks.length; i++) {
+      const firstDay = weeks[i].find(d => d !== null);
+      if (!firstDay) continue;
+      const month = new Date(firstDay.date).getMonth();
+      if (month !== lastMonth) {
+        monthLabels.push({ col: i, label: months[month] });
+        lastMonth = month;
+      }
+    }
+  }
+} catch {
+  // Silently fail — graph won't render
+}
+
+const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
+  if (i === 0) return true;
+  return m.col - arr[i - 1].col >= 3;
+});
+
 interface Position {
   role: string;
   employer?: string;
@@ -148,12 +219,62 @@ const span = (positions: Position[]) =>
     ))}
   </ol>
 
+  {contributionGrid.length > 0 && (
+    <div class="github-section">
+      <p class="section-label">Last year on GitHub</p>
+
+      <div class="contribution-calendar">
+        <div class="contribution-scroll">
+          <div class="contribution-header">
+            <div class="contribution-days" aria-hidden="true"></div>
+            <div class="contribution-months" style={`--weeks: ${contributionGrid.length}`}>
+              {filteredMonthLabels.map(m => (
+                <span style={`grid-column: ${m.col + 1}`}>{m.label}</span>
+              ))}
+            </div>
+          </div>
+
+          <div class="contribution-body">
+            <div class="contribution-days">
+              <span></span>
+              <span>Mon</span>
+              <span></span>
+              <span>Wed</span>
+              <span></span>
+              <span>Fri</span>
+              <span></span>
+            </div>
+
+            <div class="contribution-grid" style={`--weeks: ${contributionGrid.length}`}>
+              {Array.from({ length: 7 }).map((_, dayIndex) =>
+                contributionGrid.map(week => {
+                  const day = week[dayIndex];
+                  return (
+                    <div
+                      class="contribution-cell"
+                      data-level={day?.level ?? 0}
+                      title={day ? `${day.count} contributions on ${day.date}` : undefined}
+                    />
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contribution-footer">
+        <p class="contribution-total">{totalContributions.toLocaleString()} contributions in the last year — <a href="https://github.com/fahadimran7" target="_blank" rel="noopener">@fahadimran7</a></p>
+      </div>
+    </div>
+  )}
+
 </Base>
 
 <style>
   .timeline {
     list-style: none;
-    margin: 0;
+    margin: 0 0 56px;
     padding: 0;
   }
 
