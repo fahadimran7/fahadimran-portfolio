@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-astro';
+import { ArrowUpRight } from 'lucide-astro';
 
 interface ContributionDay {
   date: string;
@@ -217,15 +217,6 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
     </div>
   )}
 
-  <div class="connect">
-    <p class="section-label">Find me online</p>
-    <div class="social-links">
-      <a href="https://github.com/fahadimran7" target="_blank" rel="noopener" class="social-link"><Github size={17} />GitHub</a>
-      <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener" class="social-link"><Linkedin size={17} />LinkedIn</a>
-      <a href="mailto:fahadimran6544@gmail.com" class="social-link"><Mail size={17} />Email</a>
-    </div>
-  </div>
-
   <div class="say-hi">
     <p class="section-label">Say hi</p>
     <p class="say-hi-text">Got a project in mind, or just want to say hi?</p>
@@ -286,8 +277,16 @@ const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
   /* Bio sits close under the heading; the hero's own CTA follows it
      closely too. The bottom "Say hi" CTA still gets its own space after
      the proof sections further down the page. */
+  .hero-text h1 {
+    margin-bottom: 12px;
+  }
+
   .hero .bio {
-    margin-bottom: 20px;
+    margin-bottom: 32px;
+  }
+
+  .hero {
+    margin-bottom: 64px;
   }
 
   .say-hi {
