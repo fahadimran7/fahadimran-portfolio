@@ -4,8 +4,6 @@ publishedAt: "2026-07-14"
 summary: 3D Secure runs inside an iframe that won't call you back, so we couldn't actually know when a payment had finished. This is the polling hook we built to find out, which started as one small function and turned into the most deceptively hard thing I shipped at Nomod.
 tags: ["Nomod", "Payments", "Frontend", "React", "3DS"]
 published: true
-series: "nomod-payments"
-seriesPart: 3
 ---
 
 This is the third post about payments work at [Nomod](https://nomod.com). The first was about tokenizing cards with Basis Theory, the second about making the frontend read a backend config instead of deciding things itself. Both of those mentioned, in passing, a couple of things that stayed provider-specific and got pushed to the edges. This is one of them, and it's the one that looked trivial and absolutely was not.

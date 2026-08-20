@@ -4,8 +4,6 @@ publishedAt: "2026-07-14"
 summary: When I joined Nomod's web team, the checkout was a tangle of per-provider forms and six copies of Apple Pay. Here's how we made the backend config the source of truth, collapsed the mess, and accidentally unlocked dynamic routing.
 tags: ["Nomod", "Payments", "Frontend", "Architecture", "Redux"]
 published: true
-series: "nomod-payments"
-seriesPart: 2
 ---
 
 This is the second post about payments work at [Nomod](https://nomod.com). The first was about getting out of PCI scope with Basis Theory. This one is the groundwork that made that migration easy, even though I built it before Basis Theory was on the table. It's the less glamorous half of the story: taking a checkout that had quietly turned into a mess and making it boring again.

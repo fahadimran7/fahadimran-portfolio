@@ -4,8 +4,6 @@ publishedAt: "2026-07-13"
 summary: At Nomod we kept adding card providers to cut fees and stay resilient. Each one came with its own card fields, and that quietly put us out of PCI compliance. Here's how we ended up charging cards we never hold, by tokenizing every provider through Basis Theory.
 tags: ["Nomod", "Payments", "PCI", "Frontend", "Architecture"]
 published: true
-series: "nomod-payments"
-seriesPart: 1
 ---
 
 This is the first of a few posts about work I did at [Nomod](https://nomod.com), where I've been building the payments front end. Nomod lets a merchant take card payments on their phone, no terminal, no hardware. The kind of thing a market stall or a freelancer can open and start charging a card with in a couple of minutes.
