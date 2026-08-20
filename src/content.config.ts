@@ -9,8 +9,6 @@ const ramblings = defineCollection({
     summary: z.string(),
     tags: z.array(z.string()).default([]),
     published: z.boolean().default(true),
-    series: z.string().optional(),
-    seriesPart: z.number().optional(),
   }),
 });
 

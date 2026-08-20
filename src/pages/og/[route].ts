@@ -5,7 +5,6 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { series } from '../../data/series';
 
 // Custom OG images rendered at build time with Satori (HTML/CSS -> SVG) and
 // resvg (SVG -> PNG). Editorial framed card: eyebrow + read time up top, big
@@ -70,17 +69,13 @@ function decoration(): El {
 
 interface OgData {
   title: string;
-  series?: string;
-  seriesPart?: number;
   tags: string[];
   readTime: string;
   date: string;
 }
 
-function template({ title, series: seriesKey, seriesPart, tags, readTime, date }: OgData): El {
-  const s = seriesKey ? series[seriesKey] : undefined;
-  const label = s ? `${s.name} · Part ${seriesPart ?? ''}`.trim() : 'Ramblings';
-  const eyebrow = `${label} · ${date}`;
+function template({ title, tags, readTime, date }: OgData): El {
+  const eyebrow = `Ramblings · ${date}`;
 
   const len = title.length;
   const titleSize = len > 62 ? 50 : len > 46 ? 58 : 68;
@@ -239,8 +234,6 @@ export async function getStaticPaths() {
     props: {
       data: {
         title: post.data.title,
-        series: post.data.series,
-        seriesPart: post.data.seriesPart,
         tags: post.data.tags,
         readTime: readingTime(post.body ?? ''),
         date: formatDate(post.data.publishedAt),

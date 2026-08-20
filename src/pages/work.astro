@@ -1,165 +1,81 @@
 ---
 import Base from '../layouts/Base.astro';
 
-interface ContributionDay {
-  date: string;
-  count: number;
-  level: number;
-}
-
-let contributionGrid: (ContributionDay | null)[][] = [];
-let totalContributions = 0;
-let monthLabels: { col: number; label: string }[] = [];
-
-try {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
-  const res = await fetch('https://github-contributions-api.jogruber.de/v4/fahadimran7?y=last', {
-    signal: controller.signal,
-  });
-  clearTimeout(timeoutId);
-
-  if (res.ok) {
-    const data = await res.json() as {
-      total: Record<string, number>;
-      contributions: ContributionDay[];
-    };
-    const contributions = data.contributions || [];
-
-    totalContributions = Object.values(data.total || {}).reduce((sum, val) => {
-      return typeof val === 'number' ? sum + val : sum;
-    }, 0);
-
-    const weeks: (ContributionDay | null)[][] = [];
-    let currentWeek: (ContributionDay | null)[] = new Array(7).fill(null);
-
-    for (const day of contributions) {
-      const date = new Date(day.date);
-      const dow = date.getDay();
-
-      if (dow === 0 && currentWeek.some(d => d !== null)) {
-        weeks.push([...currentWeek]);
-        currentWeek = new Array(7).fill(null);
-      }
-
-      currentWeek[dow] = day;
-    }
-
-    if (currentWeek.some(d => d !== null)) {
-      weeks.push([...currentWeek]);
-    }
-
-    contributionGrid = weeks;
-
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let lastMonth = -1;
-    for (let i = 0; i < weeks.length; i++) {
-      const firstDay = weeks[i].find(d => d !== null);
-      if (!firstDay) continue;
-      const month = new Date(firstDay.date).getMonth();
-      if (month !== lastMonth) {
-        monthLabels.push({ col: i, label: months[month] });
-        lastMonth = month;
-      }
-    }
-  }
-} catch {
-  // Silently fail — graph won't render
-}
-
-const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
-  if (i === 0) return true;
-  return m.col - arr[i - 1].col >= 3;
-});
-
-interface Position {
+interface Project {
+  name: string;
+  image: string;
+  url?: string;
   role: string;
   employer?: string;
   start: string;
   end: string;
-}
-
-interface Company {
-  company: string;
-  logo: string;
-  url?: string;
   location: string;
   remote?: boolean;
-  positions: Position[];
+  description: string;
 }
 
-// Reverse-chronological. Multiple roles at the same company are grouped
-// under one logo (LinkedIn-style); positions are newest-first.
-const companies: Company[] = [
+// Reverse-chronological.
+const projects: Project[] = [
   {
-    company: 'Nomod',
-    logo: '/images/nomod-logo.webp',
+    name: 'Nomod',
+    image: '/images/work/nomod.webp',
     url: 'https://nomod.com',
+    role: 'Software Engineer',
+    employer: 'Alfabolt',
+    start: 'Jun 2024',
+    end: 'Present',
     location: 'United Arab Emirates',
     remote: true,
-    positions: [
-      { role: 'Software Engineer', employer: 'Alfabolt', start: 'Jun 2024', end: 'Present' },
-    ],
+    description: 'Payments platform for 40,000+ GCC merchants. Built the provider layer behind Link, Invoice, and Checkout.',
   },
   {
-    company: 'Pine',
-    logo: '/images/pine-logo.webp',
+    name: 'Pine',
+    image: '/images/work/pine.webp',
     url: 'https://apps.apple.com/no/app/pine-the-app/id6467567252',
+    role: 'Software Engineer',
+    employer: 'Alfabolt',
+    start: 'Nov 2023',
+    end: 'Jun 2024',
     location: 'Norway',
     remote: true,
-    positions: [
-      { role: 'Software Engineer', employer: 'Alfabolt', start: 'Nov 2023', end: 'Jun 2024' },
-    ],
+    description: 'Group-buying app from Norway. Led the mobile build and the bill-splitting flow for friends ordering together.',
   },
   {
-    company: 'Rayne',
-    logo: '/images/rayne-logo.webp',
+    name: 'Rayne',
+    image: '/images/work/rayne.webp',
     url: 'https://wearerayne.com',
+    role: 'Frontend Engineer',
+    employer: 'Alfabolt',
+    start: 'Aug 2023',
+    end: 'Nov 2023',
     location: 'United Arab Emirates',
     remote: true,
-    positions: [
-      { role: 'Frontend Engineer', employer: 'Alfabolt', start: 'Aug 2023', end: 'Nov 2023' },
-    ],
+    description: 'Marketing site and component library, migrated to Sanity CMS. Hit a 100 Lighthouse SEO score across 5+ countries.',
   },
   {
-    company: 'Leaf',
-    logo: '/images/leaf-logo.webp',
+    name: 'Leaf',
+    image: '/images/work/leaf.webp',
     url: 'https://sharewithleaf.com',
+    role: 'Software Engineer',
+    employer: 'Devsinc',
+    start: 'Jan 2023',
+    end: 'Aug 2023',
     location: 'United States',
     remote: true,
-    positions: [
-      { role: 'Software Engineer', employer: 'Devsinc', start: 'Jan 2023', end: 'Aug 2023' },
-    ],
+    description: 'Private voice recorder for families. Built the recording flow with Whisper transcription and speaker tagging.',
   },
   {
-    company: 'Maple',
-    logo: '/images/maple-logo.webp',
+    name: 'Maple',
+    image: '/images/work/maple.webp',
     url: 'https://www.linkedin.com/company/maplehr',
+    role: 'Software Engineer',
+    employer: 'Devsinc',
+    start: 'Aug 2022',
+    end: 'Mar 2023',
     location: 'Pakistan',
-    positions: [
-      { role: 'Software Engineer', employer: 'Devsinc', start: 'Aug 2022', end: 'Mar 2023' },
-    ],
-  },
-  {
-    company: 'Tuamify',
-    logo: '/images/tuamify-logo.webp',
-    url: 'https://www.linkedin.com/company/tuamify',
-    location: 'Pakistan',
-    positions: [
-      { role: 'Frontend Engineer', start: 'Sep 2021', end: 'Apr 2022' },
-    ],
+    description: 'HR platform built in Flutter from scratch, with MVVM architecture and 85% unit test coverage. Shipped leave, expense, and inventory modules against a Rails backend.',
   },
 ];
-
-const employerUrls: Record<string, string> = {
-  Alfabolt: 'https://alfabolt.com',
-  Devsinc: 'https://devsinc.com',
-};
-
-const span = (positions: Position[]) =>
-  positions.length > 1
-    ? `${positions[positions.length - 1].start} — ${positions[0].end}`
-    : `${positions[0].start} — ${positions[0].end}`;
 ---
 <Base
   title="Work"
@@ -171,265 +87,154 @@ const span = (positions: Position[]) =>
     <p>Five years, four countries, mostly remote from a bedroom in Pakistan. Here's roughly where the time went.</p>
   </div>
 
-  <ol class="timeline">
-    {companies.map((c) => (
-      <li class="tl-item">
-        <span class="tl-marker">
-          <img src={c.logo} alt={c.company} loading="lazy" />
-        </span>
-        <div class="tl-body">
-          <div class="tl-row">
-            <h2 class="tl-company">
-              {c.url
-                ? <a href={c.url} target="_blank" rel="noopener">{c.company}</a>
-                : c.company}
-            </h2>
-            <span class="tl-dates">{span(c.positions)}</span>
+  <div class="project-grid">
+    {projects.map((p) => {
+      const Tag = p.url ? 'a' : 'div';
+      const cursorLabel = p.url ? 'View project ↗' : 'Case study coming soon';
+      return (
+        <Tag
+          class="project-card"
+          href={p.url}
+          target={p.url ? '_blank' : undefined}
+          rel={p.url ? 'noopener' : undefined}
+        >
+          <div class="project-image-wrap">
+            <img src={p.image} alt={p.name} loading="lazy" />
+            <span class="project-cursor-tag">{cursorLabel}</span>
           </div>
 
-          {c.positions.length > 1 ? (
-            <ul class="tl-roles">
-              {c.positions.map((p) => (
-                <li class="tl-role-row">
-                  <span class="tl-role">
-                    {p.role}{p.employer && (
-                      <span class="tl-via"> · via {employerUrls[p.employer]
-                        ? <a href={employerUrls[p.employer]} target="_blank" rel="noopener">{p.employer}</a>
-                        : p.employer}</span>
-                    )}
-                  </span>
-                  <span class="tl-role-dates">{p.start} — {p.end}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p class="tl-role">
-              {c.positions[0].role}
-              {c.positions[0].employer && (
-                <span class="tl-via"> · via {employerUrls[c.positions[0].employer]
-                  ? <a href={employerUrls[c.positions[0].employer]} target="_blank" rel="noopener">{c.positions[0].employer}</a>
-                  : c.positions[0].employer}</span>
-              )}
-            </p>
-          )}
-
-          <p class="tl-loc">{c.remote && <span class="tl-remote">Remote</span>}{c.remote && ' · '}{c.location}</p>
-        </div>
-      </li>
-    ))}
-  </ol>
-
-  {contributionGrid.length > 0 && (
-    <div class="github-section">
-      <p class="section-label">Last year on GitHub</p>
-
-      <div class="contribution-calendar">
-        <div class="contribution-scroll">
-          <div class="contribution-header">
-            <div class="contribution-days" aria-hidden="true"></div>
-            <div class="contribution-months" style={`--weeks: ${contributionGrid.length}`}>
-              {filteredMonthLabels.map(m => (
-                <span style={`grid-column: ${m.col + 1}`}>{m.label}</span>
-              ))}
-            </div>
+          <div class="project-info">
+            <h2 class="project-title">{p.name}</h2>
+            <p class="project-desc">{p.description}</p>
           </div>
-
-          <div class="contribution-body">
-            <div class="contribution-days">
-              <span></span>
-              <span>Mon</span>
-              <span></span>
-              <span>Wed</span>
-              <span></span>
-              <span>Fri</span>
-              <span></span>
-            </div>
-
-            <div class="contribution-grid" style={`--weeks: ${contributionGrid.length}`}>
-              {Array.from({ length: 7 }).map((_, dayIndex) =>
-                contributionGrid.map(week => {
-                  const day = week[dayIndex];
-                  return (
-                    <div
-                      class="contribution-cell"
-                      data-level={day?.level ?? 0}
-                      title={day ? `${day.count} contributions on ${day.date}` : undefined}
-                    />
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="contribution-footer">
-        <p class="contribution-total">{totalContributions.toLocaleString()} contributions in the last year — <a href="https://github.com/fahadimran7" target="_blank" rel="noopener">@fahadimran7</a></p>
-      </div>
-    </div>
-  )}
+        </Tag>
+      );
+    })}
+  </div>
 
 </Base>
 
 <style>
-  .timeline {
-    list-style: none;
-    margin: 0 0 56px;
-    padding: 0;
-  }
-
-  .tl-item {
-    position: relative;
+  .project-grid {
     display: grid;
-    grid-template-columns: 44px 1fr;
-    gap: 18px;
-    padding-bottom: 34px;
-  }
-  .tl-item:last-child {
-    padding-bottom: 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 40px;
+    margin-bottom: 56px;
   }
 
-  /* connecting line — from below this marker down to the next */
-  .tl-item::before {
+  .project-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project-image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--chip-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--chip-shadow);
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .project-card:hover .project-image-wrap {
+    box-shadow: var(--chip-shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Subtle dark scrim on hover so the cursor tag reads clearly against any
+     screenshot, light or dark. */
+  .project-image-wrap::after {
     content: '';
     position: absolute;
-    left: 21px;
-    top: 44px;
-    bottom: -6px;
-    width: 2px;
-    background: var(--border);
-  }
-  .tl-item:last-child::before {
-    display: none;
-  }
-
-  .tl-marker {
-    position: relative;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.2s ease;
+    pointer-events: none;
     z-index: 1;
-    width: 44px;
-    height: 44px;
-    border-radius: 11px;
-    border: 1px solid var(--border);
-    background: var(--chip-bg);
-    box-shadow: var(--chip-shadow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  }
+  .project-card:hover .project-image-wrap::after {
+    background: rgba(0, 0, 0, 0.28);
   }
 
-  .tl-marker img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
+  .project-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Keep the left edge (logo, headline) always in frame — crop the right
+       side instead of cropping evenly from both sides. */
+    object-position: left center;
     display: block;
   }
 
-  .tl-body {
-    min-width: 0;
-    padding-top: 1px;
+  /* Custom cursor label that tracks the mouse over the image — set via
+     --x/--y inline vars in the mousemove handler below. */
+  .project-cursor-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(calc(var(--x, 0) * 1px - 50%), calc(var(--y, 0) * 1px - 50%));
+    /* Fixed dark pill regardless of site theme — most project screenshots
+       are light, so a theme-following (light-in-dark-mode) tag would
+       disappear against them. */
+    background: #1a1a1a;
+    color: #f9f9f7;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 2;
+  }
+  .project-image-wrap:hover .project-cursor-tag {
+    opacity: 1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .project-image-wrap {
+      cursor: none;
+    }
   }
 
-  .tl-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-  }
-
-  .tl-company {
+  .project-title {
     font-size: 19px;
     font-weight: 700;
     letter-spacing: -0.01em;
-    line-height: 1.4;
-  }
-  .tl-company a {
-    color: var(--text);
-    text-decoration: none;
-  }
-  .tl-company a:hover {
-    text-decoration: underline;
+    line-height: 1.3;
+    margin-bottom: 4px;
   }
 
-  .tl-dates {
-    font-size: 13px;
+  .project-desc {
+    font-size: 15px;
+    line-height: 1.6;
     color: var(--muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .tl-role {
-    font-size: 16px;
-    color: var(--text);
-    margin-top: 1px;
-  }
-  .tl-via {
-    color: var(--muted);
-  }
-  .tl-via a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-  .tl-via a:hover {
-    color: var(--text);
-    text-decoration: underline;
-  }
-
-  /* grouped roles under one company */
-  .tl-roles {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 0;
-  }
-  .tl-role-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    padding: 3px 0;
-  }
-  .tl-role-row .tl-role {
-    margin-top: 0;
-  }
-  .tl-role-dates {
-    font-size: 13px;
-    color: var(--muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .tl-loc {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-    opacity: 0.85;
   }
 
   @media (max-width: 570px) {
-    .tl-item {
-      grid-template-columns: 38px 1fr;
-      gap: 14px;
-    }
-    .tl-item::before {
-      left: 18px;
-      top: 38px;
-    }
-    .tl-marker {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-    }
-    .tl-marker img {
-      width: 26px;
-      height: 26px;
-    }
-    .tl-row {
-      flex-direction: column;
-      gap: 2px;
-    }
-    .tl-role-row {
-      flex-direction: column;
-      gap: 1px;
+    .project-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
     }
   }
 </style>
+
+<script>
+  // Custom cursor-follow label over each project image, positioned via
+  // CSS vars rather than raw left/top so it never fights the card's layout.
+  function initProjectCursor() {
+    document.querySelectorAll('.project-image-wrap').forEach(function (wrap) {
+      if (wrap.dataset.cursorBound) return;
+      wrap.dataset.cursorBound = '1';
+      wrap.addEventListener('mousemove', function (e) {
+        const rect = wrap.getBoundingClientRect();
+        wrap.style.setProperty('--x', String(e.clientX - rect.left));
+        wrap.style.setProperty('--y', String(e.clientY - rect.top));
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initProjectCursor);
+</script>

@@ -13,7 +13,7 @@
   --text: #1a1a1a;
   --muted: #707070;
   --border: #e5e5e3;
-  --max-w: 960px;
+  --max-w: 1320px;
   --chip-bg: white;
   --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   --chip-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.09);
@@ -52,6 +52,9 @@ body {
   font-weight: 400;
   line-height: 1.7;
   padding: 48px 0 120px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   /* clip stray horizontal overflow (e.g. chip tooltips near the screen edge)
      without breaking the sticky header — clip is not a scroll container */
   overflow-x: clip;
@@ -65,6 +68,14 @@ body {
   max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
   padding: 0 24px;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#page-content {
+  flex: 1;
 }
 
 /* Page sections rise in on load, staggered by position. Pure CSS: the
@@ -118,12 +129,15 @@ nav {
   max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
   padding: 12px 24px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  gap: 16px;
 }
 
 nav .logo {
+  grid-column: 1;
+  justify-self: start;
   font-weight: 700;
   font-size: 22px;
   letter-spacing: -0.03em;
@@ -131,21 +145,25 @@ nav .logo {
   text-decoration: none;
   color: var(--text);
   display: inline-block;
-  transition: transform 0.18s ease;
-}
-nav .logo:hover {
-  transform: scale(1.08);
 }
 nav .logo .logo-dot {
   color: var(--accent);
+}
+
+.nav-actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 nav ul {
   list-style: none;
   display: flex;
   gap: 24px;
-  margin-left: auto;
-  margin-right: 24px;
+  grid-column: 2;
+  justify-self: center;
 }
 
 nav ul a {
@@ -208,11 +226,8 @@ nav ul a[aria-current="page"] {
 /* ── Footer ── */
 footer {
   margin-top: 80px;
-  padding-top: 24px;
+  padding-top: 48px;
   border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   font-size: 13px;
   color: var(--muted);
 }
@@ -223,6 +238,51 @@ footer a {
 }
 footer a:hover {
   color: var(--text);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  padding-bottom: 40px;
+}
+
+.footer-brand {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col.footer-about {
+  max-width: 280px;
+}
+
+.footer-about p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-heading {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
 }
 
 .footer-socials {
@@ -435,55 +495,6 @@ footer a:hover {
   box-shadow: var(--chip-shadow-hover);
 }
 
-/* ── Theme toggle ── */
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: none;
-  background: var(--toggle-bg);
-  color: var(--toggle-color);
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-  flex-shrink: 0;
-}
-
-.theme-toggle:hover {
-  opacity: 0.85;
-}
-
-.theme-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  will-change: transform, opacity;
-}
-
-[data-theme="light"] .theme-toggle {
-  background: #805AD5;
-  color: #fff;
-}
-
-[data-theme="light"] .theme-toggle:hover {
-  background: #6B46C1;
-  opacity: 1;
-}
-
-[data-theme="dark"] .theme-toggle {
-  background: #FBD38D;
-  color: #1a1a1a;
-}
-
-[data-theme="dark"] .theme-toggle:hover {
-  background: #f6ad56;
-  opacity: 1;
-}
-
 /* ── Tools page ── */
 .tools-section {
   margin-bottom: 44px;
@@ -573,7 +584,7 @@ footer a:hover {
 }
 .writing-item a {
   font-size: 19px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.011em;
   color: var(--text);
   text-decoration: none;
@@ -727,6 +738,11 @@ footer a:hover {
 
   .hero-text h1 {
     font-size: 40px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    gap: 28px;
   }
 
   .writing-item {

@@ -1,8 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { CalendarDays, Clock3, ArrowRight, ArrowLeft } from 'lucide-astro';
-import { series as allSeries } from '../../data/series';
+import { CalendarDays, Clock3, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('ramblings', ({ data }) => data.published);
@@ -17,18 +16,18 @@ function formatDate(str: string) {
 }
 
 function readingTime(body: string) {
-  const words = body.trim().split(/\s+/).length;
-  return `${Math.ceil(words / 200)} min read`;
+  return `${Math.ceil(body.trim().split(/\s+/).length / 200)} min read`;
 }
 
 const tags = post.data.tags ?? [];
 
-// Series context, if this post belongs to one.
-const currentSeries = post.data.series ? allSeries[post.data.series] : undefined;
-const currentPart = post.data.seriesPart;
-const nextPart = currentSeries?.parts.find(
-  (p) => currentPart !== undefined && p.part === currentPart + 1
+// Chronological prev/next, independent of any grouping — every post stands alone.
+const allPosts = (await getCollection('ramblings', ({ data }) => data.published)).sort(
+  (a, b) => new Date(a.data.publishedAt).getTime() - new Date(b.data.publishedAt).getTime()
 );
+const currentIndex = allPosts.findIndex(p => p.id === post.id);
+const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
+const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined;
 ---
 <Base title={post.data.title} description={post.data.summary} ogImage={`/og/${post.id}.png`}>
 
@@ -40,7 +39,7 @@ const nextPart = currentSeries?.parts.find(
       gap: 6px;
       margin-bottom: 28px;
       font-size: 14px;
-      font-weight: 550;
+      font-weight: 400;
       color: var(--muted);
       text-decoration: none;
       transition: color 0.15s ease;
@@ -48,7 +47,7 @@ const nextPart = currentSeries?.parts.find(
     .post-back:hover {
       color: var(--text);
     }
-    /* Nudge the arrow left on hover, mirroring .series-next's rightward nudge. */
+    /* Nudge the arrow left on hover, mirroring the post-nav links' nudge. */
     .post-back svg {
       transition: transform 0.15s ease;
     }
@@ -66,21 +65,13 @@ const nextPart = currentSeries?.parts.find(
 
     .post-tag {
       font-size: 12.5px;
-      font-weight: 550;
+      font-weight: 400;
       line-height: 1;
       padding: 6px 11px;
       border-radius: 999px;
       background: var(--chip-bg);
       color: var(--muted);
       border: 1px solid var(--border);
-    }
-
-    .post-series-eyebrow {
-      font-size: 13px;
-      font-weight: 550;
-      color: var(--muted);
-      letter-spacing: 0.01em;
-      margin-bottom: 10px;
     }
 
     .post-title {
@@ -296,155 +287,143 @@ const nextPart = currentSeries?.parts.find(
       fill: hsl(var(--h) 62% 76%);
     }
 
-    /* ── Series box ── */
-    .series-box {
+    /* ── Post reading column: restrained width, centered inside the wider
+       site wrap (which stays wide for every other page). ── */
+    .post-shell {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* ── Prev / next ── */
+    .post-nav {
       margin-top: 56px;
-      padding: 22px 24px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--chip-bg);
-      box-shadow: var(--chip-shadow);
-    }
-
-    .series-box-label {
-      font-size: 12.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .series-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .series-item {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      padding: 7px 0;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    .series-item + .series-item {
+      padding-top: 24px;
       border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
     }
 
-    .series-num {
+    .post-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 46%;
+      min-width: 0;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .post-nav-next {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .post-nav-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .post-nav-label {
       font-size: 12px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--muted);
-      font-variant-numeric: tabular-nums;
+    }
+
+    .post-nav-title {
+      font-size: 15px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.15s ease;
+    }
+
+    .post-nav-link:hover .post-nav-title {
+      color: var(--text);
+    }
+
+    .post-nav-link svg {
       flex-shrink: 0;
-      opacity: 0.7;
-    }
-
-    .series-item a {
-      color: var(--text);
-      text-decoration: none;
-    }
-    .series-item a:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .series-item.is-current .series-title {
-      color: var(--text);
-      font-weight: 600;
-    }
-    .series-item:not(.is-current) .series-title {
       color: var(--muted);
+      transition: transform 0.15s ease;
+    }
+    .post-nav-prev:hover svg {
+      transform: translateX(-3px);
+    }
+    .post-nav-next:hover svg {
+      transform: translateX(3px);
     }
 
-    .series-here {
-      font-weight: 500;
-      color: var(--muted);
-    }
-    .series-soon {
-      color: var(--muted);
-      opacity: 0.75;
-    }
-
-    .series-next {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 18px;
-      font-size: 14px;
-      font-weight: 550;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .series-next:hover {
-      gap: 9px;
+    @media (max-width: 570px) {
+      .post-nav-link {
+        max-width: 48%;
+      }
+      .post-nav-title {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
     }
   </style>
 
-  <a class="post-back" href="/ramblings">
-    <ArrowLeft size={15} strokeWidth={2} />
-    Ramblings
-  </a>
+  <div class="post-shell">
+    <a class="post-back" href="/ramblings">
+      <ArrowLeft size={15} strokeWidth={2} />
+      Ramblings
+    </a>
 
-  {currentSeries && currentPart !== undefined && (
-    <p class="post-series-eyebrow">{currentSeries.name} · Part {currentPart}</p>
-  )}
+    <h1 class="post-title">{post.data.title}</h1>
 
-  <h1 class="post-title">{post.data.title}</h1>
-
-  <div class="post-meta">
-    <span>
-      <CalendarDays size={14} strokeWidth={1.75} />
-      {formatDate(post.data.publishedAt)}
-    </span>
-    <span class="sep">·</span>
-    <span>
-      <Clock3 size={14} strokeWidth={1.75} />
-      {readingTime(post.body)}
-    </span>
-  </div>
-
-  {tags.length > 0 && (
-    <div class="post-tags">
-      {tags.map(tag => (
-        <span class="post-tag">#{tag}</span>
-      ))}
+    <div class="post-meta">
+      <span>
+        <CalendarDays size={14} strokeWidth={1.75} />
+        {formatDate(post.data.publishedAt)}
+      </span>
+      <span class="sep">·</span>
+      <span>
+        <Clock3 size={14} strokeWidth={1.75} />
+        {readingTime(post.body)}
+      </span>
     </div>
-  )}
 
-  <div class="post-body">
-    <Content />
-  </div>
-
-  {currentSeries && (
-    <aside class="series-box">
-      <p class="series-box-label">Part of a series · {currentSeries.name}</p>
-      <ol class="series-list">
-        {currentSeries.parts.map((p) => (
-          <li class={`series-item${p.part === currentPart ? ' is-current' : ''}`}>
-            <span class="series-num">{String(p.part).padStart(2, '0')}</span>
-            {p.slug && p.part !== currentPart ? (
-              <a href={`/ramblings/${p.slug}`}>{p.title}</a>
-            ) : (
-              <span class="series-title">
-                {p.title}
-                {p.part === currentPart && <span class="series-here"> · you're here</span>}
-                {!p.slug && <span class="series-soon"> · coming soon</span>}
-              </span>
-            )}
-          </li>
+    {tags.length > 0 && (
+      <div class="post-tags">
+        {tags.map(tag => (
+          <span class="post-tag">#{tag}</span>
         ))}
-      </ol>
-      {nextPart?.slug && (
-        <a class="series-next" href={`/ramblings/${nextPart.slug}`}>
-          Next: {nextPart.title}
-          <ArrowRight size={14} strokeWidth={2} />
+      </div>
+    )}
+
+    <div class="post-body">
+      <Content />
+    </div>
+
+    <nav class="post-nav" aria-label="More ramblings">
+      {prevPost ? (
+        <a class="post-nav-link post-nav-prev" href={`/ramblings/${prevPost.id}`}>
+          <ChevronLeft size={16} strokeWidth={2} />
+          <span class="post-nav-text">
+            <span class="post-nav-label">Previous</span>
+            <span class="post-nav-title">{prevPost.data.title}</span>
+          </span>
         </a>
-      )}
-    </aside>
-  )}
+      ) : <span />}
+      {nextPost ? (
+        <a class="post-nav-link post-nav-next" href={`/ramblings/${nextPost.id}`}>
+          <span class="post-nav-text">
+            <span class="post-nav-label">Next</span>
+            <span class="post-nav-title">{nextPost.data.title}</span>
+          </span>
+          <ChevronRight size={16} strokeWidth={2} />
+        </a>
+      ) : <span />}
+    </nav>
+  </div>
 
   <script>
     // Wrap each code block and add a copy button that flips to "Copied" briefly.
