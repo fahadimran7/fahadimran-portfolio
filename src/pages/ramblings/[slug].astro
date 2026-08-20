@@ -21,9 +21,11 @@ function readingTime(body: string) {
 
 const tags = post.data.tags ?? [];
 
-// Chronological prev/next, independent of any grouping — every post stands alone.
+// Prev/next follow the same newest-first order as /ramblings, so adjacency
+// here always matches the list — "previous" is the post shown above this one
+// there, "next" is the post shown below.
 const allPosts = (await getCollection('ramblings', ({ data }) => data.published)).sort(
-  (a, b) => new Date(a.data.publishedAt).getTime() - new Date(b.data.publishedAt).getTime()
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
 );
 const currentIndex = allPosts.findIndex(p => p.id === post.id);
 const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
@@ -351,6 +353,15 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       flex-shrink: 0;
       color: var(--muted);
       transition: transform 0.15s ease;
+    }
+    /* The chevron glyph sits ~6px inset from its own SVG box on every side
+       (Lucide's viewBox is wider than the stroke) — pull it back out on the
+       outward-facing edge so the arrow reads flush with the card, not padded. */
+    .post-nav-prev svg {
+      margin-left: -6px;
+    }
+    .post-nav-next svg {
+      margin-right: -6px;
     }
     .post-nav-prev:hover svg {
       transform: translateX(-3px);
