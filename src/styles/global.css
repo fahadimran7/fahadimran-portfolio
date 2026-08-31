@@ -42,6 +42,7 @@
 html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -105,6 +106,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   #page-content > * {
     transition: none;
   }
@@ -324,102 +329,6 @@ footer a:hover {
   font-weight: 400;
   letter-spacing: -0.011em;
   margin-bottom: 56px;
-}
-
-/* ── Chips ── */
-.section-row {
-  margin-bottom: 40px;
-}
-
-.chip-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.chip-wrap {
-  position: relative;
-  display: inline-flex;
-}
-
-.chip-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  /* JS sets --tip-shift to nudge edge tooltips inside the viewport. It rides on
-     margin-left (not transform) so it applies instantly — folding it into the
-     transitioned transform makes the offset fail to resolve until a reflow. */
-  margin-left: var(--tip-shift, 0px);
-  transform: translateX(-50%) translateY(4px);
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 12px;
-  white-space: nowrap;
-  padding: 5px 11px;
-  border-radius: 999px;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.15s ease,
-    visibility 0.15s ease,
-    transform 0.15s ease;
-  z-index: 10;
-}
-
-.chip-wrap:hover .chip-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 16px 6px 8px;
-  font-size: 16px;
-  color: var(--text);
-  text-decoration: none;
-  text-decoration: none;
-  background: var(--chip-bg);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
-  box-shadow: var(--chip-shadow);
-  cursor: default;
-}
-
-.chip:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--chip-shadow-hover);
-  border-color: #d0d0ce;
-  cursor: pointer;
-}
-
-.chip-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.chip-icon img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
 }
 
 /* ── Social links ── */
@@ -763,157 +672,4 @@ footer a:hover {
     flex-direction: column;
     gap: 12px;
   }
-}
-
-@media (max-width: 360px) {
-  .contribution-footer {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 570px) {
-  /* hover tooltips make no sense on touch — hide them (also avoids any overflow) */
-  .chip-tooltip {
-    display: none;
-  }
-}
-
-/* ── GitHub Contributions ── */
-.github-section {
-  margin-bottom: 56px;
-}
-
-.contribution-calendar {
-  margin-bottom: 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-.contribution-scroll {
-  overflow-x: auto;
-  width: 100%;
-  padding-bottom: 8px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.contribution-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.contribution-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.contribution-header {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-  min-width: 0;
-}
-
-.contribution-header .contribution-days {
-  width: 36px;
-  flex-shrink: 0;
-}
-
-.contribution-months {
-  display: grid;
-  /* Fixed track size (not 1fr) so this grid's width comes purely from the
-     shared column count, not from its own sparse content — two separate
-     grids (13 label spans here vs 371 dense cells in .contribution-grid)
-     only stay column-aligned if neither one's width depends on its content. */
-  grid-template-columns: repeat(var(--weeks, 53), 12px);
-  gap: 3px;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1;
-  min-width: 0;
-}
-
-.contribution-months span {
-  grid-row: 1;
-  white-space: nowrap;
-}
-
-.contribution-body {
-  display: flex;
-  gap: 6px;
-  min-width: 0;
-}
-
-.contribution-days {
-  display: grid;
-  grid-template-rows: repeat(7, 1fr);
-  gap: 3px;
-  width: 36px;
-  flex-shrink: 0;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1;
-  align-items: center;
-}
-
-.contribution-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--weeks, 53), 12px);
-  gap: 3px;
-  min-width: 0;
-}
-
-.contribution-cell {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 2px;
-}
-
-.contribution-cell[data-level="0"] {
-  background: #ebedf0;
-}
-.contribution-cell[data-level="1"] {
-  background: #9be9a8;
-}
-.contribution-cell[data-level="2"] {
-  background: #40c463;
-}
-.contribution-cell[data-level="3"] {
-  background: #30a14e;
-}
-.contribution-cell[data-level="4"] {
-  background: #216e39;
-}
-
-[data-theme="dark"] .contribution-cell[data-level="0"] {
-  background: #1c1c1a;
-}
-[data-theme="dark"] .contribution-cell[data-level="1"] {
-  background: #0e4429;
-}
-[data-theme="dark"] .contribution-cell[data-level="2"] {
-  background: #006d32;
-}
-[data-theme="dark"] .contribution-cell[data-level="3"] {
-  background: #26a641;
-}
-[data-theme="dark"] .contribution-cell[data-level="4"] {
-  background: #39d353;
-}
-
-.contribution-total {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0;
-}
-
-.contribution-total a {
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.contribution-total a:hover {
-  text-decoration: underline;
 }

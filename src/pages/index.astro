@@ -1,290 +1,206 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Github, Linkedin, Mail } from 'lucide-astro';
-
-interface ContributionDay {
-  date: string;
-  count: number;
-  level: number;
-}
-
-let contributionGrid: (ContributionDay | null)[][] = [];
-let totalContributions = 0;
-let monthLabels: { col: number; label: string }[] = [];
-
-try {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
-  const res = await fetch('https://github-contributions-api.jogruber.de/v4/fahadimran7?y=last', {
-    signal: controller.signal,
-  });
-  clearTimeout(timeoutId);
-
-  if (res.ok) {
-    const data = await res.json() as {
-      total: Record<string, number>;
-      contributions: ContributionDay[];
-    };
-    const contributions = data.contributions || [];
-
-    totalContributions = Object.values(data.total || {}).reduce((sum, val) => {
-      return typeof val === 'number' ? sum + val : sum;
-    }, 0);
-
-    const weeks: (ContributionDay | null)[][] = [];
-    let currentWeek: (ContributionDay | null)[] = new Array(7).fill(null);
-
-    for (const day of contributions) {
-      const date = new Date(day.date);
-      const dow = date.getDay();
-
-      if (dow === 0 && currentWeek.some(d => d !== null)) {
-        weeks.push([...currentWeek]);
-        currentWeek = new Array(7).fill(null);
-      }
-
-      currentWeek[dow] = day;
-    }
-
-    if (currentWeek.some(d => d !== null)) {
-      weeks.push([...currentWeek]);
-    }
-
-    contributionGrid = weeks;
-
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let lastMonth = -1;
-    for (let i = 0; i < weeks.length; i++) {
-      const firstDay = weeks[i].find(d => d !== null);
-      if (!firstDay) continue;
-      const month = new Date(firstDay.date).getMonth();
-      if (month !== lastMonth) {
-        monthLabels.push({ col: i, label: months[month] });
-        lastMonth = month;
-      }
-    }
-  }
-} catch {
-  // Silently fail — graph won't render
-}
-
-const filteredMonthLabels = monthLabels.filter((m, i, arr) => {
-  if (i === 0) return true;
-  return m.col - arr[i - 1].col >= 3;
-});
+import ProjectCard from '../components/ProjectCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import ContactCta from '../components/ContactCta.astro';
+import { featuredProjects } from '../data/projects';
+import { testimonials } from '../data/testimonials';
+import { ArrowDown } from 'lucide-astro';
 ---
-<Base title="Home" description="Product and engineering. Mostly at startups, mostly moving fast. Nights go to building things I kept wishing someone else would make.">
 
-  <div class="hero">
+<Base
+  title="Home"
+  description="Product engineer building payment products in small startup teams, from ambiguous problems to shipped features across web and mobile."
+>
+  <section class="hero">
     <div class="hero-text">
-      <h1>Hi, I'm Fahad Imran</h1>
+      <h1>Product engineer building payment products for 40,000+ GCC merchants.</h1>
     </div>
 
     <p class="bio">
-      I build payment products. Four years mostly embedded in small product teams, figuring out why something's being built before deciding how.
+      I work inside small startup teams, turning ambiguous problems into shipped features across web and mobile.
     </p>
-  </div>
 
-  <div class="section-row">
-    <p class="section-label">Places I've worked at</p>
-    <div class="chip-list">
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">where I work now :)</span>
-        <a class="chip" href="https://alfabolt.com" target="_blank" rel="noopener">
-          <span class="chip-icon" style="border-radius:50%;"><img src="/images/alfabolt-logo-1.webp" alt="" style="width:46px;height:46px;" /></span>
-          Alfabolt
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">where I used to work</span>
-        <a class="chip" href="https://devsinc.com" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/devsinc-logo.svg" alt="" style="width:20px;height:20px;" /></span>
-          Devsinc
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">where i started, part-time</span>
-        <a class="chip" href="https://www.linkedin.com/company/tuamify" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/tuamify-logo.webp" alt="" /></span>
-          Tuamify
-        </a>
-      </div>
-
+    <div class="hero-actions">
+      <a class="btn-solid" href="#selected-work">View selected work <ArrowDown size={15} /></a>
+      <a class="btn-ghost" href="mailto:fahadimran6544@gmail.com">Get in touch</a>
     </div>
-  </div>
+  </section>
 
-  <div class="section-row" style="margin-bottom:56px;">
-    <p class="section-label">Products I've shipped</p>
-    <div class="chip-list">
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">Accept payments over WhatsApp</span>
-        <a class="chip" href="https://nomod.com" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/nomod-logo.webp" alt="" /></span>
-          Nomod
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">Group buying for restaurants and cafes</span>
-        <a class="chip" href="https://apps.apple.com/no/app/pine-the-app/id6467567252" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/pine-logo.webp" alt="" /></span>
-          Pine
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">Audio stories, saved for family</span>
-        <a class="chip" href="https://sharewithleaf.com" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/leaf-logo.webp" alt="" /></span>
-          Leaf
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">On-demand lawyers for businesses</span>
-        <a class="chip" href="https://wearerayne.com" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/rayne-logo.webp" alt="" /></span>
-          Rayne
-        </a>
-      </div>
-
-      <div class="chip-wrap">
-        <span class="chip-tooltip">HR management for teams</span>
-        <a class="chip" href="https://www.linkedin.com/company/maplehr" target="_blank" rel="noopener">
-          <span class="chip-icon"><img src="/images/maple-logo.webp" alt="" /></span>
-          Maple
-        </a>
-      </div>
-
+  <section class="selected-work" id="selected-work" aria-labelledby="selected-work-heading">
+    <div class="section-heading-row">
+      <p class="section-label" id="selected-work-heading">Selected work</p>
+      <a href="/work" class="section-link">View all work →</a>
     </div>
-  </div>
-
-  {contributionGrid.length > 0 && (
-    <div class="github-section">
-      <p class="section-label">Last year on GitHub</p>
-
-      <div class="contribution-calendar">
-        <div class="contribution-scroll">
-          <div class="contribution-header">
-            <div class="contribution-days" aria-hidden="true"></div>
-            <div class="contribution-months" style={`--weeks: ${contributionGrid.length}`}>
-              {filteredMonthLabels.map(m => (
-                <span style={`grid-column: ${m.col + 1}`}>{m.label}</span>
-              ))}
-            </div>
-          </div>
-
-          <div class="contribution-body">
-            <div class="contribution-days">
-              <span></span>
-              <span>Mon</span>
-              <span></span>
-              <span>Wed</span>
-              <span></span>
-              <span>Fri</span>
-              <span></span>
-            </div>
-
-            <div class="contribution-grid" style={`--weeks: ${contributionGrid.length}`}>
-              {Array.from({ length: 7 }).map((_, dayIndex) =>
-                contributionGrid.map(week => {
-                  const day = week[dayIndex];
-                  return (
-                    <div
-                      class="contribution-cell"
-                      data-level={day?.level ?? 0}
-                      title={day ? `${day.count} contributions on ${day.date}` : undefined}
-                    />
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="contribution-footer">
-        <p class="contribution-total">{totalContributions.toLocaleString()} contributions in the last year — <a href="https://github.com/fahadimran7" target="_blank" rel="noopener">@fahadimran7</a></p>
-      </div>
+    <div class="featured-project-grid">
+      {featuredProjects.map((project) => (
+        <ProjectCard project={project} variant="featured" />
+      ))}
     </div>
-  )}
+  </section>
 
-  <div class="say-hi">
-    <p class="section-label">Say hi</p>
-    <p class="say-hi-text">Got a project in mind, or just want to say hi?</p>
-    <div class="social-links">
-      <a href="https://github.com/fahadimran7" target="_blank" rel="noopener" class="social-link"><Github size={17} />GitHub</a>
-      <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener" class="social-link"><Linkedin size={17} />LinkedIn</a>
-      <a href="mailto:fahadimran6544@gmail.com" class="social-link"><Mail size={17} />Email</a>
+  <section class="testimonials" aria-labelledby="testimonials-heading">
+    <div class="testimonials-intro">
+      <p class="section-label">Kind words</p>
+      <h2 id="testimonials-heading">People I’ve worked with say it better.</h2>
+      <p>Unprompted, unedited, and suspiciously kind.</p>
     </div>
-  </div>
 
+    <div class:list={['testimonial-grid', { 'testimonial-grid--single': testimonials.length === 1 }]}>
+      {testimonials.map((testimonial) => (
+        <TestimonialCard testimonial={testimonial} />
+      ))}
+    </div>
+  </section>
+
+  <ContactCta />
 </Base>
 
-<script>
-  // Keep chip tooltips inside the viewport so they never clip at the edges.
-  // We compute the offset from the chip's geometry (its centre) and the
-  // tooltip's width — both unaffected by the tooltip's transform transition —
-  // rather than reading the tooltip's (mid-animation) position, which would
-  // give a wrong measurement and leave edge tooltips overflowing.
-  function clampChipTooltips() {
-    var margin = 10;
-    var vw = document.documentElement.clientWidth;
-    var tips = document.querySelectorAll('.chip-tooltip');
-    for (var i = 0; i < tips.length; i++) {
-      var tip = tips[i];
-      var wrap = tip.parentElement;
-      if (!wrap) continue;
-      var wrapRect = wrap.getBoundingClientRect();
-      var tipWidth = tip.getBoundingClientRect().width; // width is transform-invariant
-      if (!tipWidth) { tip.style.setProperty('--tip-shift', '0px'); continue; }
-      // The tooltip is centred over the chip (left:50% + translateX(-50%)).
-      var center = wrapRect.left + wrapRect.width / 2;
-      var naturalLeft = center - tipWidth / 2;
-      var naturalRight = center + tipWidth / 2;
-      var shift = 0;
-      if (naturalLeft < margin) {
-        shift = margin - naturalLeft;
-      } else if (naturalRight > vw - margin) {
-        shift = (vw - margin) - naturalRight;
-      }
-      tip.style.setProperty('--tip-shift', Math.round(shift) + 'px');
+<style>
+  .hero {
+    max-width: 980px;
+    margin-bottom: 88px;
+  }
+
+  .hero-text h1 {
+    font-size: clamp(42px, 5.1vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    margin-bottom: 24px;
+    text-wrap: balance;
+  }
+
+  .bio {
+    max-width: 710px;
+    font-size: 20px;
+    margin-bottom: 28px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .selected-work {
+    scroll-margin-top: 96px;
+    margin-bottom: 80px;
+  }
+
+  .section-heading-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-heading-row .section-label {
+    margin-bottom: 0;
+  }
+
+  .section-link {
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  .section-link:hover {
+    color: var(--text);
+  }
+
+  .featured-project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.45fr);
+    align-items: start;
+    gap: clamp(36px, 7vw, 104px);
+    margin-bottom: 88px;
+    padding-top: 8px;
+  }
+
+  .testimonials-intro {
+    position: sticky;
+    top: 112px;
+  }
+
+  .testimonials-intro .section-label {
+    margin-bottom: 14px;
+  }
+
+  .testimonials-intro h2 {
+    max-width: 520px;
+    color: var(--muted);
+    font-size: clamp(34px, 3.7vw, 52px);
+    font-weight: 500;
+    line-height: 1.13;
+    letter-spacing: -0.038em;
+    text-wrap: balance;
+  }
+
+  .testimonials-intro > p:last-child {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .testimonial-grid--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    .featured-project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .testimonials {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .testimonials-intro {
+      position: static;
+    }
+
+    .testimonials-intro h2 {
+      max-width: 680px;
     }
   }
 
-  // clampChipTooltips is a no-op on pages without chips, so it's safe to leave
-  // these listeners bound across client-side navigations. Re-run on the next
-  // frame after load so it measures the final (wrapped) layout.
-  function clampSoon() {
-    clampChipTooltips();
-    requestAnimationFrame(clampChipTooltips);
-  }
-  window.addEventListener('resize', clampSoon);
-  window.addEventListener('load', clampSoon);
-  document.addEventListener('astro:page-load', clampSoon);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(clampChipTooltips);
-  }
-</script>
+  @media (max-width: 570px) {
+    .hero {
+      margin-bottom: 68px;
+    }
 
-<style>
-  /* Bio sits close under the heading. */
-  .hero-text h1 {
-    margin-bottom: 12px;
-  }
+    .hero-text h1 {
+      font-size: clamp(38px, 11vw, 48px);
+    }
 
-  .say-hi {
-    margin-top: 8px;
-  }
+    .bio {
+      font-size: 18px;
+    }
 
-  .say-hi-text {
-    color: var(--muted);
-    font-size: 17px;
-    margin-bottom: 16px;
-    max-width: 440px;
+    .featured-project-grid {
+      grid-template-columns: 1fr;
+      gap: 38px;
+    }
+
+    .selected-work,
+    .testimonials {
+      margin-bottom: 64px;
+    }
+
   }
 </style>

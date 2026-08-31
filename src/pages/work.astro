@@ -1,240 +1,40 @@
 ---
 import Base from '../layouts/Base.astro';
-
-interface Project {
-  name: string;
-  image: string;
-  url?: string;
-  role: string;
-  employer?: string;
-  start: string;
-  end: string;
-  location: string;
-  remote?: boolean;
-  description: string;
-}
-
-// Reverse-chronological.
-const projects: Project[] = [
-  {
-    name: 'Nomod',
-    image: '/images/work/nomod.webp',
-    url: 'https://nomod.com',
-    role: 'Software Engineer',
-    employer: 'Alfabolt',
-    start: 'Jun 2024',
-    end: 'Present',
-    location: 'United Arab Emirates',
-    remote: true,
-    description: 'Payments platform for 40,000+ GCC merchants. Built the provider layer behind Link, Invoice, and Checkout.',
-  },
-  {
-    name: 'Pine',
-    image: '/images/work/pine.webp',
-    url: 'https://apps.apple.com/no/app/pine-the-app/id6467567252',
-    role: 'Software Engineer',
-    employer: 'Alfabolt',
-    start: 'Nov 2023',
-    end: 'Jun 2024',
-    location: 'Norway',
-    remote: true,
-    description: 'Group-buying app from Norway. Led the mobile build and the bill-splitting flow for friends ordering together.',
-  },
-  {
-    name: 'Rayne',
-    image: '/images/work/rayne.webp',
-    url: 'https://wearerayne.com',
-    role: 'Frontend Engineer',
-    employer: 'Alfabolt',
-    start: 'Aug 2023',
-    end: 'Nov 2023',
-    location: 'United Arab Emirates',
-    remote: true,
-    description: 'Marketing site and component library, migrated to Sanity CMS. Hit a 100 Lighthouse SEO score across 5+ countries.',
-  },
-  {
-    name: 'Leaf',
-    image: '/images/work/leaf.webp',
-    url: 'https://sharewithleaf.com',
-    role: 'Software Engineer',
-    employer: 'Devsinc',
-    start: 'Jan 2023',
-    end: 'Aug 2023',
-    location: 'United States',
-    remote: true,
-    description: 'Private voice recorder for families. Built the recording flow with Whisper transcription and speaker tagging.',
-  },
-  {
-    name: 'Maple',
-    image: '/images/work/maple.webp',
-    url: 'https://www.linkedin.com/company/maplehr',
-    role: 'Software Engineer',
-    employer: 'Devsinc',
-    start: 'Aug 2022',
-    end: 'Mar 2023',
-    location: 'Pakistan',
-    description: 'HR platform built in Flutter from scratch, with MVVM architecture and 85% unit test coverage. Shipped leave, expense, and inventory modules against a Rails backend.',
-  },
-];
+import ProjectCard from '../components/ProjectCard.astro';
+import ContactCta from '../components/ContactCta.astro';
+import { projects } from '../data/projects';
 ---
+
 <Base
   title="Work"
-  description="A loosely chronological list of places that let me ship things. Fintech in the UAE, food in Norway, and a few stops I'm still fond of."
+  description="Product engineering across payments, mobile, web, and startup teams in four countries."
 >
-
   <div class="page-heading">
     <h1>Work</h1>
-    <p>Five years, four countries, mostly remote from a bedroom in Pakistan. Here's roughly where the time went.</p>
+    <p>Products built across four countries, mostly remote from Pakistan. Here's where the time went.</p>
   </div>
 
   <div class="project-grid">
-    {projects.map((p) => {
-      const Tag = p.url ? 'a' : 'div';
-      const cursorLabel = p.url ? 'View project ↗' : 'Case study coming soon';
-      return (
-        <Tag
-          class="project-card"
-          href={p.url}
-          target={p.url ? '_blank' : undefined}
-          rel={p.url ? 'noopener' : undefined}
-        >
-          <div class="project-image-wrap">
-            <img src={p.image} alt={p.name} loading="lazy" />
-            <span class="project-cursor-tag">{cursorLabel}</span>
-          </div>
-
-          <div class="project-info">
-            <h2 class="project-title">{p.name}</h2>
-            <p class="project-desc">{p.description}</p>
-          </div>
-        </Tag>
-      );
-    })}
+    {projects.map((project) => (
+      <ProjectCard project={project} />
+    ))}
   </div>
 
+  <ContactCta />
 </Base>
 
 <style>
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px 40px;
-    margin-bottom: 56px;
-  }
-
-  .project-card {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .project-image-wrap {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--chip-bg);
-    border: 1px solid var(--border);
-    box-shadow: var(--chip-shadow);
-    margin-bottom: 16px;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-  }
-  .project-card:hover .project-image-wrap {
-    box-shadow: var(--chip-shadow-hover);
-    transform: translateY(-2px);
-  }
-
-  /* Subtle dark scrim on hover so the cursor tag reads clearly against any
-     screenshot, light or dark. */
-  .project-image-wrap::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0);
-    transition: background 0.2s ease;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .project-card:hover .project-image-wrap::after {
-    background: rgba(0, 0, 0, 0.28);
-  }
-
-  .project-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Keep the left edge (logo, headline) always in frame — crop the right
-       side instead of cropping evenly from both sides. */
-    object-position: left center;
-    display: block;
-  }
-
-  /* Custom cursor label that tracks the mouse over the image — set via
-     --x/--y inline vars in the mousemove handler below. */
-  .project-cursor-tag {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(calc(var(--x, 0) * 1px - 50%), calc(var(--y, 0) * 1px - 50%));
-    /* Fixed dark pill regardless of site theme — most project screenshots
-       are light, so a theme-following (light-in-dark-mode) tag would
-       disappear against them. */
-    background: #1a1a1a;
-    color: #f9f9f7;
-    font-size: 12.5px;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 999px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    z-index: 2;
-  }
-  .project-image-wrap:hover .project-cursor-tag {
-    opacity: 1;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .project-image-wrap {
-      cursor: none;
-    }
-  }
-
-  .project-title {
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    margin-bottom: 4px;
-  }
-
-  .project-desc {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--muted);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+    margin-bottom: 88px;
   }
 
   @media (max-width: 570px) {
     .project-grid {
       grid-template-columns: 1fr;
-      gap: 36px;
+      gap: 40px;
     }
   }
 </style>
-
-<script>
-  // Custom cursor-follow label over each project image, positioned via
-  // CSS vars rather than raw left/top so it never fights the card's layout.
-  function initProjectCursor() {
-    document.querySelectorAll('.project-image-wrap').forEach(function (wrap) {
-      if (wrap.dataset.cursorBound) return;
-      wrap.dataset.cursorBound = '1';
-      wrap.addEventListener('mousemove', function (e) {
-        const rect = wrap.getBoundingClientRect();
-        wrap.style.setProperty('--x', String(e.clientX - rect.left));
-        wrap.style.setProperty('--y', String(e.clientY - rect.top));
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', initProjectCursor);
-</script>

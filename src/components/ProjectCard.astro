@@ -1,0 +1,349 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  variant?: 'featured' | 'standard';
+}
+
+const { project, variant = 'standard' } = Astro.props;
+const Tag = project.url ? 'a' : 'div';
+const cursorLabel = project.url ? 'View project ↗' : 'Project details';
+const summary = variant === 'featured' && project.featuredSummary
+  ? project.featuredSummary
+  : project.description;
+---
+
+<Tag
+  class:list={['project-card', `project-card--${variant}`]}
+  href={project.url}
+  target={project.url ? '_blank' : undefined}
+  rel={project.url ? 'noopener' : undefined}
+>
+  <div class="project-image-wrap">
+    <img src={project.image} alt={`${project.name} product preview`} loading="lazy" />
+    {variant === 'featured' ? (
+      <span class="project-cursor-tag">{cursorLabel}</span>
+    ) : (
+      <>
+        <span class="project-cursor-tag project-cursor-tag--standard" aria-hidden="true">{cursorLabel}</span>
+        <div class="project-overlay">
+          <div class="overlay-summary">
+            <h2 class="project-title">{project.name}</h2>
+            <div class="project-tags" aria-label={`${project.name} categories`}>
+              {project.tags.map((tag, index) => (
+                <span class:list={['project-tag', { 'project-tag--primary': index === 0 }]}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <div class="overlay-details">
+            <p class="project-role">
+              {project.role}{project.employer && <> · {project.employer}</>}
+            </p>
+            <p class="project-desc">{summary}</p>
+            <p class="project-context project-context--overlay">
+              {project.start}–{project.end} · {project.location}{project.remote && <> · Remote</>}
+            </p>
+          </div>
+        </div>
+      </>
+    )}
+  </div>
+
+  {variant === 'featured' && (
+    <div class="project-info">
+      <h2 class="project-title">{project.name}</h2>
+      <p class="project-role">
+        {project.role}{project.employer && <> · {project.employer}</>}
+      </p>
+      <p class="project-desc">{summary}</p>
+    </div>
+  )}
+</Tag>
+
+<style>
+  .project-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .project-image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--chip-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--chip-shadow);
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .project-card:hover .project-image-wrap,
+  .project-card:focus-visible .project-image-wrap {
+    box-shadow: var(--chip-shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .project-image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .project-card:hover .project-image-wrap::after {
+    background: rgba(0, 0, 0, 0.28);
+  }
+
+  .project-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    display: block;
+  }
+
+  .project-card--standard .project-image-wrap {
+    aspect-ratio: 16 / 11;
+    margin-bottom: 0;
+  }
+
+  .project-card--standard .project-image-wrap > img {
+    height: calc(100% - 126px);
+    transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-card--standard:hover .project-image-wrap > img,
+  .project-card--standard:focus-visible .project-image-wrap > img {
+    height: 46%;
+  }
+
+  .project-overlay {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    height: 126px;
+    padding: 20px 26px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--chip-bg) 96%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-card--standard:hover .project-overlay,
+  .project-card--standard:focus-visible .project-overlay {
+    height: 54%;
+  }
+
+  .overlay-summary {
+    flex-shrink: 0;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .project-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 3px 10px 4px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 550;
+    line-height: 1;
+  }
+
+  .project-tag--primary {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .overlay-details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    margin-top: 14px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.24s ease,
+      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-card--standard:hover .overlay-details,
+  .project-card--standard:focus-visible .overlay-details {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.08s;
+  }
+
+  .project-cursor-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(calc(var(--x, 0) * 1px - 50%), calc(var(--y, 0) * 1px - 50%));
+    background: #1a1a1a;
+    color: #f9f9f7;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 2;
+  }
+
+  .project-card--featured .project-image-wrap:hover .project-cursor-tag,
+  .project-card--standard:hover .project-cursor-tag--standard {
+    opacity: 1;
+  }
+
+  .project-cursor-tag--standard {
+    z-index: 4;
+  }
+
+  .project-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+
+  .project-overlay .project-title {
+    font-size: clamp(21px, 2vw, 27px);
+    letter-spacing: -0.025em;
+  }
+
+  .project-role {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 7px;
+  }
+
+  .project-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .project-context {
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+
+  .overlay-details .project-role {
+    margin-bottom: 9px;
+    font-weight: 650;
+  }
+
+  .overlay-details .project-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .project-context--overlay {
+    margin-top: auto;
+    padding-top: 14px;
+  }
+
+  .project-card--featured .project-desc {
+    max-width: 42ch;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-card--featured .project-image-wrap,
+    .project-card--standard {
+      cursor: none;
+    }
+  }
+
+  @media (hover: none), (max-width: 570px) {
+    .project-card--standard .project-image-wrap {
+      aspect-ratio: auto;
+    }
+
+    .project-card--standard .project-image-wrap img {
+      height: auto;
+      aspect-ratio: 16 / 10;
+    }
+
+    .project-overlay {
+      position: static;
+      height: auto;
+      padding: 22px;
+      overflow: visible;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    .overlay-details {
+      margin-top: 20px;
+      opacity: 1;
+      transform: none;
+    }
+
+    .overlay-details .project-desc {
+      display: block;
+      overflow: visible;
+    }
+
+    .project-context--overlay {
+      margin-top: 18px;
+      padding-top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-image-wrap,
+    .project-image-wrap::after,
+    .project-cursor-tag,
+    .project-card--standard .project-image-wrap > img,
+    .project-overlay,
+    .overlay-details {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initProjectCursor() {
+    document.querySelectorAll('.project-card--featured .project-image-wrap, .project-card--standard').forEach(function (wrap) {
+      if (wrap.dataset.cursorBound) return;
+      wrap.dataset.cursorBound = '1';
+      wrap.addEventListener('mousemove', function (event) {
+        const rect = wrap.getBoundingClientRect();
+        wrap.style.setProperty('--x', String(event.clientX - rect.left));
+        wrap.style.setProperty('--y', String(event.clientY - rect.top));
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initProjectCursor);
+</script>
