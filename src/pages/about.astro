@@ -27,6 +27,15 @@ const books = [
     width: 1429,
     height: 2000,
   },
+  {
+    title: 'Harry Potter series',
+    author: 'J.K. Rowling',
+    note: 'Re-reading for the 100th time. Give or take.',
+    url: 'https://www.harrypotter.com/',
+    image: '/images/books/harry-potter-series.webp',
+    width: 1500,
+    height: 2000,
+  },
 ];
 
 const tripPhotos = [
@@ -136,6 +145,7 @@ const tripPhotos = [
           <div class="book-details">
             <h3>{book.title}</h3>
             <p>{book.author}</p>
+            {book.note && <p class="book-note">{book.note}</p>}
           </div>
         </a>
       ))}
@@ -355,8 +365,8 @@ const tripPhotos = [
 
   .book-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 150px));
-    gap: 28px;
+    grid-template-columns: repeat(4, minmax(0, 132px));
+    gap: 24px;
     align-items: start;
     justify-content: start;
   }
@@ -406,6 +416,12 @@ const tripPhotos = [
     color: var(--muted);
     font-size: 12px;
     line-height: 1.45;
+  }
+
+  .book-details .book-note {
+    margin-top: 7px;
+    font-size: 11px;
+    font-style: italic;
   }
 
   .book-card:hover .book-cover img {
@@ -601,17 +617,24 @@ const tripPhotos = [
     font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 570px) {
+  @media (max-width: 820px) {
     .me {
       grid-template-columns: 1fr;
-      gap: 28px;
-      justify-items: center;
+      gap: 36px;
     }
     .polaroid {
       max-width: 240px;
     }
     .me-body {
+      width: 100%;
       padding-top: 0;
+    }
+  }
+
+  @media (max-width: 570px) {
+    .me {
+      gap: 28px;
+      justify-items: center;
     }
     .me-role {
       font-size: 21px;
@@ -669,7 +692,10 @@ const tripPhotos = [
 
   @media (min-width: 571px) and (max-width: 900px) {
     .book-grid {
-      gap: 32px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 600px;
     }
   }
 

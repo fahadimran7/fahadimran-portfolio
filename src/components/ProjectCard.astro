@@ -110,12 +110,13 @@ const summary = variant === 'featured' && project.featuredSummary
   }
 
   .project-card--standard .project-image-wrap {
+    --overlay-rest-height: 126px;
     aspect-ratio: 16 / 11;
     margin-bottom: 0;
   }
 
   .project-card--standard .project-image-wrap > img {
-    height: calc(100% - 126px);
+    height: calc(100% - var(--overlay-rest-height));
     transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -132,7 +133,7 @@ const summary = variant === 'featured' && project.featuredSummary
     z-index: 3;
     display: flex;
     flex-direction: column;
-    height: 126px;
+    height: var(--overlay-rest-height, 126px);
     padding: 20px 26px;
     overflow: hidden;
     background: color-mix(in srgb, var(--chip-bg) 96%, transparent);
@@ -284,7 +285,63 @@ const summary = variant === 'featured' && project.featuredSummary
     }
   }
 
-  @media (hover: none), (max-width: 570px) {
+  @media (min-width: 701px) and (max-width: 1000px) {
+    .project-card--standard .project-image-wrap {
+      --overlay-rest-height: 104px;
+      aspect-ratio: 6 / 5;
+    }
+
+    .project-card--standard:hover .project-image-wrap > img,
+    .project-card--standard:focus-visible .project-image-wrap > img {
+      height: 48%;
+    }
+
+    .project-overlay {
+      padding: 14px 18px;
+    }
+
+    .project-card--standard:hover .project-overlay,
+    .project-card--standard:focus-visible .project-overlay {
+      height: 52%;
+    }
+
+    .project-overlay .project-title {
+      font-size: clamp(20px, 2.5vw, 24px);
+    }
+
+    .project-tags {
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .project-tag {
+      min-height: 24px;
+      padding: 3px 9px;
+      font-size: 11.5px;
+    }
+
+    .overlay-details {
+      margin-top: 11px;
+    }
+
+    .overlay-details .project-role {
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .overlay-details .project-desc {
+      font-size: 13px;
+      line-height: 1.45;
+      -webkit-line-clamp: 2;
+    }
+
+    .project-context--overlay {
+      padding-top: 9px;
+      font-size: 11.5px;
+    }
+  }
+
+  @media (hover: none), (max-width: 700px) {
     .project-card--standard .project-image-wrap {
       aspect-ratio: auto;
     }
