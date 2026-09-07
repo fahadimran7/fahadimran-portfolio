@@ -112,7 +112,11 @@ const summary = variant === 'featured' && project.featuredSummary
   }
 
   .project-card--standard .project-image-wrap > img {
-    height: 100%;
+    /* Compose the screenshot for the exposed image strip. The overlay covers
+       the lower part of the card, so there is no value in cropping artwork to
+       fill space the visitor cannot see. */
+    height: calc(100% - var(--overlay-rest-height));
+    object-position: center center;
   }
 
   .project-overlay {
