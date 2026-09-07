@@ -1,13 +1,27 @@
 ---
 import { ArrowUpRight, Mail } from 'lucide-astro';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  copy?: string;
+  buttonLabel?: string;
+}
+
+const {
+  eyebrow = 'Still here?',
+  heading = "Let's build something worth shipping.",
+  copy = 'Convinced? Good. Click the button before I fall asleep again.',
+  buttonLabel = 'Wake me up',
+} = Astro.props;
 ---
 
 <section class="contact-cta" aria-labelledby="contact-heading">
-  <p class="cta-eyebrow">Still here?</p>
-  <h2 id="contact-heading">Let's build something worth shipping.</h2>
-  <p>Convinced? Good. Click the button before I fall asleep again.</p>
+  <p class="cta-eyebrow">{eyebrow}</p>
+  <h2 id="contact-heading">{heading}</h2>
+  <p>{copy}</p>
   <a href="mailto:fahadimran6544@gmail.com" class="cta-button">
-    <Mail size={17} /> Wake me up <ArrowUpRight size={16} />
+    <Mail size={17} /> {buttonLabel} <ArrowUpRight size={16} />
   </a>
 </section>
 

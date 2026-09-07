@@ -8,7 +8,6 @@ interface Props {
 
 const { project, variant = 'standard' } = Astro.props;
 const Tag = project.url ? 'a' : 'div';
-const cursorLabel = project.url ? 'View project ↗' : 'Project details';
 const summary = variant === 'featured' && project.featuredSummary
   ? project.featuredSummary
   : project.description;
@@ -22,11 +21,8 @@ const summary = variant === 'featured' && project.featuredSummary
 >
   <div class="project-image-wrap">
     <img src={project.image} alt={`${project.name} product preview`} loading="lazy" />
-    {variant === 'featured' ? (
-      <span class="project-cursor-tag">{cursorLabel}</span>
-    ) : (
+    {variant !== 'featured' && (
       <>
-        <span class="project-cursor-tag project-cursor-tag--standard" aria-hidden="true">{cursorLabel}</span>
         <div class="project-overlay">
           <div class="overlay-summary">
             <h2 class="project-title">{project.name}</h2>
@@ -116,13 +112,7 @@ const summary = variant === 'featured' && project.featuredSummary
   }
 
   .project-card--standard .project-image-wrap > img {
-    height: calc(100% - var(--overlay-rest-height));
-    transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .project-card--standard:hover .project-image-wrap > img,
-  .project-card--standard:focus-visible .project-image-wrap > img {
-    height: 46%;
+    height: 100%;
   }
 
   .project-overlay {
@@ -197,33 +187,6 @@ const summary = variant === 'featured' && project.featuredSummary
     transition-delay: 0.08s;
   }
 
-  .project-cursor-tag {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(calc(var(--x, 0) * 1px - 50%), calc(var(--y, 0) * 1px - 50%));
-    background: #1a1a1a;
-    color: #f9f9f7;
-    font-size: 12.5px;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 999px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    z-index: 2;
-  }
-
-  .project-card--featured .project-image-wrap:hover .project-cursor-tag,
-  .project-card--standard:hover .project-cursor-tag--standard {
-    opacity: 1;
-  }
-
-  .project-cursor-tag--standard {
-    z-index: 4;
-  }
-
   .project-title {
     font-size: 19px;
     font-weight: 700;
@@ -278,22 +241,10 @@ const summary = variant === 'featured' && project.featuredSummary
     max-width: 42ch;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .project-card--featured .project-image-wrap,
-    .project-card--standard {
-      cursor: none;
-    }
-  }
-
   @media (min-width: 701px) and (max-width: 1000px) {
     .project-card--standard .project-image-wrap {
       --overlay-rest-height: 104px;
       aspect-ratio: 6 / 5;
-    }
-
-    .project-card--standard:hover .project-image-wrap > img,
-    .project-card--standard:focus-visible .project-image-wrap > img {
-      height: 48%;
     }
 
     .project-overlay {
@@ -342,6 +293,17 @@ const summary = variant === 'featured' && project.featuredSummary
   }
 
   @media (hover: none), (max-width: 700px) {
+    .project-card:hover .project-image-wrap,
+    .project-card:focus-visible .project-image-wrap {
+      box-shadow: var(--chip-shadow);
+      transform: none;
+    }
+
+    .project-card:hover .project-image-wrap::after,
+    .project-card:focus-visible .project-image-wrap::after {
+      background: transparent;
+    }
+
     .project-card--standard .project-image-wrap {
       aspect-ratio: auto;
     }
@@ -375,12 +337,12 @@ const summary = variant === 'featured' && project.featuredSummary
       margin-top: 18px;
       padding-top: 0;
     }
+
   }
 
   @media (prefers-reduced-motion: reduce) {
     .project-image-wrap,
     .project-image-wrap::after,
-    .project-cursor-tag,
     .project-card--standard .project-image-wrap > img,
     .project-overlay,
     .overlay-details {
@@ -388,19 +350,3 @@ const summary = variant === 'featured' && project.featuredSummary
     }
   }
 </style>
-
-<script>
-  function initProjectCursor() {
-    document.querySelectorAll('.project-card--featured .project-image-wrap, .project-card--standard').forEach(function (wrap) {
-      if (wrap.dataset.cursorBound) return;
-      wrap.dataset.cursorBound = '1';
-      wrap.addEventListener('mousemove', function (event) {
-        const rect = wrap.getBoundingClientRect();
-        wrap.style.setProperty('--x', String(event.clientX - rect.left));
-        wrap.style.setProperty('--y', String(event.clientY - rect.top));
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', initProjectCursor);
-</script>

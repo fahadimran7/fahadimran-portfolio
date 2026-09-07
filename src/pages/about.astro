@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { ArrowUpRight } from 'lucide-astro';
+import ContactCta from '../components/ContactCta.astro';
 
 const books = [
   {
@@ -25,15 +25,6 @@ const books = [
     url: 'https://andy-crouch.com/',
     image: '/images/books/tech-wise-family.webp',
     width: 1429,
-    height: 2000,
-  },
-  {
-    title: 'Harry Potter series',
-    author: 'J.K. Rowling',
-    note: 'Re-reading for the 100th time. Give or take.',
-    url: 'https://www.harrypotter.com/',
-    image: '/images/books/harry-potter-series.webp',
-    width: 1500,
     height: 2000,
   },
 ];
@@ -110,11 +101,6 @@ const tripPhotos = [
           <dd>Pakistan 🇵🇰 — working remotely across international teams</dd>
         </div>
       </dl>
-      <div class="me-actions">
-        <a class="btn-solid" href="mailto:fahadimran6544@gmail.com">
-          Get in touch <ArrowUpRight size={15} />
-        </a>
-      </div>
     </div>
   </div>
 
@@ -124,31 +110,33 @@ const tripPhotos = [
       <h2 id="bookshelf-title">A few things shaping how I think.</h2>
     </div>
 
-    <div class="book-grid">
-      {books.map((book) => (
-        <a
-          class="book-card"
-          href={book.url}
-          target="_blank"
-          rel="noopener"
-          aria-label={`${book.title} by ${book.author} (opens in a new tab)`}
-        >
-          <div class="book-cover">
-            <img
-              src={book.image}
-              alt={`Cover of ${book.title}`}
-              width={book.width}
-              height={book.height}
-              loading="lazy"
-            />
-          </div>
-          <div class="book-details">
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-            {book.note && <p class="book-note">{book.note}</p>}
-          </div>
-        </a>
-      ))}
+    <div class="carousel-shell book-carousel-shell" data-carousel>
+      <div class="book-grid" data-carousel-track>
+        {books.map((book) => (
+          <a
+            class="book-card"
+            href={book.url}
+            target="_blank"
+            rel="noopener"
+            aria-label={`${book.title} by ${book.author} (opens in a new tab)`}
+          >
+            <div class="book-cover">
+              <img
+                src={book.image}
+                alt={`Cover of ${book.title}`}
+                width={book.width}
+                height={book.height}
+                loading="lazy"
+              />
+            </div>
+            <div class="book-details">
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
+              {book.note && <p class="book-note">{book.note}</p>}
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -183,24 +171,35 @@ const tripPhotos = [
       </p>
     </div>
 
-    <div class="trip-photo-strip">
-      {tripPhotos.map((photo, index) => (
-        <figure class:list={["trip-polaroid", `trip-polaroid--${index + 1}`]}>
-          <img
-            src={photo.src}
-            alt={photo.alt}
-            width={photo.width}
-            height={photo.height}
-            loading="lazy"
-          />
-          <figcaption>
-            <span>{photo.caption}</span>
-            <span aria-hidden="true">0{index + 1}</span>
-          </figcaption>
-        </figure>
-      ))}
+    <div class="carousel-shell trip-carousel-shell" data-carousel>
+      <div class="trip-photo-strip" data-carousel-track>
+        {tripPhotos.map((photo, index) => (
+          <figure class:list={["trip-polaroid", `trip-polaroid--${index + 1}`]}>
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              width={photo.width}
+              height={photo.height}
+              loading="lazy"
+            />
+            <figcaption>
+              <span>{photo.caption}</span>
+              <span aria-hidden="true">0{index + 1}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
+
+  <div class="about-cta">
+    <ContactCta
+      eyebrow="One last thing"
+      heading="Back to business."
+      copy="If the work feels like a fit, let’s talk."
+      buttonLabel="Start a conversation"
+    />
+  </div>
 
 </Base>
 
@@ -225,6 +224,30 @@ const tripPhotos = [
     polaroidIO.observe(polaroid);
   }
   document.addEventListener('astro:page-load', initPolaroidTilt);
+
+  function initCarousels() {
+    document.querySelectorAll('[data-carousel]').forEach(function (shell) {
+      const track = shell.querySelector('[data-carousel-track]');
+      if (!track || track.dataset.carouselBound) return;
+      track.dataset.carouselBound = '1';
+
+      function syncFades() {
+        const leftThreshold = 32;
+        const rightThreshold = 3;
+        shell.classList.toggle('can-scroll-left', track.scrollLeft > leftThreshold);
+        shell.classList.toggle(
+          'can-scroll-right',
+          track.scrollLeft < track.scrollWidth - track.clientWidth - rightThreshold
+        );
+      }
+
+      track.addEventListener('scroll', syncFades, { passive: true });
+      window.addEventListener('resize', syncFades, { passive: true });
+      requestAnimationFrame(syncFades);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCarousels);
 </script>
 
 <style>
@@ -328,13 +351,6 @@ const tripPhotos = [
     text-decoration-color: var(--text);
   }
 
-  .me-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 24px;
-  }
-
   /* ── Current reading ── */
   .bookshelf {
     display: grid;
@@ -371,6 +387,11 @@ const tripPhotos = [
     justify-content: start;
   }
 
+  .carousel-shell {
+    position: relative;
+    min-width: 0;
+  }
+
   .book-card {
     display: block;
     min-width: 0;
@@ -394,9 +415,7 @@ const tripPhotos = [
     object-fit: cover;
     object-position: center;
     border-radius: 3px;
-    box-shadow:
-      -7px 9px 18px rgba(0, 0, 0, 0.14),
-      0 2px 4px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     transform-origin: center bottom;
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
   }
@@ -426,9 +445,7 @@ const tripPhotos = [
 
   .book-card:hover .book-cover img {
     transform: translateY(-8px) rotateY(-2deg);
-    box-shadow:
-      -10px 16px 24px rgba(0, 0, 0, 0.18),
-      0 3px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
   }
 
   .book-card:hover .book-details h3 {
@@ -563,9 +580,7 @@ const tripPhotos = [
     background: #f8f7f2;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 3px;
-    box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.08),
-      0 14px 34px rgba(0, 0, 0, 0.14);
+    box-shadow: none;
     transform-origin: center center;
     transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms ease;
   }
@@ -587,9 +602,7 @@ const tripPhotos = [
   .trip-polaroid:hover {
     z-index: 1;
     transform: translateY(-8px) rotate(0deg);
-    box-shadow:
-      0 4px 7px rgba(0, 0, 0, 0.09),
-      0 20px 42px rgba(0, 0, 0, 0.18);
+    box-shadow: none;
   }
 
   .trip-polaroid img {
@@ -640,10 +653,54 @@ const tripPhotos = [
       font-size: 21px;
     }
     .book-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 18px;
-      width: 100%;
-      max-width: 308px;
+      display: flex;
+      gap: 20px;
+      width: auto;
+      max-width: none;
+      padding: 14px 32px 32px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-padding-inline: 32px;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+      touch-action: pan-x pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+    .book-grid::-webkit-scrollbar {
+      display: none;
+    }
+    .book-card {
+      flex: 0 0 min(220px, 68vw);
+      scroll-snap-align: start;
+    }
+    .book-carousel-shell,
+    .trip-carousel-shell {
+      margin-inline: -24px;
+      overflow: hidden;
+    }
+    .carousel-shell::before,
+    .carousel-shell::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 3;
+      width: clamp(52px, 18vw, 78px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+    .carousel-shell::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg) 4%, color-mix(in srgb, var(--bg) 82%, transparent) 38%, transparent 100%);
+    }
+    .carousel-shell::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg) 4%, color-mix(in srgb, var(--bg) 82%, transparent) 38%, transparent 100%);
+    }
+    .carousel-shell.can-scroll-left::before,
+    .carousel-shell.can-scroll-right::after {
+      opacity: 1;
     }
     .trip-gallery {
       margin: 76px 0 56px;
@@ -663,7 +720,10 @@ const tripPhotos = [
       overscroll-behavior-inline: contain;
       scroll-snap-type: inline mandatory;
       scrollbar-width: none;
-      padding: 8px 18px 30px 8px;
+      padding: 8px 32px 30px;
+      scroll-padding-inline: 32px;
+      touch-action: pan-x pan-y;
+      -webkit-overflow-scrolling: touch;
     }
     .trip-photo-strip::-webkit-scrollbar {
       display: none;
@@ -673,6 +733,14 @@ const tripPhotos = [
     .trip-polaroid--3 {
       margin-top: 0;
       scroll-snap-align: start;
+    }
+    .book-card:hover .book-cover img,
+    .book-card:active .book-cover img {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    }
+    .trip-polaroid:hover,
+    .trip-polaroid:active {
+      box-shadow: none;
     }
   }
 
@@ -712,5 +780,9 @@ const tripPhotos = [
     .trip-polaroid:hover {
       transform: none;
     }
+  }
+
+  .about-cta {
+    margin-top: 96px;
   }
 </style>
