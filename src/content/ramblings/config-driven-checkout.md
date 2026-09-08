@@ -2,7 +2,6 @@
 title: Making the frontend dumb on purpose
 publishedAt: "2026-07-14"
 summary: When I joined Nomod's web team, the checkout was a tangle of per-provider forms and six copies of Apple Pay. Here's how we made the backend config the source of truth, collapsed the mess, and accidentally unlocked dynamic routing.
-tags: ["Nomod", "Payments", "Frontend", "Architecture", "Redux"]
 published: true
 ---
 

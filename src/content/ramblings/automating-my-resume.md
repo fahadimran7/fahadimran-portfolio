@@ -2,7 +2,6 @@
 title: I really hate updating my résumé. So I built a machine to do it.
 publishedAt: "2026-06-17"
 summary: A master résumé, a LaTeX template, and a folder full of instructions. A tiny automation for the one task I refuse to do by hand.
-tags: ["Side project", "AI", "Automation"]
 published: false
 ---
 

@@ -8,7 +8,7 @@ import { join } from 'node:path';
 
 // Custom OG images rendered at build time with Satori (HTML/CSS -> SVG) and
 // resvg (SVG -> PNG). Editorial framed card: eyebrow + read time up top, big
-// title, then coloured tag pills and a site-link badge along the bottom.
+// title, then a site-link badge along the bottom.
 // Fonts and avatar are vendored so the build stays offline.
 
 const asset = (f: string) => readFileSync(join(process.cwd(), 'src/assets/og', f));
@@ -24,24 +24,6 @@ const h = (type: string, props: Record<string, unknown>, ...children: unknown[])
   type,
   props: { ...props, children: children.length <= 1 ? children[0] : children },
 });
-
-// Per-tag hue, mirrored from the post page so pills match the site exactly.
-const TAG_HUES = [145, 210, 265, 35, 330, 175, 5, 240];
-const TAG_HUE_MAP: Record<string, number> = {
-  ai: 210,
-  ux: 265,
-  'side project': 145,
-  mobile: 35,
-  craft: 330,
-  reflection: 175,
-};
-function tagHue(tag: string): number {
-  const known = TAG_HUE_MAP[tag.toLowerCase()];
-  if (known !== undefined) return known;
-  let n = 0;
-  for (let i = 0; i < tag.length; i++) n = (n * 31 + tag.charCodeAt(i)) >>> 0;
-  return TAG_HUES[n % TAG_HUES.length];
-}
 
 function readingTime(body: string): string {
   const words = body.trim().split(/\s+/).length;
@@ -69,34 +51,15 @@ function decoration(): El {
 
 interface OgData {
   title: string;
-  tags: string[];
   readTime: string;
   date: string;
 }
 
-function template({ title, tags, readTime, date }: OgData): El {
+function template({ title, readTime, date }: OgData): El {
   const eyebrow = `Ramblings · ${date}`;
 
   const len = title.length;
   const titleSize = len > 62 ? 50 : len > 46 ? 58 : 68;
-
-  const tagPill = (tag: string): El =>
-    h(
-      'div',
-      {
-        style: {
-          display: 'flex',
-          fontSize: '22px',
-          fontWeight: 500,
-          padding: '9px 18px',
-          borderRadius: '999px',
-          backgroundColor: 'rgba(26,26,26,0.05)',
-          color: '#5c5c5c',
-          border: '1px solid rgba(26,26,26,0.07)',
-        },
-      },
-      `#${tag}`,
-    );
 
   const clockIcon = (): El =>
     h(
@@ -181,15 +144,10 @@ function template({ title, tags, readTime, date }: OgData): El {
         },
         title,
       ),
-      // bottom row: tags + site badge
+      // bottom row: site badge
       h(
         'div',
-        { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-        h(
-          'div',
-          { style: { display: 'flex', alignItems: 'center', gap: '12px' } },
-          ...tags.slice(0, 4).map(tagPill),
-        ),
+        { style: { display: 'flex', justifyContent: 'flex-end', alignItems: 'center' } },
         // site-link badge (dark pill, avatar + domain)
         h(
           'div',
@@ -234,7 +192,6 @@ export async function getStaticPaths() {
     props: {
       data: {
         title: post.data.title,
-        tags: post.data.tags,
         readTime: readingTime(post.body ?? ''),
         date: formatDate(post.data.publishedAt),
       } satisfies OgData,

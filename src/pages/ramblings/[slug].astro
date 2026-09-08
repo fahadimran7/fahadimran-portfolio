@@ -19,8 +19,6 @@ function readingTime(body: string) {
   return `${Math.ceil(body.trim().split(/\s+/).length / 200)} min read`;
 }
 
-const tags = post.data.tags ?? [];
-
 // Prev/next follow the same newest-first order as /ramblings, so adjacency
 // here always matches the list — "previous" is the post shown above this one
 // there, "next" is the post shown below.
@@ -55,25 +53,6 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     }
     .post-back:hover svg {
       transform: translateX(-3px);
-    }
-
-    /* ── Tags ── */
-    .post-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: -32px 0 48px;
-    }
-
-    .post-tag {
-      font-size: 12.5px;
-      font-weight: 400;
-      line-height: 1;
-      padding: 6px 11px;
-      border-radius: 999px;
-      background: var(--chip-bg);
-      color: var(--muted);
-      border: 1px solid var(--border);
     }
 
     .post-title {
@@ -273,7 +252,7 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     .post-body tbody tr:last-child td { border-bottom: none; }
     .post-body table strong { font-weight: 650; }
 
-    /* ── Coloured chips inside inline SVG diagrams (matches .post-tag) ── */
+    /* ── Coloured chips inside inline SVG diagrams ── */
     .post-body svg .dchip rect {
       fill: hsl(var(--h) 65% 94%);
       stroke: hsl(var(--h) 55% 87%);
@@ -401,14 +380,6 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
         {readingTime(post.body)}
       </span>
     </div>
-
-    {tags.length > 0 && (
-      <div class="post-tags">
-        {tags.map(tag => (
-          <span class="post-tag">#{tag}</span>
-        ))}
-      </div>
-    )}
 
     <div class="post-body">
       <Content />
