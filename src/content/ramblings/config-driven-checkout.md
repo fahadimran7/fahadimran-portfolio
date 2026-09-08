@@ -3,6 +3,9 @@ title: Making the frontend dumb on purpose
 publishedAt: "2026-07-14"
 summary: When I joined Nomod's web team, the checkout was a tangle of per-provider forms and six copies of Apple Pay. Here's how we made the backend config the source of truth, collapsed the mess, and accidentally unlocked dynamic routing.
 published: true
+showHeroImage: true
+heroImage: /images/blogs/hero/config-driven-checkout.webp
+heroAlt: A Formula 1 driver captioned “Ahhh... I am stupid” after a mistake
 ---
 
 This is the second post about payments work at [Nomod](https://nomod.com). The first was about getting out of PCI scope with Basis Theory. This one is the groundwork that made that migration easy, even though I built it before Basis Theory was on the table. It's the less glamorous half of the story: taking a checkout that had quietly turned into a mess and making it boring again.

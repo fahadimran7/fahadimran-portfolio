@@ -8,6 +8,12 @@ const ramblings = defineCollection({
     publishedAt: z.string(),
     summary: z.string(),
     published: z.boolean().default(true),
+    heroImage: z.string().optional(),
+    heroAlt: z.string().optional(),
+    heroCredit: z.string().optional(),
+    heroCreditUrl: z.string().url().optional(),
+    showHeroImage: z.boolean().default(false),
+    showInlineMedia: z.boolean().default(false),
   }),
 });
 

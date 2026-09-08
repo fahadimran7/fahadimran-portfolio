@@ -3,6 +3,11 @@ title: I built a zakat calculator in 2026. The code was the easy part.
 publishedAt: "2026-06-15"
 summary: A boring app, two prompts of working code, and six months of UX questions I couldn't hand off. Why the calculator was the easy part.
 published: true
+showInlineMedia: true
+heroImage: "https://images.unsplash.com/photo-1762265591492-1454ae17f31a?auto=format&fit=crop&w=1600&q=82"
+heroAlt: A calculator, paperwork, coins, and prayer beads sharing a desk
+heroCredit: Cht Gsml
+heroCreditUrl: "https://unsplash.com/photos/desk-with-calculator-papers-and-prayer-beads-MWa1Ui1ZPT4"
 ---
 
 Let me get the obvious thing out of the way.

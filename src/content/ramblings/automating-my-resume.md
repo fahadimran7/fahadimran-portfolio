@@ -3,6 +3,10 @@ title: I really hate updating my résumé. So I built a machine to do it.
 publishedAt: "2026-06-17"
 summary: A master résumé, a LaTeX template, and a folder full of instructions. A tiny automation for the one task I refuse to do by hand.
 published: false
+heroImage: "https://images.unsplash.com/photo-1566699270403-3f7e3f340664?auto=format&fit=crop&w=1600&q=82"
+heroAlt: A developer's desk almost disappearing under stacks of paper, notes, and old equipment
+heroCredit: Wonderlane
+heroCreditUrl: "https://unsplash.com/photos/office-table-with-pile-of-papers-6jA6eVsRJ6Q"
 ---
 
 I hate writing my résumé. Not in a casual, who-doesn't way. In a deep, in-the-bones way.

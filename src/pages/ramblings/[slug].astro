@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { CalendarDays, Clock3, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-astro';
+import { CalendarDays, Clock3, ArrowLeft, ArrowUp, ChevronLeft, ChevronRight } from 'lucide-astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('ramblings', ({ data }) => data.published);
@@ -37,7 +37,7 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 28px;
+      margin-bottom: 48px;
       padding: 9px 12px;
       border: 1px solid var(--border);
       font-size: 14px;
@@ -72,7 +72,7 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       gap: 12px;
       font-size: 14px;
       color: var(--muted);
-      margin-bottom: 48px;
+      margin-bottom: 28px;
     }
 
     .post-meta span {
@@ -82,6 +82,42 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     }
 
     .post-meta .sep { font-size: 10px; }
+
+    .post-meta:has(+ .post-hero) {
+      margin-bottom: 28px;
+    }
+
+    .post-hero {
+      margin: 0 0 52px;
+    }
+
+    .post-hero img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+
+    .post-hero figcaption {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .post-hero a {
+      color: inherit;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+
+    .post-hero a:hover {
+      color: var(--text);
+      text-decoration-color: var(--text);
+    }
 
     .post-body {
       font-size: 18px;
@@ -134,6 +170,16 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     .post-body figure img,
     .post-body figure video {
       margin: 0;
+    }
+
+    /* Temporarily keep article screenshots, recordings, and diagrams out of
+       the reading flow while their visual language is being reconsidered.
+       The source markup and local assets remain untouched. */
+    .post-body:not(.post-body--show-media) figure,
+    .post-body:not(.post-body--show-media) > img,
+    .post-body:not(.post-body--show-media) > video,
+    .post-body:not(.post-body--show-media) > p:has(> img:only-child) {
+      display: none;
     }
 
     /* Portrait phone screenshots / recordings shouldn't span the full column */
@@ -278,6 +324,47 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       margin: 0 auto;
     }
 
+    .post-to-top {
+      position: fixed;
+      right: max(20px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      z-index: 130;
+      display: inline-grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      border: 1px solid rgba(0, 0, 0, 0.09);
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.16);
+      color: #1a1a1a;
+      font: inherit;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition:
+        color 150ms ease,
+        border-color 150ms ease,
+        box-shadow 150ms ease,
+        opacity 180ms ease,
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .post-to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .post-to-top:hover {
+      border-color: rgba(0, 0, 0, 0.18);
+      box-shadow: 0 11px 30px rgba(0, 0, 0, 0.22);
+      transform: translateY(-3px);
+    }
+
     /* ── Prev / next ── */
     .post-nav {
       margin-top: 56px;
@@ -353,6 +440,10 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     }
 
     @media (max-width: 570px) {
+      .post-to-top {
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+      }
       .post-nav-link {
         max-width: 48%;
       }
@@ -384,7 +475,27 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       </span>
     </div>
 
-    <div class="post-body">
+    {post.data.showHeroImage && post.data.heroImage && (
+      <figure class="post-hero">
+        <img
+          src={post.data.heroImage}
+          alt={post.data.heroAlt ?? ''}
+          width="1600"
+          height="1000"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          referrerpolicy="no-referrer"
+        />
+        {post.data.heroCredit && post.data.heroCreditUrl && (
+          <figcaption>
+            Photo by <a href={post.data.heroCreditUrl} target="_blank" rel="noopener">{post.data.heroCredit}</a> on Unsplash
+          </figcaption>
+        )}
+      </figure>
+    )}
+
+    <div class:list={['post-body', { 'post-body--show-media': post.data.showInlineMedia }]}>
       <Content />
     </div>
 
@@ -409,6 +520,10 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       ) : <span />}
     </nav>
   </div>
+
+  <button class="post-to-top" type="button" aria-label="Back to top" aria-hidden="true" tabindex="-1">
+    <ArrowUp size={21} strokeWidth={2.25} />
+  </button>
 
   <script>
     // Wrap each code block and add a copy button that flips to "Copied" briefly.
@@ -458,7 +573,36 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       });
     }
 
+    let backToTopAbort;
+
+    function initBackToTop() {
+      backToTopAbort?.abort();
+      backToTopAbort = new AbortController();
+
+      const button = document.querySelector('.post-to-top');
+      if (!(button instanceof HTMLButtonElement)) return;
+
+      const syncVisibility = () => {
+        const visible = window.scrollY > 520;
+        button.classList.toggle('is-visible', visible);
+        button.setAttribute('aria-hidden', String(!visible));
+        button.tabIndex = visible ? 0 : -1;
+      };
+
+      window.addEventListener('scroll', syncVisibility, {
+        passive: true,
+        signal: backToTopAbort.signal,
+      });
+      button.addEventListener('click', () => {
+        const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        window.scrollTo({ top: 0, behavior });
+      }, { signal: backToTopAbort.signal });
+
+      syncVisibility();
+    }
+
     document.addEventListener('astro:page-load', initCodeCopy);
+    document.addEventListener('astro:page-load', initBackToTop);
   </script>
 
 </Base>
