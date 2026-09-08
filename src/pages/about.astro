@@ -70,12 +70,7 @@ const tripPhotos = [
   </p>
 
   <div class="me">
-    <figure class="polaroid">
-      <img src="/images/profile-portrait.webp" alt="Fahad Imran" width="240" height="288" />
-    </figure>
-
-    <div class="me-body">
-      <dl class="facts">
+    <dl class="facts">
         <div class="fact">
           <dt>Currently</dt>
           <dd>
@@ -100,8 +95,7 @@ const tripPhotos = [
           <dt>Based</dt>
           <dd>Pakistan 🇵🇰 — working remotely across international teams</dd>
         </div>
-      </dl>
-    </div>
+    </dl>
   </div>
 
   <section class="bookshelf" aria-labelledby="bookshelf-title">
@@ -204,27 +198,6 @@ const tripPhotos = [
 </Base>
 
 <script>
-  // Tilt the polaroid once it scrolls into view, and leave it tilted.
-  // Re-run on every client-side navigation, since the element is swapped fresh.
-  let polaroidIO = null;
-  function initPolaroidTilt() {
-    const polaroid = document.querySelector('.polaroid');
-    if (!polaroid) return;
-    if (polaroidIO) polaroidIO.disconnect();
-    polaroidIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          polaroid.classList.add('is-tilted');
-          if (polaroidIO) polaroidIO.disconnect();
-        }
-      });
-      // Fires only once the photo scrolls up past the middle of the viewport,
-      // so the tilt animation is visible even when it's on-screen at load.
-    }, { threshold: 0, rootMargin: '0px 0px -50% 0px' });
-    polaroidIO.observe(polaroid);
-  }
-  document.addEventListener('astro:page-load', initPolaroidTilt);
-
   function initCarousels() {
     document.querySelectorAll('[data-carousel]').forEach(function (shell) {
       const track = shell.querySelector('[data-carousel-track]');
@@ -263,53 +236,9 @@ const tripPhotos = [
     margin-bottom: 44px;
   }
 
-  /* ── Photo + current role ── */
+  /* ── Current role ── */
   .me {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 64px;
-    align-items: start;
     margin-bottom: 64px;
-  }
-
-  .polaroid {
-    background: #fff;
-    padding: 7px;
-    border-radius: 3px;
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.08),
-      0 10px 26px rgba(0, 0, 0, 0.12);
-    transform: rotate(0deg);
-    /* eased so the tilt settles in as it scrolls into view */
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  /* tilts once when scrolled into view, then stays */
-  .polaroid.is-tilted {
-    transform: rotate(-3deg);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .polaroid {
-      transition: none;
-    }
-    .polaroid.is-tilted {
-      transform: none;
-    }
-  }
-  .polaroid img {
-    display: block;
-    width: 100%;
-    /* height:auto lets the width/aspect-ratio drive the height. Without it the
-       img's height attribute stays fixed while width scales to the column, so
-       the ratio breaks after a client-side nav (it's only correct on refresh). */
-    height: auto;
-    aspect-ratio: 5 / 6;
-    object-fit: cover;
-    border-radius: 1px;
-  }
-
-  .me-body {
-    min-width: 0;
-    padding-top: 4px;
   }
 
   .facts {
@@ -317,9 +246,9 @@ const tripPhotos = [
   }
   .fact {
     display: grid;
-    grid-template-columns: 88px 1fr;
-    gap: 16px;
-    padding: 11px 0;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+    padding: 14px 0;
     border-top: 1px solid var(--border);
     align-items: baseline;
   }
@@ -381,7 +310,7 @@ const tripPhotos = [
 
   .book-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 132px));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
     align-items: start;
     justify-content: start;
@@ -630,27 +559,10 @@ const tripPhotos = [
     font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 820px) {
-    .me {
-      grid-template-columns: 1fr;
-      gap: 36px;
-    }
-    .polaroid {
-      max-width: 240px;
-    }
-    .me-body {
-      width: 100%;
-      padding-top: 0;
-    }
-  }
-
   @media (max-width: 570px) {
-    .me {
-      gap: 28px;
-      justify-items: center;
-    }
-    .me-role {
-      font-size: 21px;
+    .fact {
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 16px;
     }
     .book-grid {
       display: flex;
@@ -670,7 +582,7 @@ const tripPhotos = [
       display: none;
     }
     .book-card {
-      flex: 0 0 min(220px, 68vw);
+      flex: 0 0 min(175px, 54vw);
       scroll-snap-align: start;
     }
     .book-carousel-shell,
@@ -760,7 +672,7 @@ const tripPhotos = [
 
   @media (min-width: 571px) and (max-width: 900px) {
     .book-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 24px;
       width: 100%;
       max-width: 600px;

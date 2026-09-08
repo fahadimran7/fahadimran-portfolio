@@ -661,6 +661,11 @@ footer a:hover {
     gap: 28px;
   }
 
+  .footer-col.footer-about {
+    width: 100%;
+    max-width: none;
+  }
+
   .writing-item {
     flex-direction: column;
     gap: 4px;

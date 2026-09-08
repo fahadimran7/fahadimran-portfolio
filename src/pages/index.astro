@@ -6,6 +6,22 @@ import ContactCta from '../components/ContactCta.astro';
 import { featuredProjects } from '../data/projects';
 import { testimonials } from '../data/testimonials';
 import { ArrowDown } from 'lucide-astro';
+
+const shippedProducts = [
+  { name: 'Nomod', logo: '/images/nomod-logo.webp' },
+  { name: 'Pine', logo: '/images/pine-logo.webp' },
+  { name: 'Rayne', logo: '/images/rayne-logo.webp' },
+  { name: 'Leaf', logo: '/images/leaf-logo.webp' },
+  { name: 'Maple', logo: '/images/maple-logo.webp' },
+];
+
+const internationalMarkets = [
+  { name: 'Saudi Arabia', flag: '/images/flags/saudi-arabia.webp' },
+  { name: 'United Arab Emirates', flag: '/images/flags/united-arab-emirates.webp' },
+  { name: 'Pakistan', flag: '/images/flags/pakistan.webp' },
+  { name: 'United States', flag: '/images/flags/united-states.webp' },
+  { name: 'Norway', flag: '/images/flags/norway.webp' },
+];
 ---
 
 <Base
@@ -13,24 +29,64 @@ import { ArrowDown } from 'lucide-astro';
   description="Product engineer building payment products in small startup teams, from ambiguous problems to shipped features across web and mobile."
 >
   <section class="hero">
-    <div class="hero-text">
-      <h1>Product engineer building payment products for 40,000+ GCC merchants.</h1>
+    <div class="hero-copy">
+      <div class="hero-text">
+        <h1>Product engineer turning ambiguous startup problems into shipped products.</h1>
+      </div>
+
+      <p class="bio">
+        I work inside small startup teams, building payment infrastructure and product experiences across web and mobile.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn-solid" href="#selected-work">View selected work <ArrowDown size={15} /></a>
+      </div>
     </div>
 
-    <p class="bio">
-      I work inside small startup teams, turning ambiguous problems into shipped features across web and mobile.
-    </p>
+    <figure class="hero-portrait">
+      <img src="/images/profile-portrait.webp" alt="Fahad Imran" width="480" height="576" />
+    </figure>
+  </section>
 
-    <div class="hero-actions">
-      <a class="btn-solid" href="#selected-work">View selected work <ArrowDown size={15} /></a>
-      <a class="btn-ghost" href="mailto:fahadimran6544@gmail.com">Get in touch</a>
-    </div>
+  <section class="proof-strip" aria-label="At a glance">
+    <dl>
+      <div class="proof-stat">
+        <dt data-count="40" data-suffix="K+">40K+</dt>
+        <dd>GCC merchants supported</dd>
+      </div>
+      <div class="proof-stat">
+        <dt data-count="5" data-suffix="+">5+</dt>
+        <dd class="proof-label">
+          <span>Products shipped</span>
+          <span class="mini-stack" role="img" aria-label={shippedProducts.map(({ name }) => name).join(', ')}>
+            {shippedProducts.map(({ name, logo }) => (
+              <span class="mini-avatar">
+                <img src={logo} alt="" width="20" height="20" title={name} />
+              </span>
+            ))}
+          </span>
+        </dd>
+      </div>
+      <div class="proof-stat">
+        <dt data-count="5" data-suffix="+">5+</dt>
+        <dd class="proof-label">
+          <span>International markets</span>
+          <span class="mini-stack" role="img" aria-label={internationalMarkets.map(({ name }) => name).join(', ')}>
+            {internationalMarkets.map(({ name, flag }) => (
+              <span class="mini-avatar" title={name}>
+                <img src={flag} alt="" width="20" height="20" />
+              </span>
+            ))}
+          </span>
+        </dd>
+      </div>
+    </dl>
   </section>
 
   <section class="selected-work" id="selected-work" aria-labelledby="selected-work-heading">
     <div class="section-heading-row">
       <p class="section-label" id="selected-work-heading">Selected work</p>
-      <a href="/work" class="section-link">View all work →</a>
+      <a href="/work" class="section-link">View all work <span aria-hidden="true">→</span></a>
     </div>
     <div class="featured-project-grid">
       {featuredProjects.map((project) => (
@@ -56,10 +112,61 @@ import { ArrowDown } from 'lucide-astro';
   <ContactCta />
 </Base>
 
+<script>
+  function initProofCounters() {
+    const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+    if (!counters.length) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+    function animateCounter(counter: HTMLElement) {
+      const target = Number(counter.dataset.count ?? 0);
+      const suffix = counter.dataset.suffix ?? '';
+      const duration = 900;
+      const startedAt = performance.now();
+
+      function tick(now: number) {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counter.textContent = `${Math.round(target * eased)}${suffix}`;
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    counters.forEach((counter) => {
+      if (counter.dataset.counted) return;
+      const suffix = counter.dataset.suffix ?? '';
+      counter.textContent = `0${suffix}`;
+
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        counter.dataset.counted = 'true';
+        observer.disconnect();
+        animateCounter(counter);
+      }, { threshold: 0.35 });
+
+      observer.observe(counter);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initProofCounters);
+</script>
+
 <style>
   .hero {
-    max-width: 980px;
-    margin-bottom: 88px;
+    display: grid;
+    grid-template-columns: minmax(0, 980px) minmax(220px, 300px);
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(36px, 5vw, 72px);
+    margin-bottom: 56px;
+  }
+
+  .hero-copy {
+    min-width: 0;
   }
 
   .hero-text h1 {
@@ -83,6 +190,117 @@ import { ArrowDown } from 'lucide-astro';
     gap: 8px;
   }
 
+  .hero-portrait {
+    width: 100%;
+    max-width: 300px;
+    justify-self: end;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.11);
+  }
+
+  .hero-portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+  }
+
+  .proof-strip {
+    margin-bottom: 88px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .proof-strip dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .proof-stat {
+    min-width: 0;
+    padding: 26px 30px;
+  }
+
+  .proof-stat:first-child {
+    padding-left: 0;
+  }
+
+  .proof-stat + .proof-stat {
+    position: relative;
+  }
+
+  .proof-stat + .proof-stat::before {
+    content: '';
+    position: absolute;
+    top: 22%;
+    bottom: 22%;
+    left: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .proof-stat dt {
+    color: var(--text);
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .proof-stat dd {
+    margin-top: 9px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .proof-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 9px;
+    min-width: 0;
+  }
+
+  .proof-label > span:first-child {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .mini-stack {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding-right: 1px;
+  }
+
+  .mini-avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    border: 1px solid var(--bg);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  }
+
+  .mini-avatar + .mini-avatar {
+    margin-left: -5px;
+  }
+
+  .mini-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .selected-work {
     scroll-margin-top: 96px;
     margin-bottom: 80px;
@@ -101,13 +319,30 @@ import { ArrowDown } from 'lucide-astro';
   }
 
   .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
     text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
   }
 
   .section-link:hover {
     color: var(--text);
+    border-color: color-mix(in srgb, var(--text) 30%, var(--border));
+  }
+
+  .section-link span {
+    transition: transform 0.15s ease;
+  }
+
+  .section-link:hover span {
+    transform: translateX(3px);
   }
 
   .featured-project-grid {
@@ -161,6 +396,11 @@ import { ArrowDown } from 'lucide-astro';
   }
 
   @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 32px;
+    }
+
     .featured-project-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -181,7 +421,15 @@ import { ArrowDown } from 'lucide-astro';
 
   @media (max-width: 570px) {
     .hero {
-      margin-bottom: 68px;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-bottom: 44px;
+    }
+
+    .hero-portrait {
+      width: 175px;
+      justify-self: start;
+      padding: 6px;
     }
 
     .hero-text h1 {
@@ -190,6 +438,44 @@ import { ArrowDown } from 'lucide-astro';
 
     .bio {
       font-size: 18px;
+    }
+
+    .proof-strip {
+      margin-bottom: 64px;
+    }
+
+    .proof-strip dl {
+      grid-template-columns: 1fr;
+    }
+
+    .proof-stat,
+    .proof-stat:first-child {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      padding: 17px 0;
+    }
+
+    .proof-stat + .proof-stat {
+      border-top: 1px solid var(--border);
+    }
+
+    .proof-stat + .proof-stat::before {
+      display: none;
+    }
+
+    .proof-stat dt {
+      font-size: 32px;
+    }
+
+    .proof-stat dd {
+      margin-top: 0;
+      font-size: 13px;
+    }
+
+    .proof-label {
+      margin-top: 0;
     }
 
     .featured-project-grid {
