@@ -56,7 +56,7 @@ interface OgData {
 }
 
 function template({ title, readTime, date }: OgData): El {
-  const eyebrow = `Ramblings · ${date}`;
+  const eyebrow = `Writings · ${date}`;
 
   const len = title.length;
   const titleSize = len > 62 ? 50 : len > 46 ? 58 : 68;
@@ -186,7 +186,7 @@ async function render(data: OgData): Promise<Buffer> {
 }
 
 export async function getStaticPaths() {
-  const posts = await getCollection('ramblings', ({ data }) => data.published);
+  const posts = await getCollection('writings', ({ data }) => data.published);
   return posts.map((post) => ({
     params: { route: `${post.id}.png` },
     props: {

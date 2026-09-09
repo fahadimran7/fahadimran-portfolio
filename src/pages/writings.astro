@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('ramblings', ({ data }) => data.published)).sort(
+const posts = (await getCollection('writings', ({ data }) => data.published)).sort(
   (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
 );
 
@@ -16,17 +16,17 @@ function readingTime(body: string) {
   return `${minutes} min read`;
 }
 ---
-<Base title="Ramblings" description="Working notes on product engineering, payments, and building software.">
+<Base title="Writings" description="Working notes on product engineering, payments, and building software.">
 
   <div class="page-heading">
-    <h1>Ramblings</h1>
+    <h1>Writings</h1>
     <p>Working notes on product engineering, payments, and the details that surface while building software.</p>
   </div>
 
   <div class="writing-list">
     {posts.map(post => (
       <div class="writing-item">
-        <a href={`/ramblings/${post.id}`}>{post.data.title}</a>
+        <a href={`/writings/${post.id}`}>{post.data.title}</a>
         <span class="writing-date">{formatDate(post.data.publishedAt)} · {readingTime(post.body)}</span>
       </div>
     ))}

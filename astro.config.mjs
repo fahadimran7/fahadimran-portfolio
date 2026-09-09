@@ -4,6 +4,10 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://fahadimran.me',
+  redirects: {
+    '/ramblings': '/writings',
+    '/ramblings/[slug]': '/writings/[slug]',
+  },
   build: {
     // Inline the site CSS into each page's HTML instead of a separate
     // <link rel="stylesheet">. The stylesheet is small (~12KB) and was a

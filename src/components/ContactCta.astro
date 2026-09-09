@@ -17,6 +17,16 @@ const {
 ---
 
 <section class="contact-cta" aria-labelledby="contact-heading">
+  <div class="cta-contours" aria-hidden="true">
+    <svg viewBox="0 0 720 520" preserveAspectRatio="none">
+      <path d="M-40 548C82 389 229 359 367 273C493 194 573 98 608-36" />
+      <path d="M66 556C167 425 283 392 405 317C522 244 615 143 663-34" />
+      <path d="M167 560C249 454 337 426 444 361C553 294 653 191 716-28" />
+      <path d="M269 566C328 485 391 462 481 408C580 347 682 251 756 40" />
+      <path d="M366 572C406 513 448 496 521 451C609 398 700 315 774 147" />
+      <path d="M459 576C482 538 511 525 559 496C630 453 705 386 773 271" />
+    </svg>
+  </div>
   <p class="cta-eyebrow">{eyebrow}</p>
   <h2 id="contact-heading">{heading}</h2>
   <p>{copy}</p>
@@ -27,14 +37,48 @@ const {
 
 <style>
   .contact-cta {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
     text-align: center;
     padding: 72px 32px;
     border-radius: 24px;
-    background: var(--text);
+    background:
+      radial-gradient(circle at 92% 42%, rgba(255, 255, 255, 0.075), transparent 42%),
+      linear-gradient(112deg, #171717 0%, #1c1c1c 48%, #292929 100%);
     color: var(--bg);
+  }
+
+  .contact-cta > :not(.cta-contours) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-contours {
+    position: absolute;
+    top: 0;
+    right: -3%;
+    bottom: 0;
+    width: 62%;
+    z-index: -1;
+    opacity: 0.48;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 22%, #000 52%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 22%, #000 52%);
+  }
+
+  .cta-contours svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.24);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
   }
 
   .cta-eyebrow {
@@ -93,6 +137,12 @@ const {
     .contact-cta {
       padding: 56px 22px;
       border-radius: 18px;
+    }
+
+    .cta-contours {
+      right: -30%;
+      width: 105%;
+      opacity: 0.34;
     }
   }
 

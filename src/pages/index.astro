@@ -83,6 +83,21 @@ const internationalMarkets = [
     </dl>
   </section>
 
+  <section class="expertise" aria-labelledby="expertise-heading">
+    <div class="expertise-sticky">
+      <h2 id="expertise-heading" class="visually-hidden">What I work across</h2>
+      <div class="expertise-lines" aria-hidden="true">
+        <p class="expertise-line expertise-line--forward">
+          Product engineering <span>·</span> Payments <span>·</span> Fintech <span>·</span> Web
+        </p>
+        <p class="expertise-line expertise-line--reverse">
+          Mobile apps <span>·</span> AI <span>·</span> SaaS <span>·</span> Automations <span>·</span> Consumer apps
+        </p>
+      </div>
+      <p class="expertise-fallback">Product engineering · Payments · Fintech · Web · Mobile apps · AI · SaaS · Automations · Consumer apps</p>
+    </div>
+  </section>
+
   <section class="selected-work" id="selected-work" aria-labelledby="selected-work-heading">
     <div class="section-heading-row">
       <p class="section-label" id="selected-work-heading">Selected work</p>
@@ -152,7 +167,54 @@ const internationalMarkets = [
     });
   }
 
-  document.addEventListener('astro:page-load', initProofCounters);
+  let removeExpertiseScroller: (() => void) | undefined;
+
+  function initExpertiseScroller() {
+    removeExpertiseScroller?.();
+    removeExpertiseScroller = undefined;
+
+    const section = document.querySelector<HTMLElement>('.expertise');
+    if (!section) return;
+
+    const motionQuery = window.matchMedia('(min-width: 701px) and (prefers-reduced-motion: no-preference)');
+    let frame: number | undefined;
+
+    function update() {
+      frame = undefined;
+      if (!motionQuery.matches) {
+        section.classList.remove('is-enhanced');
+        section.style.removeProperty('--expertise-progress');
+        return;
+      }
+
+      const rect = section.getBoundingClientRect();
+      const travel = Math.max(section.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
+      section.style.setProperty('--expertise-progress', progress.toFixed(4));
+      section.classList.add('is-enhanced');
+    }
+
+    function queueUpdate() {
+      if (frame === undefined) frame = requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', queueUpdate, { passive: true });
+    window.addEventListener('resize', queueUpdate, { passive: true });
+    motionQuery.addEventListener('change', queueUpdate);
+    update();
+
+    removeExpertiseScroller = () => {
+      window.removeEventListener('scroll', queueUpdate);
+      window.removeEventListener('resize', queueUpdate);
+      motionQuery.removeEventListener('change', queueUpdate);
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    };
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initProofCounters();
+    initExpertiseScroller();
+  });
 </script>
 
 <style>
@@ -357,6 +419,95 @@ const internationalMarkets = [
     object-fit: cover;
   }
 
+  .expertise {
+    --expertise-progress: 1;
+    width: 100vw;
+    height: 165svh;
+    margin-left: calc(50% - 50vw);
+  }
+
+  .expertise-sticky {
+    position: sticky;
+    top: 0;
+    display: grid;
+    place-items: center;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .expertise-lines {
+    display: grid;
+    width: max-content;
+    gap: clamp(12px, 2vw, 28px);
+  }
+
+  .expertise-line {
+    color: var(--muted);
+    font-size: clamp(48px, 5vw, 76px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  .expertise-line span {
+    color: inherit;
+  }
+
+  .expertise.is-enhanced .expertise-line--forward {
+    transform: translate3d(calc((1 - var(--expertise-progress)) * 42vw), 0, 0);
+  }
+
+  .expertise.is-enhanced .expertise-line--reverse {
+    transform: translate3d(calc((1 - var(--expertise-progress)) * -42vw), 0, 0);
+  }
+
+  .expertise-fallback {
+    display: none;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 700px) {
+    .expertise {
+      width: auto;
+      height: auto;
+      margin: 0 0 72px;
+      padding: 42px 0;
+    }
+
+    .expertise-sticky {
+      position: static;
+      display: block;
+      height: auto;
+      overflow: visible;
+    }
+
+    .expertise-lines {
+      display: none;
+    }
+
+    .expertise-fallback {
+      display: block;
+      max-width: 12ch;
+      color: var(--muted);
+      font-size: clamp(38px, 11vw, 50px);
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+    }
+  }
+
   .selected-work {
     scroll-margin-top: 96px;
     margin-bottom: 80px;
@@ -540,6 +691,10 @@ const internationalMarkets = [
   @media (prefers-reduced-motion: reduce) {
     .hero-portrait img {
       transition: none;
+    }
+
+    .expertise {
+      height: 100svh;
     }
   }
 

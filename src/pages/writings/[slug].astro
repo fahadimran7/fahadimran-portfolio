@@ -4,7 +4,7 @@ import { getCollection, render } from 'astro:content';
 import { CalendarDays, Clock3, ArrowLeft, ArrowUp, ChevronLeft, ChevronRight } from 'lucide-astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('ramblings', ({ data }) => data.published);
+  const posts = await getCollection('writings', ({ data }) => data.published);
   return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
 }
 
@@ -19,10 +19,10 @@ function readingTime(body: string) {
   return `${Math.ceil(body.trim().split(/\s+/).length / 200)} min read`;
 }
 
-// Prev/next follow the same newest-first order as /ramblings, so adjacency
+// Prev/next follow the same newest-first order as /writings, so adjacency
 // here always matches the list — "previous" is the post shown above this one
 // there, "next" is the post shown below.
-const allPosts = (await getCollection('ramblings', ({ data }) => data.published)).sort(
+const allPosts = (await getCollection('writings', ({ data }) => data.published)).sort(
   (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
 );
 const currentIndex = allPosts.findIndex(p => p.id === post.id);
@@ -436,9 +436,9 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
   </style>
 
   <div class="post-shell">
-    <a class="post-back" href="/ramblings">
+    <a class="post-back" href="/writings">
       <ArrowLeft size={15} strokeWidth={2} />
-      Ramblings
+      Writings
     </a>
 
     <h1 class="post-title">{post.data.title}</h1>
@@ -479,9 +479,9 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       <Content />
     </div>
 
-    <nav class="post-nav" aria-label="More ramblings">
+    <nav class="post-nav" aria-label="More writings">
       {prevPost ? (
-        <a class="post-nav-link post-nav-prev" href={`/ramblings/${prevPost.id}`}>
+        <a class="post-nav-link post-nav-prev" href={`/writings/${prevPost.id}`}>
           <ChevronLeft size={16} strokeWidth={2} />
           <span class="post-nav-text">
             <span class="post-nav-label">Previous</span>
@@ -490,7 +490,7 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
         </a>
       ) : <span />}
       {nextPost ? (
-        <a class="post-nav-link post-nav-next" href={`/ramblings/${nextPost.id}`}>
+        <a class="post-nav-link post-nav-next" href={`/writings/${nextPost.id}`}>
           <span class="post-nav-text">
             <span class="post-nav-label">Next</span>
             <span class="post-nav-title">{nextPost.data.title}</span>

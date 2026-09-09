@@ -97,7 +97,8 @@ html.lenis.lenis-stopped {
 }
 
 body:has(.contact-cta:hover) .site-cursor__core,
-body:has(.btn-solid:hover) .site-cursor__core {
+body:has(.btn-solid:hover) .site-cursor__core,
+body:has(.site-header .logo:hover) .site-cursor__core {
   background: var(--highlight);
 }
 
