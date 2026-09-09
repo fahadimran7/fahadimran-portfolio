@@ -133,16 +133,45 @@ const {
     outline-offset: 4px;
   }
 
-  @media (max-width: 570px) {
+  @media (max-width: 640px) {
     .contact-cta {
-      padding: 56px 22px;
+      padding: 48px 20px 46px;
       border-radius: 18px;
     }
 
     .cta-contours {
-      right: -30%;
-      width: 105%;
-      opacity: 0.34;
+      top: 34%;
+      right: -48%;
+      bottom: -1px;
+      width: 145%;
+      opacity: 0.4;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.55) 22%, #000 48%);
+      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.55) 22%, #000 48%);
+    }
+
+    .cta-eyebrow {
+      margin-bottom: 10px;
+      font-size: 11px;
+    }
+
+    .contact-cta h2 {
+      max-width: 11ch;
+      font-size: clamp(31px, 9vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .contact-cta > p:not(.cta-eyebrow) {
+      max-width: 31ch;
+      margin-top: 20px;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .cta-button {
+      margin-top: 26px;
+      padding: 13px 18px 14px;
+      font-size: 14px;
     }
   }
 

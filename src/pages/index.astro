@@ -31,7 +31,7 @@ const internationalMarkets = [
   <section class="hero">
     <div class="hero-copy">
       <div class="hero-text">
-        <h1>Product engineer turning ambiguous <span class="hero-emphasis hero-emphasis--problem">startup problems</span> into <span class="hero-emphasis hero-emphasis--product">shipped products</span>.</h1>
+        <h1>Product engineer turning ambiguous <span class="hero-emphasis hero-emphasis--problem">startup problems</span> into <span class="hero-emphasis hero-emphasis--product">shipped products</span></h1>
       </div>
 
       <p class="bio">
@@ -176,7 +176,7 @@ const internationalMarkets = [
     const section = document.querySelector<HTMLElement>('.expertise');
     if (!section) return;
 
-    const motionQuery = window.matchMedia('(min-width: 701px) and (prefers-reduced-motion: no-preference)');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: no-preference)');
     let frame: number | undefined;
 
     function update() {
@@ -184,13 +184,26 @@ const internationalMarkets = [
       if (!motionQuery.matches) {
         section.classList.remove('is-enhanced');
         section.style.removeProperty('--expertise-progress');
+        section.style.removeProperty('--expertise-forward-x');
+        section.style.removeProperty('--expertise-reverse-x');
         return;
       }
 
       const rect = section.getBoundingClientRect();
       const travel = Math.max(section.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
+      const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth <= 700;
+      const forwardX = isMobile
+        ? (0.1 - progress * 1.1) * viewportWidth
+        : (1 - progress) * 0.42 * viewportWidth;
+      const reverseX = isMobile
+        ? (-1.8 + progress * 1.65) * viewportWidth
+        : (1 - progress) * -0.42 * viewportWidth;
+
       section.style.setProperty('--expertise-progress', progress.toFixed(4));
+      section.style.setProperty('--expertise-forward-x', `${forwardX.toFixed(2)}px`);
+      section.style.setProperty('--expertise-reverse-x', `${reverseX.toFixed(2)}px`);
       section.classList.add('is-enhanced');
     }
 
@@ -368,15 +381,18 @@ const internationalMarkets = [
 
   .proof-label {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 9px;
+    column-gap: 9px;
+    row-gap: 6px;
     margin-top: 9px;
     min-width: 0;
   }
 
   .proof-label > span:first-child {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
+    white-space: nowrap;
   }
 
   .mini-stack {
@@ -421,6 +437,8 @@ const internationalMarkets = [
 
   .expertise {
     --expertise-progress: 1;
+    --expertise-forward-x: 0px;
+    --expertise-reverse-x: 0px;
     width: 100vw;
     height: 165svh;
     margin-left: calc(50% - 50vw);
@@ -456,11 +474,11 @@ const internationalMarkets = [
   }
 
   .expertise.is-enhanced .expertise-line--forward {
-    transform: translate3d(calc((1 - var(--expertise-progress)) * 42vw), 0, 0);
+    transform: translate3d(var(--expertise-forward-x), 0, 0);
   }
 
   .expertise.is-enhanced .expertise-line--reverse {
-    transform: translate3d(calc((1 - var(--expertise-progress)) * -42vw), 0, 0);
+    transform: translate3d(var(--expertise-reverse-x), 0, 0);
   }
 
   .expertise-fallback {
@@ -480,9 +498,41 @@ const internationalMarkets = [
 
   @media (max-width: 700px) {
     .expertise {
+      width: 100vw;
+      height: 150svh;
+      margin-left: calc(50% - 50vw);
+    }
+
+    .expertise-sticky {
+      position: sticky;
+      top: 0;
+      display: grid;
+      place-items: center;
+      height: 100svh;
+      overflow: hidden;
+    }
+
+    .expertise-lines {
+      display: grid;
+      width: 100%;
+      gap: 14px;
+      padding: 0 24px;
+    }
+
+    .expertise-line {
+      width: max-content;
+      font-size: clamp(32px, 9.5vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.018em;
+    }
+
+  }
+
+  @media (max-width: 700px) and (prefers-reduced-motion: reduce) {
+    .expertise {
       width: auto;
       height: auto;
-      margin: 0 0 72px;
+      margin: 0 0 64px;
       padding: 42px 0;
     }
 
@@ -499,12 +549,12 @@ const internationalMarkets = [
 
     .expertise-fallback {
       display: block;
-      max-width: 12ch;
+      max-width: 15ch;
       color: var(--muted);
-      font-size: clamp(38px, 11vw, 50px);
+      font-size: clamp(30px, 8.5vw, 38px);
       font-weight: 500;
-      line-height: 1.06;
-      letter-spacing: -0.025em;
+      line-height: 1.08;
+      letter-spacing: -0.018em;
     }
   }
 
@@ -617,26 +667,26 @@ const internationalMarkets = [
     }
   }
 
-  @media (max-width: 570px) {
+  @media (max-width: 640px) {
     .hero {
       grid-template-columns: 1fr;
-      gap: 30px;
       margin-bottom: 44px;
     }
 
     .hero-portrait {
-      width: 175px;
-      justify-self: start;
-      padding: 6px;
+      display: none;
     }
 
     .hero-text h1 {
-      font-size: clamp(38px, 11vw, 48px);
+      font-size: clamp(34px, 10vw, 46px);
     }
 
     .bio {
       font-size: 18px;
     }
+  }
+
+  @media (max-width: 570px) {
 
     .proof-strip {
       margin-bottom: 64px;
@@ -650,7 +700,7 @@ const internationalMarkets = [
     .proof-stat:first-child {
       display: grid;
       grid-template-columns: 86px minmax(0, 1fr);
-      align-items: baseline;
+      align-items: center;
       gap: 16px;
       padding: 17px 0;
     }
@@ -673,6 +723,7 @@ const internationalMarkets = [
     }
 
     .proof-label {
+      align-items: center;
       margin-top: 0;
     }
 

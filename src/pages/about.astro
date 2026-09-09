@@ -104,8 +104,8 @@ const tripPhotos = [
       <h2 id="bookshelf-title">A few things shaping how I think.</h2>
     </div>
 
-    <div class="carousel-shell book-carousel-shell" data-carousel>
-      <div class="book-grid" data-carousel-track>
+    <div class="carousel-shell book-carousel-shell">
+      <div class="book-grid">
         {books.map((book) => (
           <a
             class="book-card"
@@ -165,8 +165,8 @@ const tripPhotos = [
       </p>
     </div>
 
-    <div class="carousel-shell trip-carousel-shell" data-carousel>
-      <div class="trip-photo-strip" data-carousel-track>
+    <div class="carousel-shell trip-carousel-shell">
+      <div class="trip-photo-strip">
         {tripPhotos.map((photo, index) => (
           <figure class:list={["trip-polaroid", `trip-polaroid--${index + 1}`]}>
             <img
@@ -191,37 +191,11 @@ const tripPhotos = [
       eyebrow="One last thing"
       heading="Back to business."
       copy="If the work feels like a fit, let’s talk."
-      buttonLabel="Start a conversation"
+      buttonLabel="Let's talk"
     />
   </div>
 
 </Base>
-
-<script>
-  function initCarousels() {
-    document.querySelectorAll('[data-carousel]').forEach(function (shell) {
-      const track = shell.querySelector('[data-carousel-track]');
-      if (!track || track.dataset.carouselBound) return;
-      track.dataset.carouselBound = '1';
-
-      function syncFades() {
-        const leftThreshold = 32;
-        const rightThreshold = 3;
-        shell.classList.toggle('can-scroll-left', track.scrollLeft > leftThreshold);
-        shell.classList.toggle(
-          'can-scroll-right',
-          track.scrollLeft < track.scrollWidth - track.clientWidth - rightThreshold
-        );
-      }
-
-      track.addEventListener('scroll', syncFades, { passive: true });
-      window.addEventListener('resize', syncFades, { passive: true });
-      requestAnimationFrame(syncFades);
-    });
-  }
-
-  document.addEventListener('astro:page-load', initCarousels);
-</script>
 
 <style>
   .page-heading {
@@ -577,30 +551,6 @@ const tripPhotos = [
     .trip-carousel-shell {
       margin-inline: -24px;
       overflow: hidden;
-    }
-    .carousel-shell::before,
-    .carousel-shell::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      z-index: 3;
-      width: clamp(52px, 18vw, 78px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 180ms ease;
-    }
-    .carousel-shell::before {
-      left: 0;
-      background: linear-gradient(to right, var(--bg) 4%, color-mix(in srgb, var(--bg) 82%, transparent) 38%, transparent 100%);
-    }
-    .carousel-shell::after {
-      right: 0;
-      background: linear-gradient(to left, var(--bg) 4%, color-mix(in srgb, var(--bg) 82%, transparent) 38%, transparent 100%);
-    }
-    .carousel-shell.can-scroll-left::before,
-    .carousel-shell.can-scroll-right::after {
-      opacity: 1;
     }
     .trip-gallery {
       margin: 76px 0 56px;

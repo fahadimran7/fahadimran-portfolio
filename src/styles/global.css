@@ -688,7 +688,7 @@ footer a:hover {
 
 @media (max-width: 570px) {
   .site-header nav {
-    padding: 12px 24px;
+    padding: calc(20px + env(safe-area-inset-top)) 24px 14px;
   }
 
   .site-header nav ul {
