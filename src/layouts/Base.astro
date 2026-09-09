@@ -128,8 +128,10 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     </nav>
   </div>
 
-  <div class="site-cursor" id="site-cursor" aria-hidden="true">
-    <span class="site-cursor__core"></span>
+  <div class="site-cursor" id="site-cursor" aria-hidden="true" transition:persist>
+    <span class="site-cursor__core">
+      <span class="site-cursor__label"></span>
+    </span>
   </div>
 
   <script>
@@ -167,21 +169,58 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       '(min-width: 571px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
     );
     const cursor = document.getElementById('site-cursor');
-    const cursorCore = cursor?.querySelector('.site-cursor__core');
+    const cursorLabel = cursor?.querySelector('.site-cursor__label');
     let cursorFrame;
+    let cursorHitTestFrame;
+    let cursorLabelClearTimer;
     let cursorEnabled = false;
     let cursorHasPosition = false;
     let cursorTarget = { x: 0, y: 0 };
     let cursorCorePosition = { x: 0, y: 0 };
 
-    function paintCursor(element, position, size) {
-      element.style.transform = `translate3d(${position.x - size / 2}px, ${position.y - size / 2}px, 0)`;
+    function paintCursor(element, position) {
+      element.style.transform = `translate3d(${position.x}px, ${position.y}px, 0)`;
+    }
+
+    function setCursorLabel(nextLabel) {
+      if (!cursor || !cursorLabel) return;
+
+      if (nextLabel) {
+        if (cursorLabelClearTimer) clearTimeout(cursorLabelClearTimer);
+        cursorLabelClearTimer = undefined;
+        if (cursorLabel.textContent !== nextLabel) cursorLabel.textContent = nextLabel;
+        cursor.style.setProperty('--cursor-label-width', `${Math.ceil(cursorLabel.scrollWidth) + 28}px`);
+        cursor.classList.add('is-labelled');
+        return;
+      }
+
+      if (!cursor.classList.contains('is-labelled')) return;
+      cursor.classList.remove('is-labelled');
+      cursorLabelClearTimer = window.setTimeout(() => {
+        if (!cursor.classList.contains('is-labelled')) cursorLabel.textContent = '';
+      }, 360);
+    }
+
+    function getCursorLabel(element) {
+      const labelTarget = element?.closest('[data-cursor-label]');
+      return labelTarget?.getAttribute('data-cursor-label')?.trim() || '';
+    }
+
+    function syncCursorLabelAtPointer() {
+      cursorHitTestFrame = undefined;
+      if (!cursorEnabled || !cursorHasPosition || !cursor?.classList.contains('is-visible')) return;
+      const elementAtPointer = document.elementFromPoint(cursorTarget.x, cursorTarget.y);
+      setCursorLabel(getCursorLabel(elementAtPointer));
+    }
+
+    function queueCursorHitTest() {
+      if (!cursorHitTestFrame) cursorHitTestFrame = requestAnimationFrame(syncCursorLabelAtPointer);
     }
 
     function animateCursor() {
       cursorCorePosition.x += (cursorTarget.x - cursorCorePosition.x) * 0.56;
       cursorCorePosition.y += (cursorTarget.y - cursorCorePosition.y) * 0.56;
-      if (cursorCore) paintCursor(cursorCore, cursorCorePosition, 12);
+      if (cursor) paintCursor(cursor, cursorCorePosition);
 
       const remainingDistance = Math.hypot(
         cursorTarget.x - cursorCorePosition.x,
@@ -198,30 +237,41 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     function moveCursor(event) {
       if (!cursorEnabled || event.pointerType !== 'mouse') return;
       cursorTarget = { x: event.clientX, y: event.clientY };
+      setCursorLabel(getCursorLabel(event.target instanceof Element ? event.target : null));
       if (!cursorHasPosition) {
         cursorCorePosition = { ...cursorTarget };
-        if (cursorCore) paintCursor(cursorCore, cursorCorePosition, 12);
+        if (cursor) paintCursor(cursor, cursorCorePosition);
         cursorHasPosition = true;
       }
-      document.documentElement.classList.add('custom-cursor-visible');
+      cursor?.classList.add('is-visible');
       if (!cursorFrame) cursorFrame = requestAnimationFrame(animateCursor);
+    }
+
+    function hideCursor() {
+      cursor?.classList.remove('is-visible');
+      setCursorLabel('');
     }
 
     function syncCustomCursor() {
       cursorEnabled = cursorQuery.matches;
-      document.documentElement.classList.toggle('has-custom-cursor', cursorEnabled);
+      document.documentElement.classList.remove('has-custom-cursor', 'custom-cursor-visible');
       if (!cursorEnabled) {
-        document.documentElement.classList.remove('custom-cursor-visible');
+        hideCursor();
         cursorHasPosition = false;
         if (cursorFrame) cancelAnimationFrame(cursorFrame);
+        if (cursorHitTestFrame) cancelAnimationFrame(cursorHitTestFrame);
         cursorFrame = undefined;
+        cursorHitTestFrame = undefined;
       }
     }
 
     document.addEventListener('pointermove', moveCursor, { passive: true });
-    window.addEventListener('blur', () => document.documentElement.classList.remove('custom-cursor-visible'));
+    document.addEventListener('scroll', queueCursorHitTest, { passive: true, capture: true });
+    window.addEventListener('resize', queueCursorHitTest, { passive: true });
+    document.documentElement.addEventListener('mouseleave', hideCursor);
+    window.addEventListener('blur', hideCursor);
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) document.documentElement.classList.remove('custom-cursor-visible');
+      if (document.hidden) hideCursor();
     });
     syncCustomCursor();
     cursorQuery.addEventListener('change', syncCustomCursor);
@@ -265,6 +315,8 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     function initChrome() {
       updateNavGlass();
       updateActiveNav();
+      syncCustomCursor();
+      queueCursorHitTest();
 
       const hamburger = document.getElementById('hamburger');
       if (hamburger && !hamburger.dataset.bound) {

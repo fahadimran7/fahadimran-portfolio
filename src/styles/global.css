@@ -48,40 +48,80 @@ html.lenis.lenis-stopped {
 /* ── Custom cursor ── */
 .site-cursor {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
   z-index: 1000;
   pointer-events: none;
   opacity: 0;
+  will-change: transform;
   transition: opacity 120ms ease;
 }
 
 .site-cursor__core {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  display: block;
-  background: var(--text);
-  will-change: transform;
-  transition: background-color 140ms ease;
-}
-
-.site-cursor__core {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 12px;
   height: 12px;
+  overflow: hidden;
+  background: var(--text);
+  border-radius: 0;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  will-change: width, height, border-radius;
+  transition:
+    width 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 240ms ease,
+    box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-cursor__label {
+  color: #1a1a1a;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(3px) scale(0.92);
+  transition:
+    opacity 150ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body:has(.contact-cta:hover) .site-cursor__core,
-body:has(.hero-portrait:hover) .site-cursor__core {
+body:has(.btn-solid:hover) .site-cursor__core {
   background: var(--highlight);
 }
 
+.site-cursor.is-labelled .site-cursor__core {
+  width: var(--cursor-label-width, 154px);
+  height: 44px;
+  border-radius: 0;
+  background: var(--highlight);
+  box-shadow: 0 10px 26px rgba(26, 26, 26, 0.16);
+}
+
+.site-cursor.is-labelled .site-cursor__label {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 70ms;
+}
+
 @media (min-width: 571px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
+  html,
+  html * {
     cursor: none !important;
   }
 
-  html.custom-cursor-visible .site-cursor {
+  .site-cursor.is-visible {
     opacity: 1;
   }
 }
@@ -181,7 +221,7 @@ body {
 .site-header nav {
   max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
-  padding: 16px 24px 20px;
+  padding: 28px 24px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
