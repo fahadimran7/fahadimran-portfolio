@@ -193,8 +193,8 @@ const internationalMarkets = [
     z-index: -1;
     height: 0.2em;
     background:
-      linear-gradient(178deg, transparent 28%, rgba(232, 185, 48, 0.72) 31% 48%, transparent 51%),
-      linear-gradient(181deg, transparent 61%, rgba(232, 185, 48, 0.48) 64% 79%, transparent 82%);
+      linear-gradient(178deg, transparent 28%, color-mix(in srgb, var(--highlight) 76%, transparent) 31% 48%, transparent 51%),
+      linear-gradient(181deg, transparent 61%, color-mix(in srgb, var(--highlight) 52%, transparent) 64% 79%, transparent 82%);
     transform: scaleX(0);
     transform-origin: left center;
     animation: hero-underline 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -244,6 +244,15 @@ const internationalMarkets = [
     height: auto;
     aspect-ratio: 5 / 6;
     object-fit: cover;
+    filter: grayscale(0.78);
+    transition: filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: filter;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-portrait:hover img {
+      filter: grayscale(0);
+    }
   }
 
   .proof-strip {
@@ -526,6 +535,12 @@ const internationalMarkets = [
       margin-bottom: 64px;
     }
 
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-portrait img {
+      transition: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

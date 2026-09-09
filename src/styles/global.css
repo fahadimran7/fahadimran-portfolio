@@ -18,31 +18,72 @@
   --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   --chip-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.09);
   --social-bg: white;
-  --toggle-bg: #1a1a1a;
-  --toggle-color: #f9f9f7;
   --accent: #805AD5;
+  --highlight: #F2C94C;
   --nav-glass: rgba(249, 249, 247, 0.82);
-}
-
-[data-theme="dark"] {
-  --bg: #111110;
-  --text: rgba(255, 255, 255, 0.80);
-  --muted: #8a8a8a;
-  --border: #2a2a28;
-  --chip-bg: #1c1c1a;
-  --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --chip-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.4);
-  --social-bg: #1c1c1a;
-  --toggle-bg: #f5f0e8;
-  --toggle-color: #1a1a1a;
-  --accent: #FBD38D;
-  --nav-glass: rgba(17, 17, 16, 0.82);
 }
 
 html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
+}
+
+/* Lenis still uses the document's native scroll position, so sticky elements
+   and anchors remain reliable. Its own interpolation replaces browser smooth
+   scrolling only while the desktop enhancement is active. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+html.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ── Custom cursor ── */
+.site-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.site-cursor__core {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  background: var(--text);
+  will-change: transform;
+  transition: background-color 140ms ease;
+}
+
+.site-cursor__core {
+  width: 12px;
+  height: 12px;
+}
+
+body:has(.contact-cta:hover) .site-cursor__core,
+body:has(.hero-portrait:hover) .site-cursor__core {
+  background: var(--highlight);
+}
+
+@media (min-width: 571px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  html.custom-cursor-visible .site-cursor {
+    opacity: 1;
+  }
 }
 
 body {
@@ -52,7 +93,7 @@ body {
   font-size: 20px;
   font-weight: 400;
   line-height: 1.7;
-  padding: 24px 0 120px;
+  padding: 0 0 120px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -135,19 +176,12 @@ body {
     background: rgba(249, 249, 247, 0.88);
   }
 
-  [data-theme="dark"] .site-header.scrolled {
-    background: rgba(17, 17, 16, 0.88);
-  }
-
-  .site-header.scrolled nav {
-    padding: 16px 24px 20px;
-  }
 }
 
 .site-header nav {
   max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
-  padding: 10px 24px 18px;
+  padding: 16px 24px 20px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -401,17 +435,13 @@ footer a:hover {
   color: var(--text);
 }
 .btn-solid {
-  /* inverted pill: dark in light mode, light in dark mode */
-  color: var(--toggle-color);
-  background: var(--toggle-bg);
+  color: #f9f9f7;
+  background: #1a1a1a;
   /* 2px less on top than bottom — the text otherwise reads as sitting
      slightly low against the icon's optical center. */
   padding: 8px 20px 10px;
   font-weight: 500;
   box-shadow: var(--chip-shadow);
-}
-[data-theme="dark"] .btn-solid {
-  background: #faf7f1;
 }
 .btn-solid:hover {
   transform: translateY(-2px);
@@ -447,36 +477,6 @@ footer a:hover {
   height: 28px;
   border-radius: 6px;
   object-fit: contain;
-}
-
-/* Theme-swapped logos — higher specificity than .tool-icon img */
-.tool-icon img.posthog-dark,
-.tool-icon img.nextjs-dark,
-.tool-icon img.opencode-dark {
-  display: none;
-}
-
-.tool-icon img.posthog-light,
-.tool-icon img.nextjs-light,
-.tool-icon img.opencode-light {
-  display: block;
-}
-
-[data-theme="dark"] .tool-icon img.posthog-dark,
-[data-theme="dark"] .tool-icon img.nextjs-dark,
-[data-theme="dark"] .tool-icon img.opencode-dark {
-  display: block;
-}
-
-[data-theme="dark"] .tool-icon img.posthog-light,
-[data-theme="dark"] .tool-icon img.nextjs-light,
-[data-theme="dark"] .tool-icon img.opencode-light {
-  display: none;
-}
-
-/* Invert dark logos in dark mode */
-[data-theme="dark"] .tool-icon img.invert-dark {
-  filter: invert(1);
 }
 
 .tool-info .tool-name {
@@ -537,10 +537,6 @@ footer a:hover {
   border-radius: 8px;
   cursor: pointer;
   padding: 4px;
-}
-
-[data-theme="dark"] .hamburger {
-  background: #222220;
 }
 
 .hamburger span {
@@ -650,10 +646,6 @@ footer a:hover {
 }
 
 @media (max-width: 570px) {
-  body {
-    padding-top: 48px;
-  }
-
   .site-header nav {
     padding: 12px 24px;
   }

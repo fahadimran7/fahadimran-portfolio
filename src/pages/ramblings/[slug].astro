@@ -222,17 +222,6 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
       border: none;
       padding: 0;
     }
-    /* Shiki dual-theme token colours, switched by the site's [data-theme] toggle.
-       We keep our own block background above and only take Shiki's token colours. */
-    .post-body .astro-code,
-    .post-body .astro-code span {
-      color: var(--shiki-light);
-    }
-    [data-theme="dark"] .post-body .astro-code,
-    [data-theme="dark"] .post-body .astro-code span {
-      color: var(--shiki-dark);
-    }
-
     /* Copy button (injected around each code block by the script below) */
     .post-body .code-block {
       position: relative;
@@ -262,7 +251,6 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     .code-copy-btn svg { margin-right: 5px; }
     .code-copy-btn.is-copied { opacity: 1; }
     .code-copy-btn.is-copied svg { color: hsl(145 55% 38%); }
-    [data-theme="dark"] .code-copy-btn.is-copied svg { color: hsl(145 58% 62%); }
 
     /* ── Blockquote / callout ── */
     .post-body blockquote {
@@ -309,14 +297,6 @@ const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1]
     .post-body svg .dchip text {
       fill: hsl(var(--h) 48% 32%);
     }
-    [data-theme="dark"] .post-body svg .dchip rect {
-      fill: hsl(var(--h) 28% 17%);
-      stroke: hsl(var(--h) 25% 28%);
-    }
-    [data-theme="dark"] .post-body svg .dchip text {
-      fill: hsl(var(--h) 62% 76%);
-    }
-
     /* ── Post reading column: restrained width, centered inside the wider
        site wrap (which stays wide for every other page). ── */
     .post-shell {

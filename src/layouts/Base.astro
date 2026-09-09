@@ -24,8 +24,7 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f9f9f7" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/webp" href="/favicon.webp" />
@@ -51,15 +50,6 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
   <meta name="twitter:image:alt" content={pageTitle} />
-
-  <!-- prevent flash of wrong theme -->
-  <script is:inline>
-    (function() {
-      var stored = localStorage.getItem('theme');
-      var prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', stored || prefer);
-    })();
-  </script>
 
   <ClientRouter />
 </head>
@@ -138,7 +128,104 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
     </nav>
   </div>
 
+  <div class="site-cursor" id="site-cursor" aria-hidden="true">
+    <span class="site-cursor__core"></span>
+  </div>
+
   <script>
+    import Lenis from 'lenis';
+
+    // Keep the physical page scroll native, then add a restrained inertia layer
+    // for desktop wheel and trackpad input. Touch stays browser-native, which is
+    // both more responsive and avoids interfering with the mobile carousels.
+    let lenis;
+    const smoothScrollQuery = window.matchMedia(
+      '(min-width: 571px) and (prefers-reduced-motion: no-preference)',
+    );
+
+    function syncSmoothScroll() {
+      if (smoothScrollQuery.matches && !lenis) {
+        lenis = new Lenis({
+          autoRaf: true,
+          anchors: true,
+          lerp: 0.15,
+          wheelMultiplier: 0.9,
+          syncTouch: false,
+        });
+      } else if (!smoothScrollQuery.matches && lenis) {
+        lenis.destroy();
+        lenis = undefined;
+      }
+    }
+
+    syncSmoothScroll();
+    smoothScrollQuery.addEventListener('change', syncSmoothScroll);
+
+    // A deliberate desktop-only cursor treatment. The loop only runs while the
+    // square is catching up to the pointer.
+    const cursorQuery = window.matchMedia(
+      '(min-width: 571px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
+    );
+    const cursor = document.getElementById('site-cursor');
+    const cursorCore = cursor?.querySelector('.site-cursor__core');
+    let cursorFrame;
+    let cursorEnabled = false;
+    let cursorHasPosition = false;
+    let cursorTarget = { x: 0, y: 0 };
+    let cursorCorePosition = { x: 0, y: 0 };
+
+    function paintCursor(element, position, size) {
+      element.style.transform = `translate3d(${position.x - size / 2}px, ${position.y - size / 2}px, 0)`;
+    }
+
+    function animateCursor() {
+      cursorCorePosition.x += (cursorTarget.x - cursorCorePosition.x) * 0.56;
+      cursorCorePosition.y += (cursorTarget.y - cursorCorePosition.y) * 0.56;
+      if (cursorCore) paintCursor(cursorCore, cursorCorePosition, 12);
+
+      const remainingDistance = Math.hypot(
+        cursorTarget.x - cursorCorePosition.x,
+        cursorTarget.y - cursorCorePosition.y,
+      );
+
+      if (remainingDistance > 0.35) {
+        cursorFrame = requestAnimationFrame(animateCursor);
+      } else {
+        cursorFrame = undefined;
+      }
+    }
+
+    function moveCursor(event) {
+      if (!cursorEnabled || event.pointerType !== 'mouse') return;
+      cursorTarget = { x: event.clientX, y: event.clientY };
+      if (!cursorHasPosition) {
+        cursorCorePosition = { ...cursorTarget };
+        if (cursorCore) paintCursor(cursorCore, cursorCorePosition, 12);
+        cursorHasPosition = true;
+      }
+      document.documentElement.classList.add('custom-cursor-visible');
+      if (!cursorFrame) cursorFrame = requestAnimationFrame(animateCursor);
+    }
+
+    function syncCustomCursor() {
+      cursorEnabled = cursorQuery.matches;
+      document.documentElement.classList.toggle('has-custom-cursor', cursorEnabled);
+      if (!cursorEnabled) {
+        document.documentElement.classList.remove('custom-cursor-visible');
+        cursorHasPosition = false;
+        if (cursorFrame) cancelAnimationFrame(cursorFrame);
+        cursorFrame = undefined;
+      }
+    }
+
+    document.addEventListener('pointermove', moveCursor, { passive: true });
+    window.addEventListener('blur', () => document.documentElement.classList.remove('custom-cursor-visible'));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) document.documentElement.classList.remove('custom-cursor-visible');
+    });
+    syncCustomCursor();
+    cursorQuery.addEventListener('change', syncCustomCursor);
+
     // With the ClientRouter, pages swap in place and per-page <script> tags run
     // only once. So: bind window/document listeners a single time here, and
     // (re)bind the swapped-in header/menu on every astro:page-load.
@@ -195,12 +282,8 @@ const twitterCard = ogImage ? 'summary_large_image' : 'summary';
       const menu = document.getElementById('mobile-menu');
       if (e.key === 'Escape' && menu && menu.classList.contains('open')) toggleMenu(false);
     });
-    // Re-apply the theme before the swapped page paints, and never carry an open
-    // menu (or its scroll lock) across a navigation.
+    // Never carry an open menu (or its scroll lock) across a navigation.
     document.addEventListener('astro:after-swap', function() {
-      const stored = localStorage.getItem('theme');
-      const prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', stored || prefer);
       toggleMenu(false);
     });
 
