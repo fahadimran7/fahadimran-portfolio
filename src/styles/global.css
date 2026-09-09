@@ -21,7 +21,7 @@
   --toggle-bg: #1a1a1a;
   --toggle-color: #f9f9f7;
   --accent: #805AD5;
-  --nav-glass: rgba(249, 249, 247, 0.55);
+  --nav-glass: rgba(249, 249, 247, 0.82);
 }
 
 [data-theme="dark"] {
@@ -36,7 +36,7 @@
   --toggle-bg: #f5f0e8;
   --toggle-color: #1a1a1a;
   --accent: #FBD38D;
-  --nav-glass: rgba(17, 17, 16, 0.55);
+  --nav-glass: rgba(17, 17, 16, 0.82);
 }
 
 html {
@@ -52,7 +52,7 @@ body {
   font-size: 20px;
   font-weight: 400;
   line-height: 1.7;
-  padding: 48px 0 120px;
+  padding: 24px 0 120px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -130,10 +130,24 @@ body {
   backdrop-filter: saturate(180%) blur(12px);
 }
 
+@media (min-width: 571px) {
+  .site-header.scrolled {
+    background: rgba(249, 249, 247, 0.88);
+  }
+
+  [data-theme="dark"] .site-header.scrolled {
+    background: rgba(17, 17, 16, 0.88);
+  }
+
+  .site-header.scrolled nav {
+    padding: 16px 24px 20px;
+  }
+}
+
 .site-header nav {
   max-width: calc(var(--max-w) + 48px);
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 10px 24px 18px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -176,7 +190,7 @@ body {
   display: inline-block;
   text-decoration: none;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 19px;
   transition: color 0.15s;
 }
 
@@ -636,6 +650,14 @@ footer a:hover {
 }
 
 @media (max-width: 570px) {
+  body {
+    padding-top: 48px;
+  }
+
+  .site-header nav {
+    padding: 12px 24px;
+  }
+
   .site-header nav ul {
     display: none;
   }

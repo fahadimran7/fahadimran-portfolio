@@ -67,6 +67,7 @@ const summary = variant === 'featured' && project.featuredSummary
 
   .project-image-wrap {
     position: relative;
+    isolation: isolate;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: var(--chip-bg);
@@ -82,18 +83,22 @@ const summary = variant === 'featured' && project.featuredSummary
     transform: translateY(-2px);
   }
 
-  .project-image-wrap::after {
+  /* Homepage cards get a deliberately quiet hover cue. Opacity is cheap for
+     the compositor to animate and avoids applying a filter to the image. */
+  .project-card--featured .project-image-wrap::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0);
-    transition: background 0.2s ease;
-    pointer-events: none;
     z-index: 1;
+    background: rgba(0, 0, 0, 0.07);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
   }
 
-  .project-card:hover .project-image-wrap::after {
-    background: rgba(0, 0, 0, 0.28);
+  .project-card--featured:hover .project-image-wrap::after,
+  .project-card--featured:focus-visible .project-image-wrap::after {
+    opacity: 1;
   }
 
   .project-image-wrap img {
@@ -129,15 +134,15 @@ const summary = variant === 'featured' && project.featuredSummary
     height: var(--overlay-rest-height, 126px);
     padding: 20px 26px;
     overflow: hidden;
-    background: color-mix(in srgb, var(--chip-bg) 96%, transparent);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Keep the detail surface fully opaque so the preview never competes
+       with its copy as the panel rises. */
+    background: var(--chip-bg);
+    transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .project-card--standard:hover .project-overlay,
   .project-card--standard:focus-visible .project-overlay {
-    height: 54%;
+    height: 62%;
   }
 
   .overlay-summary {
@@ -179,8 +184,8 @@ const summary = variant === 'featured' && project.featuredSummary
     opacity: 0;
     transform: translateY(14px);
     transition:
-      opacity 0.24s ease,
-      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.22s ease,
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .project-card--standard:hover .overlay-details,
@@ -252,7 +257,7 @@ const summary = variant === 'featured' && project.featuredSummary
 
     .project-card--standard:hover .project-overlay,
     .project-card--standard:focus-visible .project-overlay {
-      height: 52%;
+      height: 58%;
     }
 
     .project-overlay .project-title {
@@ -298,11 +303,6 @@ const summary = variant === 'featured' && project.featuredSummary
       transform: none;
     }
 
-    .project-card:hover .project-image-wrap::after,
-    .project-card:focus-visible .project-image-wrap::after {
-      background: transparent;
-    }
-
     .project-card--standard .project-image-wrap {
       aspect-ratio: auto;
     }
@@ -317,8 +317,6 @@ const summary = variant === 'featured' && project.featuredSummary
       height: auto;
       padding: 22px;
       overflow: visible;
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
     }
 
     .overlay-details {
@@ -341,7 +339,7 @@ const summary = variant === 'featured' && project.featuredSummary
 
   @media (prefers-reduced-motion: reduce) {
     .project-image-wrap,
-    .project-image-wrap::after,
+    .project-card--featured .project-image-wrap::after,
     .project-card--standard .project-image-wrap > img,
     .project-overlay,
     .overlay-details {
