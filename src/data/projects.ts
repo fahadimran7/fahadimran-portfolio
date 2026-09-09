@@ -2,6 +2,7 @@ export interface Project {
   name: string;
   image: string;
   url?: string;
+  caseStudyUrl?: string;
   role: string;
   employer?: string;
   start: string;
@@ -20,6 +21,7 @@ export const projects: Project[] = [
     name: 'Nomod',
     image: '/images/work/nomod.webp',
     url: 'https://nomod.com',
+    caseStudyUrl: '/work/nomod',
     role: 'Software Engineer',
     employer: 'Alfabolt',
     start: 'Jun 2024',

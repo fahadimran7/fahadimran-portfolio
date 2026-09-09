@@ -1,0 +1,423 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactCta from './ContactCta.astro';
+import { ArrowLeft, ArrowUpRight } from 'lucide-astro';
+
+interface ProjectSection {
+  heading: string;
+  paragraphs?: string[];
+  points?: string[];
+  image?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  seoDescription?: string;
+  logo?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  image: string;
+  imageAlt: string;
+  category: string;
+  period: string;
+  role: string;
+  technologies: string[];
+  sections: ProjectSection[];
+  externalUrl?: string;
+  externalLabel?: string;
+}
+
+const {
+  title,
+  description,
+  seoDescription,
+  logo,
+  image,
+  imageAlt,
+  category,
+  period,
+  role,
+  technologies,
+  sections,
+  externalUrl,
+  externalLabel = 'Visit project',
+} = Astro.props;
+---
+
+<Base title={title} description={seoDescription ?? description ?? `${title} project case study.`} ogImage={image}>
+  <article class="project-study">
+    <a class="back-link" href="/work">
+      <ArrowLeft size={16} aria-hidden="true" />
+      Back to work
+    </a>
+
+    <header class="project-intro">
+      <div class="project-title-row">
+        {logo && (
+          <img
+            class="project-logo"
+            src={logo.src}
+            alt={logo.alt}
+            width={logo.width}
+            height={logo.height}
+          />
+        )}
+        <h1>{title}</h1>
+      </div>
+      {(description || externalUrl) && (
+        <div class="intro-row">
+          {description && <p>{description}</p>}
+          {externalUrl && (
+            <a class="project-link" href={externalUrl} target="_blank" rel="noopener">
+              {externalLabel}
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+
+    <figure class="project-hero">
+      <img src={image} alt={imageAlt} width="2400" height="1175" loading="eager" decoding="async" fetchpriority="high" />
+    </figure>
+
+    <dl class="project-meta">
+      <div>
+        <dt>Category</dt>
+        <dd>{category}</dd>
+      </div>
+      <div>
+        <dt>Period</dt>
+        <dd>{period}</dd>
+      </div>
+      <div>
+        <dt>Role</dt>
+        <dd>{role}</dd>
+      </div>
+    </dl>
+
+    <div class="project-narrative">
+      {sections.map((section) => (
+        <section class="narrative-section">
+          <h2>{section.heading}</h2>
+          <div class="narrative-copy">
+            {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+            {section.points && (
+              <ul>
+                {section.points.map((point, index) => (
+                  <li>
+                    <span class="point-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {section.image && (
+              <figure class="section-image">
+                <img
+                  src={section.image.src}
+                  alt={section.image.alt}
+                  width={section.image.width}
+                  height={section.image.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            )}
+          </div>
+        </section>
+      ))}
+
+      <section class="technology-section">
+        <h2>Technology</h2>
+        <ul class="technology-list" aria-label={`${title} technology stack`}>
+          {technologies.map((technology) => <li>{technology}</li>)}
+        </ul>
+      </section>
+    </div>
+  </article>
+
+  <ContactCta />
+</Base>
+
+<style>
+  .project-study {
+    max-width: 860px;
+    margin: 0 auto 96px;
+  }
+
+  .back-link,
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .back-link {
+    margin-bottom: 48px;
+    padding: 10px 13px;
+  }
+
+  .back-link:hover,
+  .project-link:hover {
+    border-color: color-mix(in srgb, var(--text) 34%, var(--border));
+    color: var(--text);
+  }
+
+  .back-link svg,
+  .project-link svg {
+    transition: transform 160ms ease;
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .project-link:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  .project-intro h1 {
+    font-size: clamp(40px, 4vw, 52px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .project-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .project-intro {
+    margin-bottom: 32px;
+  }
+
+  .project-logo {
+    display: block;
+    width: 54px;
+    height: 54px;
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  .intro-row {
+    margin-top: 22px;
+  }
+
+  .intro-row > p {
+    max-width: 760px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.75;
+  }
+
+  .project-link {
+    margin-top: 22px;
+    padding: 11px 14px;
+    white-space: nowrap;
+  }
+
+  .project-hero {
+    overflow: hidden;
+    margin-bottom: 0;
+    border-radius: 3px;
+  }
+
+  .project-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .project-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin: 34px 0 88px;
+  }
+
+  .project-meta > div {
+    min-width: 0;
+    padding: 22px 0 25px;
+  }
+
+  .project-meta > div + div {
+    border-left: 0;
+  }
+
+  .project-meta dt {
+    margin-bottom: 7px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .project-meta dd {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .project-narrative {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .narrative-section,
+  .technology-section {
+    padding: 0;
+  }
+
+  .narrative-section + .narrative-section,
+  .technology-section {
+    margin-top: 60px;
+  }
+
+  .narrative-section h2,
+  .technology-section h2 {
+    margin-bottom: 16px;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .narrative-copy {
+    max-width: 760px;
+  }
+
+  .narrative-copy p,
+  .narrative-copy li {
+    color: color-mix(in srgb, var(--text) 90%, var(--bg));
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .narrative-copy p + p {
+    margin-top: 18px;
+  }
+
+  .narrative-copy ul {
+    list-style: none;
+  }
+
+  .narrative-copy li {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .narrative-copy li + li {
+    margin-top: 13px;
+  }
+
+  .narrative-copy .point-index {
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+  }
+
+  .section-image {
+    margin-top: 36px;
+    overflow: hidden;
+    border-radius: 3px;
+  }
+
+  .section-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .technology-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    list-style: none;
+  }
+
+  .technology-list li {
+    padding: 6px 10px 7px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 760px) {
+    .project-study {
+      margin-bottom: 72px;
+    }
+
+    .back-link {
+      margin-bottom: 48px;
+    }
+
+    .project-intro h1 {
+      font-size: clamp(36px, 10vw, 44px);
+      line-height: 1;
+    }
+
+    .intro-row {
+      margin-top: 18px;
+      margin-bottom: 32px;
+    }
+
+    .intro-row > p {
+      font-size: 20px;
+    }
+
+    .project-link {
+      margin-top: 20px;
+    }
+
+    .project-meta {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 20px;
+      margin: 26px 0 68px;
+    }
+
+    .project-meta > div,
+    .project-meta > div:first-child {
+      padding: 19px 14px 22px 0;
+      border-left: 0;
+    }
+
+    .narrative-section + .narrative-section,
+    .technology-section {
+      margin-top: 50px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .back-link,
+    .project-link,
+    .back-link svg,
+    .project-link svg {
+      transition: none;
+    }
+  }
+</style>

@@ -7,7 +7,9 @@ interface Props {
 }
 
 const { project, variant = 'standard' } = Astro.props;
-const Tag = project.url ? 'a' : 'div';
+const href = variant === 'standard' && project.caseStudyUrl ? project.caseStudyUrl : project.url;
+const Tag = href ? 'a' : 'div';
+const isExternal = href?.startsWith('http');
 const summary = variant === 'featured' && project.featuredSummary
   ? project.featuredSummary
   : project.description;
@@ -15,10 +17,10 @@ const summary = variant === 'featured' && project.featuredSummary
 
 <Tag
   class:list={['project-card', `project-card--${variant}`]}
-  href={project.url}
-  target={project.url ? '_blank' : undefined}
-  rel={project.url ? 'noopener' : undefined}
-  data-cursor-label={project.url ? (variant === 'featured' ? 'visit website' : 'view project') : undefined}
+  href={href}
+  target={isExternal ? '_blank' : undefined}
+  rel={isExternal ? 'noopener' : undefined}
+  data-cursor-label={href ? (variant === 'featured' ? 'visit website' : 'view project') : undefined}
 >
   <div class="project-image-wrap">
     <img src={project.image} alt={`${project.name} product preview`} loading="lazy" />

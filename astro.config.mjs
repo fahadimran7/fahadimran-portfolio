@@ -6,7 +6,8 @@ export default defineConfig({
   site: 'https://fahadimran.me',
   redirects: {
     '/ramblings': '/writings',
-    '/ramblings/[slug]': '/writings/[slug]',
+    '/ramblings/building-a-zakat-app': '/writings/building-a-zakat-app',
+    '/ramblings/n-plus-one': '/writings/n-plus-one',
   },
   build: {
     // Inline the site CSS into each page's HTML instead of a separate
