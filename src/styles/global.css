@@ -265,7 +265,7 @@ body {
   display: inline-block;
   text-decoration: none;
   color: var(--muted);
-  font-size: 19px;
+  font-size: 17px;
   transition: color 0.15s;
 }
 
