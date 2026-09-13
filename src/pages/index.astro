@@ -1,758 +1,375 @@
 ---
-import Base from '../layouts/Base.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import TestimonialCard from '../components/TestimonialCard.astro';
-import ContactCta from '../components/ContactCta.astro';
-import { featuredProjects } from '../data/projects';
-import { testimonials } from '../data/testimonials';
-import { ArrowDown } from 'lucide-astro';
+const portfolioUrl = 'https://app.notion.com/p/Fahad-Imran-Selected-Work-3d996b19fa02816a9d53ec8361327937?source=copy_link';
 
-const shippedProducts = [
-  { name: 'Nomod', logo: '/images/nomod-logo.webp' },
-  { name: 'Pine', logo: '/images/pine-logo.webp' },
-  { name: 'Rayne', logo: '/images/rayne-logo.webp' },
-  { name: 'Leaf', logo: '/images/leaf-logo.webp' },
-  { name: 'Maple', logo: '/images/maple-logo.webp' },
-];
-
-const internationalMarkets = [
-  { name: 'Saudi Arabia', flag: '/images/flags/saudi-arabia.webp' },
-  { name: 'United Arab Emirates', flag: '/images/flags/united-arab-emirates.webp' },
-  { name: 'Pakistan', flag: '/images/flags/pakistan.webp' },
-  { name: 'United States', flag: '/images/flags/united-states.webp' },
-  { name: 'Norway', flag: '/images/flags/norway.webp' },
+const products = [
+  {
+    name: 'Nomod',
+    logo: '/brands/nomod.webp',
+    href: 'https://nomod.com',
+    description: 'Accept payments over WhatsApp',
+  },
+  {
+    name: 'Pine',
+    logo: '/brands/pine.webp',
+    href: 'https://apps.apple.com/no/app/pine-the-app/id6467567252',
+    description: 'Group buying for restaurants and cafes',
+  },
+  {
+    name: 'Rayne',
+    logo: '/brands/rayne.webp',
+    href: 'https://wearerayne.com',
+    description: 'On-demand lawyers for businesses',
+  },
+  {
+    name: 'Maple',
+    logo: '/brands/maple.webp',
+    href: 'https://www.linkedin.com/company/maplehr',
+    description: 'HR management for growing teams',
+  },
+  {
+    name: 'Leaf',
+    logo: '/brands/leaf.webp',
+    href: 'https://sharewithleaf.com',
+    description: 'Audio stories, saved for family',
+  },
 ];
 ---
 
-<Base
-  title="Home"
-  description="Product engineer building payment products in small startup teams, from ambiguous problems to shipped features across web and mobile."
->
-  <section class="hero">
-    <div class="hero-copy">
-      <div class="hero-text">
-        <h1>Product engineer turning ambiguous <span class="hero-emphasis hero-emphasis--problem">startup problems</span> into <span class="hero-emphasis hero-emphasis--product">shipped products</span></h1>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Fahad Imran is a software and product engineer who builds thoughtful products across web and mobile."
+    />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link
+      rel="preload"
+      href="/fonts/inter-variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <title>Fahad Imran — Software & product engineer</title>
+  </head>
+  <body>
+    <main>
+      <div class="intro-row">
+        <h1>hi, i’m fahad.</h1>
       </div>
 
-      <p class="bio">
-        I work inside small startup teams, building payment infrastructure and product experiences across web and mobile.
-      </p>
+      <section class="statement" aria-label="Introduction">
+        <p>i’m a software engineer from pakistan 🇵🇰. mostly, i make useful things and obsess over the details nobody should have to notice.</p>
 
-      <div class="hero-actions">
-        <a class="btn-solid" href="#selected-work">View selected work <ArrowDown size={15} /></a>
-      </div>
-    </div>
-
-    <figure class="hero-portrait" data-cursor-label="that's me right there">
-      <img src="/images/profile-portrait.webp" alt="Fahad Imran" width="480" height="576" />
-    </figure>
-  </section>
-
-  <section class="proof-strip" aria-label="At a glance">
-    <dl>
-      <div class="proof-stat">
-        <dt data-count="40" data-suffix="K+">40K+</dt>
-        <dd>GCC merchants supported</dd>
-      </div>
-      <div class="proof-stat">
-        <dt data-count="5" data-suffix="+">5+</dt>
-        <dd class="proof-label">
-          <span>Products shipped</span>
-          <span class="mini-stack" role="img" aria-label={shippedProducts.map(({ name }) => name).join(', ')}>
-            {shippedProducts.map(({ name, logo }) => (
-              <span class="mini-avatar">
-                <img src={logo} alt="" width="20" height="20" title={name} />
-              </span>
+        <div class="product-line">
+          <p>some things i’ve helped ship</p>
+          <div class="product-list" aria-label="Products I have helped ship">
+            {products.map((product) => (
+              <a
+                class="product"
+                href={product.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${product.name}: ${product.description}`}
+              >
+                <img src={product.logo} alt="" width="32" height="32" />
+                <span class="product-tooltip" role="tooltip" aria-hidden="true">{product.name} — {product.description}</span>
+              </a>
             ))}
-          </span>
-        </dd>
-      </div>
-      <div class="proof-stat">
-        <dt data-count="5" data-suffix="+">5+</dt>
-        <dd class="proof-label">
-          <span>International markets</span>
-          <span class="mini-stack" role="img" aria-label={internationalMarkets.map(({ name }) => name).join(', ')}>
-            {internationalMarkets.map(({ name, flag }) => (
-              <span class="mini-avatar" title={name}>
-                <img src={flag} alt="" width="20" height="20" />
-              </span>
-            ))}
-          </span>
-        </dd>
-      </div>
-    </dl>
-  </section>
+          </div>
+        </div>
 
-  <section class="expertise" aria-labelledby="expertise-heading">
-    <div class="expertise-sticky">
-      <h2 id="expertise-heading" class="visually-hidden">What I work across</h2>
-      <div class="expertise-lines" aria-hidden="true">
-        <p class="expertise-line expertise-line--forward">
-          Product engineering <span>·</span> Payments <span>·</span> Fintech <span>·</span> Web
-        </p>
-        <p class="expertise-line expertise-line--reverse">
-          Mobile apps <span>·</span> AI <span>·</span> SaaS <span>·</span> Automations <span>·</span> Consumer apps
-        </p>
-      </div>
-      <p class="expertise-fallback">Product engineering · Payments · Fintech · Web · Mobile apps · AI · SaaS · Automations · Consumer apps</p>
-    </div>
-  </section>
+        <p>for the longer version, here’s my <a class="text-link" href={portfolioUrl} target="_blank" rel="noopener noreferrer">selected work</a>.</p>
+      </section>
 
-  <section class="selected-work" id="selected-work" aria-labelledby="selected-work-heading">
-    <div class="section-heading-row">
-      <p class="section-label" id="selected-work-heading">Selected work</p>
-      <a href="/work" class="section-link">View all work <span aria-hidden="true">→</span></a>
-    </div>
-    <div class="featured-project-grid">
-      {featuredProjects.map((project) => (
-        <ProjectCard project={project} variant="featured" />
-      ))}
-    </div>
-  </section>
+      <footer>
+        <figure class="closing-portrait">
+          <img
+            src="/profile.webp"
+            alt="Fahad Imran"
+            width="200"
+            height="200"
+            loading="lazy"
+          />
+        </figure>
+        <p>you can find me on</p>
+        <nav aria-label="Social links">
+          <a href="https://github.com/fahadimran7" target="_blank" rel="noopener noreferrer">github</a>
+          <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <a href="mailto:fahadimran6544@gmail.com">email</a>
+          <a href="/resume.pdf" download>resume</a>
+        </nav>
+        <p class="sign-off">p.s. always happy to talk through a stubborn idea.</p>
+      </footer>
+    </main>
 
-  <section class="testimonials" aria-labelledby="testimonials-heading">
-    <div class="testimonials-intro">
-      <p class="section-label">Kind words</p>
-      <h2 id="testimonials-heading">People I’ve worked with say it better.</h2>
-      <p>Unprompted, unedited, and suspiciously kind.</p>
-    </div>
-
-    <div class:list={['testimonial-grid', { 'testimonial-grid--single': testimonials.length === 1 }]}>
-      {testimonials.map((testimonial) => (
-        <TestimonialCard testimonial={testimonial} />
-      ))}
-    </div>
-  </section>
-
-  <ContactCta />
-</Base>
-
-<script>
-  function initProofCounters() {
-    const counters = document.querySelectorAll<HTMLElement>('[data-count]');
-    if (!counters.length) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || !('IntersectionObserver' in window)) return;
-
-    function animateCounter(counter: HTMLElement) {
-      const target = Number(counter.dataset.count ?? 0);
-      const suffix = counter.dataset.suffix ?? '';
-      const duration = 900;
-      const startedAt = performance.now();
-
-      function tick(now: number) {
-        const progress = Math.min((now - startedAt) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        counter.textContent = `${Math.round(target * eased)}${suffix}`;
-        if (progress < 1) requestAnimationFrame(tick);
-      }
-
-      requestAnimationFrame(tick);
-    }
-
-    counters.forEach((counter) => {
-      if (counter.dataset.counted) return;
-      const suffix = counter.dataset.suffix ?? '';
-      counter.textContent = `0${suffix}`;
-
-      const observer = new IntersectionObserver((entries) => {
-        if (!entries[0]?.isIntersecting) return;
-        counter.dataset.counted = 'true';
-        observer.disconnect();
-        animateCounter(counter);
-      }, { threshold: 0.35 });
-
-      observer.observe(counter);
-    });
-  }
-
-  let removeExpertiseScroller: (() => void) | undefined;
-
-  function initExpertiseScroller() {
-    removeExpertiseScroller?.();
-    removeExpertiseScroller = undefined;
-
-    const section = document.querySelector<HTMLElement>('.expertise');
-    if (!section) return;
-
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: no-preference)');
-    let frame: number | undefined;
-
-    function update() {
-      frame = undefined;
-      if (!motionQuery.matches) {
-        section.classList.remove('is-enhanced');
-        section.style.removeProperty('--expertise-progress');
-        section.style.removeProperty('--expertise-forward-x');
-        section.style.removeProperty('--expertise-reverse-x');
-        return;
-      }
-
-      const rect = section.getBoundingClientRect();
-      const travel = Math.max(section.offsetHeight - window.innerHeight, 1);
-      const progress = Math.min(Math.max(-rect.top / travel, 0), 1);
-      const viewportWidth = window.innerWidth;
-      const isMobile = viewportWidth <= 700;
-      const forwardX = isMobile
-        ? (0.1 - progress * 1.1) * viewportWidth
-        : (1 - progress) * 0.42 * viewportWidth;
-      const reverseX = isMobile
-        ? (-1.8 + progress * 1.65) * viewportWidth
-        : (1 - progress) * -0.42 * viewportWidth;
-
-      section.style.setProperty('--expertise-progress', progress.toFixed(4));
-      section.style.setProperty('--expertise-forward-x', `${forwardX.toFixed(2)}px`);
-      section.style.setProperty('--expertise-reverse-x', `${reverseX.toFixed(2)}px`);
-      section.classList.add('is-enhanced');
-    }
-
-    function queueUpdate() {
-      if (frame === undefined) frame = requestAnimationFrame(update);
-    }
-
-    window.addEventListener('scroll', queueUpdate, { passive: true });
-    window.addEventListener('resize', queueUpdate, { passive: true });
-    motionQuery.addEventListener('change', queueUpdate);
-    update();
-
-    removeExpertiseScroller = () => {
-      window.removeEventListener('scroll', queueUpdate);
-      window.removeEventListener('resize', queueUpdate);
-      motionQuery.removeEventListener('change', queueUpdate);
-      if (frame !== undefined) cancelAnimationFrame(frame);
-    };
-  }
-
-  document.addEventListener('astro:page-load', () => {
-    initProofCounters();
-    initExpertiseScroller();
-  });
-</script>
+  </body>
+</html>
 
 <style>
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 980px) minmax(220px, 300px);
-    align-items: center;
-    justify-content: space-between;
-    gap: clamp(36px, 5vw, 72px);
-    margin-bottom: 56px;
+  @font-face {
+    font-family: 'Inter Local';
+    src: url('/fonts/inter-variable.woff2') format('woff2-variations');
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: block;
   }
 
-  .hero-copy {
-    min-width: 0;
+  :global(*) {
+    box-sizing: border-box;
   }
 
-  .hero-text h1 {
-    font-size: clamp(42px, 5.1vw, 72px);
-    line-height: 1.02;
-    letter-spacing: -0.045em;
-    margin-bottom: 24px;
-    text-wrap: balance;
-  }
-
-  .hero-emphasis {
-    position: relative;
-    z-index: 0;
-    display: inline-block;
-    white-space: nowrap;
-  }
-
-  .hero-emphasis::after {
-    content: '';
-    position: absolute;
-    right: -0.03em;
-    bottom: -0.025em;
-    left: -0.03em;
-    z-index: -1;
-    height: 0.2em;
-    background:
-      linear-gradient(178deg, transparent 28%, color-mix(in srgb, var(--highlight) 76%, transparent) 31% 48%, transparent 51%),
-      linear-gradient(181deg, transparent 61%, color-mix(in srgb, var(--highlight) 52%, transparent) 64% 79%, transparent 82%);
-    transform: scaleX(0);
-    transform-origin: left center;
-    animation: hero-underline 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-
-  .hero-emphasis--problem::after {
-    animation-delay: 520ms;
-  }
-
-  .hero-emphasis--product::after {
-    animation-delay: 800ms;
-  }
-
-  @keyframes hero-underline {
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  .bio {
-    max-width: 710px;
-    font-size: 20px;
-    margin-bottom: 28px;
-  }
-
-  .hero-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .hero-portrait {
-    width: 100%;
-    max-width: 300px;
-    justify-self: end;
-    padding: 8px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
+  :global(html) {
     background: #fff;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.11);
+    color: #1f2937;
+    font-family: 'Inter Local', Inter, system-ui, sans-serif;
+    font-synthesis: none;
   }
 
-  .hero-portrait img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 5 / 6;
-    object-fit: cover;
-    filter: grayscale(0.78);
-    transition: filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: filter;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .hero-portrait:hover img {
-      filter: grayscale(0);
-    }
-  }
-
-  .proof-strip {
-    margin-bottom: 88px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .proof-strip dl {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .proof-stat {
-    min-width: 0;
-    padding: 26px 30px;
-  }
-
-  .proof-stat:first-child {
-    padding-left: 0;
-  }
-
-  .proof-stat + .proof-stat {
-    position: relative;
-  }
-
-  .proof-stat + .proof-stat::before {
-    content: '';
-    position: absolute;
-    top: 22%;
-    bottom: 22%;
-    left: 0;
-    width: 1px;
-    background: var(--border);
-  }
-
-  .proof-stat dt {
-    color: var(--text);
-    font-size: clamp(34px, 4vw, 52px);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.045em;
-  }
-
-  .proof-stat dd {
-    margin-top: 9px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.4;
-  }
-
-  .proof-label {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    column-gap: 9px;
-    row-gap: 6px;
-    margin-top: 9px;
-    min-width: 0;
-  }
-
-  .proof-label > span:first-child {
-    flex: 0 0 auto;
-    min-width: 0;
-    white-space: nowrap;
-  }
-
-  .mini-stack {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: center;
-    padding-right: 1px;
-  }
-
-  .mini-avatar {
-    display: inline-grid;
-    place-items: center;
-    width: 20px;
-    height: 20px;
-    overflow: hidden;
-    border: 1px solid var(--bg);
-    border-radius: 50%;
+  :global(body) {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   }
 
-  .mini-avatar + .mini-avatar {
-    margin-left: -5px;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .mini-avatar + .mini-avatar {
-      transition: margin-left 280ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .mini-stack:hover .mini-avatar + .mini-avatar {
-      margin-left: 4px;
-    }
-  }
-
-  .mini-avatar img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .expertise {
-    --expertise-progress: 1;
-    --expertise-forward-x: 0px;
-    --expertise-reverse-x: 0px;
-    width: 100vw;
-    height: 165svh;
-    margin-left: calc(50% - 50vw);
-  }
-
-  .expertise-sticky {
-    position: sticky;
-    top: 0;
-    display: grid;
-    place-items: center;
-    height: 100svh;
-    overflow: hidden;
-  }
-
-  .expertise-lines {
-    display: grid;
-    width: max-content;
-    gap: clamp(12px, 2vw, 28px);
-  }
-
-  .expertise-line {
-    color: var(--muted);
-    font-size: clamp(48px, 5vw, 76px);
-    font-weight: 500;
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-    will-change: transform;
-  }
-
-  .expertise-line span {
+  :global(a) {
     color: inherit;
   }
 
-  .expertise.is-enhanced .expertise-line--forward {
-    transform: translate3d(var(--expertise-forward-x), 0, 0);
+  main {
+    width: min(100% - 64px, 575px);
+    margin: 0 auto;
+    padding: 120px 0 64px;
   }
 
-  .expertise.is-enhanced .expertise-line--reverse {
-    transform: translate3d(var(--expertise-reverse-x), 0, 0);
-  }
-
-  .expertise-fallback {
-    display: none;
-  }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  @media (max-width: 700px) {
-    .expertise {
-      width: 100vw;
-      height: 150svh;
-      margin-left: calc(50% - 50vw);
-    }
-
-    .expertise-sticky {
-      position: sticky;
-      top: 0;
-      display: grid;
-      place-items: center;
-      height: 100svh;
-      overflow: hidden;
-    }
-
-    .expertise-lines {
-      display: grid;
-      width: 100%;
-      gap: 14px;
-      padding: 0 24px;
-    }
-
-    .expertise-line {
-      width: max-content;
-      font-size: clamp(32px, 9.5vw, 42px);
-      line-height: 1.08;
-      letter-spacing: -0.018em;
-    }
-
-  }
-
-  @media (max-width: 700px) and (prefers-reduced-motion: reduce) {
-    .expertise {
-      width: auto;
-      height: auto;
-      margin: 0 0 64px;
-      padding: 42px 0;
-    }
-
-    .expertise-sticky {
-      position: static;
-      display: block;
-      height: auto;
-      overflow: visible;
-    }
-
-    .expertise-lines {
-      display: none;
-    }
-
-    .expertise-fallback {
-      display: block;
-      max-width: 15ch;
-      color: var(--muted);
-      font-size: clamp(30px, 8.5vw, 38px);
-      font-weight: 500;
-      line-height: 1.08;
-      letter-spacing: -0.018em;
-    }
-  }
-
-  .selected-work {
-    scroll-margin-top: 96px;
-    margin-bottom: 80px;
-  }
-
-  .section-heading-row {
+  .product-line {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 20px;
-  }
-
-  .section-heading-row .section-label {
-    margin-bottom: 0;
-  }
-
-  .section-link {
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 14px;
+    gap: 12px;
+  }
+
+  h1,
+  p {
+    margin: 0;
+    font: inherit;
+  }
+
+  h1,
+  .statement {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: -0.025em;
+  }
+
+  h1 {
+    font-size: 38px;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.045em;
+  }
+
+  .statement {
+    display: grid;
+    gap: 28px;
+    margin-top: 56px;
+  }
+
+  .statement > p:first-child {
+    max-width: 680px;
+  }
+
+  .product-line {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .product-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product {
+    position: relative;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    overflow: visible;
+    border-radius: 13px;
+    outline: none;
+  }
+
+  .product img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product:focus-visible {
+    opacity: 0.68;
+  }
+
+  .product-tooltip {
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    z-index: 10;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(22, 24, 29, 0.93);
+    color: #fff;
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.2;
+    letter-spacing: -0.012em;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity 120ms ease, transform 120ms ease;
+  }
+
+  .product:hover .product-tooltip,
+  .product:focus-visible .product-tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .text-link,
+  footer a {
+    color: #0077ff;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.14em;
+    transition: color 160ms ease, text-decoration-color 160ms ease;
+  }
+
+  .text-link {
     text-decoration: none;
-    transition: color 0.15s ease, border-color 0.15s ease;
   }
 
-  .section-link:hover {
-    color: var(--text);
-    border-color: color-mix(in srgb, var(--text) 30%, var(--border));
+  .text-link:hover,
+  footer a:hover {
+    color: #6d3fcc;
+    text-decoration-color: currentColor;
   }
 
-  .section-link span {
-    transition: transform 0.15s ease;
+  .text-link:focus-visible,
+  footer a:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid #2563eb;
+    outline-offset: 4px;
   }
 
-  .section-link:hover span {
-    transform: translateX(3px);
+  .closing-portrait {
+    flex: 0 0 100%;
+    margin: 0 0 16px;
   }
 
-  .featured-project-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px;
+  .closing-portrait img {
+    display: block;
+    width: 200px;
+    height: 200px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 39%;
   }
 
-  .testimonials {
-    display: grid;
-    grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.45fr);
-    align-items: start;
-    gap: clamp(36px, 7vw, 104px);
-    margin-bottom: 88px;
-    padding-top: 8px;
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px dotted #cfd4dc;
+    color: #626b78;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: -0.012em;
   }
 
-  .testimonials-intro .section-label {
-    margin-bottom: 14px;
+  footer nav {
+    display: flex;
+    gap: 7px;
   }
 
-  .testimonials-intro h2 {
-    max-width: 520px;
-    color: var(--muted);
-    font-size: clamp(34px, 3.7vw, 52px);
-    font-weight: 500;
-    line-height: 1.13;
-    letter-spacing: -0.038em;
-    text-wrap: balance;
+  footer nav a:not(:last-child)::after {
+    content: ',';
+    color: #626b78;
+    text-decoration: none;
   }
 
-  .testimonials-intro > p:last-child {
-    margin-top: 18px;
-    color: var(--muted);
-    font-size: 14px;
+  .sign-off {
+    flex-basis: 100%;
+    color: #8a919c;
   }
 
-  .testimonial-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  .testimonial-grid--single {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  @media (max-width: 900px) {
-    .hero {
-      grid-template-columns: minmax(0, 1fr) 220px;
-      gap: 32px;
+  @media (max-width: 620px) {
+    main {
+      width: min(100% - 48px, 575px);
+      padding-top: 56px;
     }
 
-    .featured-project-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .statement {
+      gap: 28px;
+      margin-top: 48px;
     }
 
-    .testimonials {
-      grid-template-columns: 1fr;
-      gap: 30px;
+    h1 {
+      font-size: 34px;
     }
 
-    .testimonials-intro h2 {
-      max-width: 680px;
+    .product-line {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .product-list {
+      flex-wrap: wrap;
+    }
+
+    .product,
+    .product img {
+      width: 32px;
+      height: 32px;
+    }
+
+    footer {
+      margin-top: 60px;
+    }
+
+    .closing-portrait {
+      margin-bottom: 14px;
+    }
+
+    .closing-portrait img {
+      width: 160px;
+      height: 160px;
     }
   }
 
-  @media (max-width: 640px) {
-    .hero {
-      grid-template-columns: 1fr;
-      margin-bottom: 44px;
-    }
-
-    .hero-portrait {
+  @media (hover: none), (pointer: coarse) {
+    .product-tooltip {
       display: none;
     }
-
-    .hero-text h1 {
-      font-size: clamp(34px, 10vw, 46px);
-    }
-
-    .bio {
-      font-size: 18px;
-    }
-  }
-
-  @media (max-width: 570px) {
-
-    .proof-strip {
-      margin-bottom: 64px;
-    }
-
-    .proof-strip dl {
-      grid-template-columns: 1fr;
-    }
-
-    .proof-stat,
-    .proof-stat:first-child {
-      display: grid;
-      grid-template-columns: 86px minmax(0, 1fr);
-      align-items: center;
-      gap: 16px;
-      padding: 17px 0;
-    }
-
-    .proof-stat + .proof-stat {
-      border-top: 1px solid var(--border);
-    }
-
-    .proof-stat + .proof-stat::before {
-      display: none;
-    }
-
-    .proof-stat dt {
-      font-size: 32px;
-    }
-
-    .proof-stat dd {
-      margin-top: 0;
-      font-size: 13px;
-    }
-
-    .proof-label {
-      align-items: center;
-      margin-top: 0;
-    }
-
-    .featured-project-grid {
-      grid-template-columns: 1fr;
-      gap: 38px;
-    }
-
-    .selected-work,
-    .testimonials {
-      margin-bottom: 64px;
-    }
-
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-portrait img {
+    .text-link,
+    footer a,
+    .product-tooltip {
       transition: none;
-    }
-
-    .expertise {
-      height: 100svh;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-emphasis::after {
-      animation: none;
-      transform: scaleX(1);
     }
   }
 </style>
