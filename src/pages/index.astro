@@ -62,9 +62,9 @@ const products = [
       </div>
 
       <section class="statement" aria-label="Introduction">
-        <p>i’m a software engineer from pakistan 🇵🇰.</p>
+        <p>i’m a software engineer based in islamabad, pakistan 🇵🇰.</p>
 
-        <p>mostly, i make useful things and obsess over the details nobody should have to notice.</p>
+        <p>mostly, i build software that feels simple, even when getting there isn’t.</p>
 
         <div class="product-line">
           <p>some things i’ve helped ship</p>
@@ -77,14 +77,24 @@ const products = [
                 rel="noopener noreferrer"
                 aria-label={`${product.name}: ${product.description}`}
               >
-                <img src={product.logo} alt="" width="32" height="32" />
+                <img src={product.logo} alt="" width="36" height="36" />
+                <span class="product-copy" aria-hidden="true">
+                  <span class="product-name">{product.name}</span>
+                  <span class="product-description">{product.description}</span>
+                </span>
                 <span class="product-tooltip" role="tooltip" aria-hidden="true">{product.name} — {product.description}</span>
               </a>
             ))}
           </div>
         </div>
 
-        <p>for the longer version, here’s my <a class="text-link" href={portfolioUrl} target="_blank" rel="noopener noreferrer">selected work</a>.</p>
+        <p>for the longer version, here’s my <a class="text-link" href={portfolioUrl} target="_blank" rel="noopener noreferrer">portfolio</a>.</p>
+
+        <p>
+          if you think we’d work well together, here’s my
+          <a class="text-link" href="/Fahad-Imran-Software-Engineer.pdf" download>resume</a>.
+        </p>
+
       </section>
 
       <footer>
@@ -97,7 +107,6 @@ const products = [
             loading="lazy"
           />
         </figure>
-        <p>you can find me on</p>
         <nav aria-label="Social links">
           <a href="https://github.com/fahadimran7" target="_blank" rel="noopener noreferrer">github</a>
           <a href="https://linkedin.com/in/fahadimran7" target="_blank" rel="noopener noreferrer">linkedin</a>
@@ -199,8 +208,8 @@ const products = [
   .product {
     position: relative;
     display: grid;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     place-items: center;
     overflow: visible;
     border-radius: 13px;
@@ -212,6 +221,10 @@ const products = [
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+
+  .product-copy {
+    display: none;
   }
 
   .product:focus-visible {
@@ -334,17 +347,57 @@ const products = [
     .product-line {
       align-items: flex-start;
       flex-direction: column;
-      gap: 12px;
+      gap: 20px;
     }
 
     .product-list {
-      flex-wrap: wrap;
+      align-items: stretch;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
     }
 
-    .product,
+    .product {
+      grid-template-columns: 36px minmax(0, 1fr);
+      column-gap: 12px;
+      width: 100%;
+      height: auto;
+      padding-block: 6px;
+      place-items: center start;
+      border-radius: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
     .product img {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .product-copy {
+      display: grid;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .product-name {
+      color: #1f2937;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
+
+    .product-description {
+      color: #8a919c;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .product-tooltip {
+      display: none;
     }
 
     footer {
